@@ -1,67 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:jog_dog/pages/page_history.dart';
+import 'package:jog_dog/pages/page_home.dart';
+import 'package:jog_dog/theme/theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late int index = 0;
+  final pages = [
+    const Center(
+        child: Home(
+      title: "Home",
+    )),
+    const Center(
+      child: History(),
+    )
+  ];
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'JogDog initial',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'JogDog initial Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      home: Scaffold(
+        body: pages[index],
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          showSelectedLabels: true,
+          currentIndex: index,
+          selectedItemColor: Theme.of(context).accentColor,
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.house_outlined), label: "Home"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.history), label: "History"),
           ],
+          onTap: (index) => setState(() {
+            this.index = index;
+          }),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
