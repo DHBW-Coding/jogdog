@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jog_dog/runSpeedTracker.dart';
+import 'package:jog_dog/sessionManager.dart';
 
 import 'package:sensors_plus/sensors_plus.dart';
 
@@ -101,12 +102,12 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void startPressed(double _currentSliderValue) 
+  void startPressed(double currentSliderValue)
   {
-    double targetSpeed = _currentSliderValue;
+    double targetSpeed = currentSliderValue;
     const double tolerance = 1;
     RunMusicLogic runLogic = RunMusicLogic(targetSpeed, tolerance);
     var musicChangeFactor = runLogic.musicChangeFactor;
-
+    Session session = Session(targetSpeed);
   }
 }
