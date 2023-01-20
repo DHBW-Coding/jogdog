@@ -1,21 +1,25 @@
-import 'dart:async';
+import 'dart:math';
+
+import 'package:geolocator/geolocator.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:clock/clock.dart';
-import 'dart:math';
 
 // Main Logic Function
 class RunMusicLogic {
+
   static final SensorData _sensors = SensorData();
-  double _prevSpeed = 0;
-  final double _targetSpeed;
   final double _tolerance;
+  final double _targetSpeed;
+  double _prevSpeed = 0;
+
   RunMusicLogic(this._targetSpeed, this._tolerance);
+
   double _normSpeedDiff() {
-    var currentSpeed =
-        average(_sensors.speeds); //maybe something better in the future
+    var currentSpeed = average(_sensors.speeds); //TODO: maybe something better in the future
     double speedDiff = _prevSpeed - currentSpeed.abs();
     _prevSpeed = speedDiff;
-  //edge case, stop and start run
+
+  // Edge case, stop and start run //TODO: Implement this
     if (speedDiff > _tolerance) {
       return _targetSpeed / speedDiff;
     } else {
@@ -23,26 +27,31 @@ class RunMusicLogic {
     }
   }
 
-  void musicChangeFactor() {
-    //some function to be modelled for testing quadratic
-    pow(_normSpeedDiff(), 2);
-    //add call to interface.musicChangeSpeed 
+  num get musicChangeFactor {
+    //TODO: some function to be modelled for testing quadratic
+    return pow(_normSpeedDiff(), 2);
+    //TODO: add call to interface.musicChangeSpeed 
   }
 }
 
 // get Accelerometer, convert to one directional speed from three dimensional velocity
 class SensorData {
-  final _stopwatch = clock.stopwatch()..start();
-  List<double> _speeds = [];
+
+  final Stopwatch _stopwatch = clock.stopwatch()..start();
+  final List<double> _speeds = []; // List is a pointer pointing to diffrent doubles thats why final
+
   SensorData() {
-    userAccelerometerEvents.listen((var event) {
+    int i = 0;
+    userAccelerometerEvents.listen((var dataPoint) {
       int timestamp = _stopwatch.elapsedMilliseconds;
-      _speeds.add(sqrt(pow(event.x, 2) + pow(event.z, 2) + pow(event.y, 2)) *
-          timestamp *
-          1000);
+      // Calculate Speed in m/s from three dimensional acceleration (m/s^2) dividied by 1000ms 
+      _speeds.add(sqrt(pow(dataPoint.x, 2) + pow(dataPoint.z, 2) + pow(dataPoint.y, 2)) * timestamp / 1000);
       _stopwatch.reset();
+      print(_speeds[i]);
+      i++;
     });
   }
+
   List<double> get speeds {
     var v = _speeds;
     _speeds.clear();

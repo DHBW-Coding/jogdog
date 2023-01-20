@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jog_dog/runSpeedTracker.dart';
+
+import 'package:sensors_plus/sensors_plus.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, required this.title});
@@ -74,7 +77,7 @@ class _HomeState extends State<Home> {
               SizedBox(
                 width: 315,
                 child: ElevatedButton(
-                  onPressed: startPressed,
+                  onPressed: () {startPressed(_currentSliderValue);},
                   child: const Text(
                     "Start Run",
                   ),
@@ -98,5 +101,12 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void startPressed() {}
+  void startPressed(double _currentSliderValue) 
+  {
+    double targetSpeed = _currentSliderValue;
+    const double tolerance = 1;
+    RunMusicLogic runLogic = RunMusicLogic(targetSpeed, tolerance);
+    var musicChangeFactor = runLogic.musicChangeFactor;
+
+  }
 }
