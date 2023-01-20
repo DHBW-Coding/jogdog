@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jog_dog/runSpeedTracker.dart';
+import 'package:jog_dog/widgets/connecttospotify.dart';
+import 'package:jog_dog/widgets/sessiondisplay.dart';
+import 'package:jog_dog/widgets/speedometer.dart';
+import 'package:jog_dog/widgets/startsessionbutton.dart';
 
 import 'package:sensors_plus/sensors_plus.dart';
 
@@ -27,43 +31,8 @@ class _HomeState extends State<Home> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Card(
-                    child: Container(
-                        width: 315,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: const Center(
-                          child: Text("Display Timer time"),
-                        )),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(150)),
-                    child: SizedBox(
-                        width: 300,
-                        height: 300,
-                        child: Center(
-                          child: Text(
-                            "${_currentSliderValue.round()} km/h",
-                            style: Theme.of(context).textTheme.headline2,
-                          ),
-                        )),
-                  ),
-                ],
-              ),
+              const SessionDisplay(),
+              Speedometer(speedValue: _currentSliderValue),
               Slider(
                 value: _currentSliderValue,
                 onChanged: (double value) {
@@ -74,39 +43,12 @@ class _HomeState extends State<Home> {
                 max: 15,
                 min: 1,
               ),
-              SizedBox(
-                width: 315,
-                child: ElevatedButton(
-                  onPressed: () {startPressed(_currentSliderValue);},
-                  child: const Text(
-                    "Start Run",
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: 315,
-                height: 50,
-                child: ElevatedButton(
-                  child: const Text("Connect to Spotify"),
-                  onPressed: () {},
-                ),
-              )
+              StartSessionButton(currentSliderValue: _currentSliderValue),
+              const ConnectToSpotify(),
             ],
           ),
         ),
       ),
     );
-  }
-
-  void startPressed(double _currentSliderValue) 
-  {
-    double targetSpeed = _currentSliderValue;
-    const double tolerance = 1;
-    RunMusicLogic runLogic = RunMusicLogic(targetSpeed, tolerance);
-    var musicChangeFactor = runLogic.musicChangeFactor;
-
   }
 }

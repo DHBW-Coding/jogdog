@@ -6,49 +6,42 @@ class History extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("History"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: const [
-            Center(
-                child: SizedBox(
-                  height: 50,
-                  width: 350,
-                  child: Card(
-                    child: Center(
-                      child: Text("History 1"),
-                    ),
-                  ),
-                )
+        appBar: AppBar(
+          title: const Text("History"),
+        ),
+        body: ListView(children:
+            // This ListView is later to be replaced by a ListView.builder for dynamic
+            // generation of the Elements
+            const [
+          Center(
+              child: SizedBox(
+            height: 50,
+            width: 350,
+            child: Card(
+              child: Center(
+                child: Text("History 1"),
+              ),
             ),
-            Center(
-                child: SizedBox(
-                  height: 50,
-                  width: 350,
-                  child: Card(
-                    child: Center(
-                      child: Text("History 2"),
-                    ),
-                  ),
-                )
+          )),
+          Center(
+              child: SizedBox(
+            height: 50,
+            width: 350,
+            child: Card(
+              child: Center(
+                child: Text("History 2"),
+              ),
             ),
-            Center(
-                child: SizedBox(
+          )),
+          Center(
+              child: SizedBox(
                   height: 50,
                   width: 350,
                   child: Card(
                     child: Center(
                       child: Text("History 3"),
                     ),
-                  ),
-                )
-            ),
-          ],
-        ),
-      )
-    );
+                  ))),
+        ]));
   }
 }
