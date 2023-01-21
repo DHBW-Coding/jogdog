@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:jog_dog/pages/page_history.dart';
 import 'package:jog_dog/pages/page_home.dart';
 import 'package:jog_dog/theme/theme.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(MyApp());
+  requestPermissions();
 }
 
 class MyApp extends StatefulWidget {
@@ -52,4 +54,38 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+}
+
+
+Future<bool> requestPermissions() async {
+
+  PermissionStatus currentStatus;
+  Map<Permission, PermissionStatus> allPermissionsStatus;
+
+  if (await Permission.location.serviceStatus.isEnabled){
+    currentStatus = await Permission.location.status;
+
+    if(currentStatus.isGranted){
+      print("Permission is already granted");
+      return true;
+
+    }else if(currentStatus.isDenied){
+      allPermissionsStatus = await [
+        Permission.location,
+      ].request();
+      print("Permission granted");
+      return true;
+
+    }else if(currentStatus.isPermanentlyDenied){
+      print("Status is permanently denied please change in settings Page");
+      openAppSettings();
+      return true; // TODO: It is not guaranteed that the use will change the settings!
+    }
+
+  }else{
+    print("Error no Location Service");
+    return false;
+  }
+
+  return false;
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jog_dog/runSpeedTracker.dart';
 
-import 'package:sensors_plus/sensors_plus.dart';
-
 class Home extends StatefulWidget {
   const Home({super.key, required this.title});
 
