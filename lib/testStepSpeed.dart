@@ -1,24 +1,42 @@
 import 'dart:collection';
-
-import 'package:pedometer/pedometer.dart';
 import 'dart:async';
 
-class SensorData {
+import 'package:pedometer/pedometer.dart';
+
+import 'package:jog_dog/utilities/debugLogger.dart';
+
+class StepSensorData {
+
   Stream<double>? stepPerSecond;
-  final StreamController<double> controller = StreamController();
+
+  var startStepCount;
+  final StreamController<double> streamCtrl = StreamController();
   late Stream<StepCount> _stepCountStream;
   late Stream<PedestrianStatus> _pedestrianStatusStream;
-  late Queue<StepCount> events;
+  Queue<StepCount> events = Queue();
+
+  StepSensorData() {
+    stepPerSecond = streamCtrl.stream;
+    _stepCountStream = Pedometer.stepCountStream
+      ..listen(onStepIncrease).onError(stepError);
+    _pedestrianStatusStream = Pedometer.pedestrianStatusStream
+      ..listen(onPedestrianStatusChange).onError(pedestrianStatusError);
+  }
+
 
   void onStepIncrease(StepCount event) {
-    if (events.length > 9 && events.length < 12) {
+    if(events.isEmpty){
+      startStepCount = event.steps;
+    }
+    dataLogger.i("Steps: ${events.last.steps - events.first.steps}");
+    if (events.length < 12) {
       events.add(event);
     } else {
-      double stepPerTime = (events.first.timeStamp
-              .difference(events.last.timeStamp)
-              .inMilliseconds /
-          (1000 * events.last.steps));
-      controller.add(stepPerTime);
+      double stepPerTime = (
+              events.last.timeStamp.difference(events.first.timeStamp)
+              .inMilliseconds / (1000 * (events.last.steps - events.first.steps))
+              );
+      streamCtrl.add(stepPerTime);
       events.removeFirst();
       events.removeFirst();
       events.add(event);
@@ -26,24 +44,18 @@ class SensorData {
   }
 
   void stepError(error) {
-    controller.close();
-    //
+    streamCtrl.close();
+    allLogger.e("stepError accoured: $error");
   }
 
   void onPedestrianStatusChange(PedestrianStatus status) {
-    controller.add(-1);
+    streamCtrl.add(-1);
   }
 
   void pedestrianStatusError(error) {
-    controller.close();
+    streamCtrl.close();
+    allLogger.e("pedestrainStepError accoured: $error");
     //
   }
 
-  SensorData() {
-    stepPerSecond = controller.stream;
-    _stepCountStream = Pedometer.stepCountStream
-      ..listen(onStepIncrease).onError(stepError);
-    _pedestrianStatusStream = Pedometer.pedestrianStatusStream
-      ..listen(onPedestrianStatusChange).onError(pedestrianStatusError);
-  }
 }
