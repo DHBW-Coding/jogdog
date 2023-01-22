@@ -128,6 +128,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  logger:
+    dependency: "direct main"
+    description:
+      name: logger
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
+  logger_flutter_plus:
+    dependency: "direct main"
+    description:
+      name: logger_flutter_plus
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.5"
   matcher:
     dependency: transitive
     description:

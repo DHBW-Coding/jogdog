@@ -4,6 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:clock/clock.dart';
 
+import 'package:jog_dog/utilities/debugLogger.dart' as Logger;
+
 // Main Logic Function
 class RunMusicLogic {
 
@@ -45,7 +47,8 @@ class SensorData {
     Geolocator.getPositionStream().listen((Position dataPoint) {
       _speeds.add(dataPoint.speed);
       //TODO: Position.speedAccracy for data norming maybe
-      print(_speeds[i]);
+      Logger.dataLogger.v(_speeds[i]);
+
       i++;
      });
   }

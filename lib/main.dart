@@ -1,12 +1,30 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:jog_dog/pages/page_history.dart';
 import 'package:jog_dog/pages/page_home.dart';
-import 'package:jog_dog/theme/theme.dart';
+
 import 'package:permission_handler/permission_handler.dart';
+
+import 'package:jog_dog/pages/page_history.dart';
+import 'package:jog_dog/theme/theme.dart';
+import 'package:jog_dog/utilities/debugLogger.dart';
+
+
+var logger;
 
 void main() {
   runApp(MyApp());
   requestPermissions();
+
+  // If in Debug Mode this Code will be executed 
+  // Else this code will be removed automatically
+  if(kDebugMode){
+    logger = allLogger;
+    //dataLogger = DebugLogger().data;
+  }else{
+    logger = null;
+    //dataLogger = null;
+  }
+
 }
 
 class MyApp extends StatefulWidget {
@@ -20,12 +38,12 @@ class _MyAppState extends State<MyApp> {
   late int index = 0;
   final pages = [
     const Center(
-        child: Home(
-      title: "Home",
-    )),
+      child: Home(title: "Home")
+    ),
     const Center(
-      child: History(),
-    )
+      child: LogWidgetContainer(),
+      //child: History(),
+    ),
   ];
 
   @override
@@ -42,10 +60,8 @@ class _MyAppState extends State<MyApp> {
           currentIndex: index,
           selectedItemColor: Theme.of(context).accentColor,
           items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.house_outlined), label: "Home"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.history), label: "History"),
+            BottomNavigationBarItem(icon: Icon(Icons.house_outlined), label: "Home"),
+            BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
           ],
           onTap: (index) => setState(() {
             this.index = index;
@@ -66,26 +82,27 @@ Future<bool> requestPermissions() async {
     currentStatus = await Permission.location.status;
 
     if(currentStatus.isGranted){
-      print("Permission is already granted");
+      if(kDebugMode) { logger.i("Permission is already granted"); }
       return true;
 
     }else if(currentStatus.isDenied){
       allPermissionsStatus = await [
         Permission.location,
       ].request();
-      print("Permission granted");
+      if(kDebugMode) { logger.i("Permission granted"); }
       return true;
 
     }else if(currentStatus.isPermanentlyDenied){
-      print("Status is permanently denied please change in settings Page");
+      if(kDebugMode) { logger.i("Status is permanently denied please change in settings Page"); }
       openAppSettings();
-      return true; // TODO: It is not guaranteed that the use will change the settings!
+      return true; // TODO: It is not guaranteed that the user will change the settings!
     }
 
   }else{
-    print("Error no Location Service");
+    if(kDebugMode) { logger.e("No Location Service Found!"); }
     return false;
   }
 
+  if(kDebugMode) { logger.e("Error! This could should be not reachable"); }
   return false;
 }
