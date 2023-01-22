@@ -48,7 +48,6 @@ class SensorData {
       _speeds.add(dataPoint.speed);
       //TODO: Position.speedAccracy for data norming maybe
       Logger.dataLogger.v(_speeds[i]);
-
       i++;
      });
   }

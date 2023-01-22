@@ -13,7 +13,7 @@ var logger;
 
 void main() {
   runApp(MyApp());
-  requestPermissions();
+  requestPermissionsStep();
 
   // If in Debug Mode this Code will be executed 
   // Else this code will be removed automatically
@@ -101,6 +101,34 @@ Future<bool> requestPermissions() async {
   }else{
     if(kDebugMode) { logger.e("No Location Service Found!"); }
     return false;
+  }
+
+  if(kDebugMode) { logger.e("Error! This could should be not reachable"); }
+  return false;
+}
+
+Future<bool> requestPermissionsStep() async {
+
+  PermissionStatus currentStatus;
+  Map<Permission, PermissionStatus> allPermissionsStatus;
+
+  currentStatus = await Permission.activityRecognition.status;
+
+  if(currentStatus.isGranted){
+    if(kDebugMode) { logger.i("Permission is already granted"); }
+    return true;
+
+  }else if(currentStatus.isDenied){
+    allPermissionsStatus = await [
+      Permission.activityRecognition,
+    ].request();
+    if(kDebugMode) { logger.i("Permission granted"); }
+    return true;
+
+  }else if(currentStatus.isPermanentlyDenied){
+    if(kDebugMode) { logger.i("Status is permanently denied please change in settings Page"); }
+    openAppSettings();
+    return true; // TODO: It is not guaranteed that the user will change the settings!
   }
 
   if(kDebugMode) { logger.e("Error! This could should be not reachable"); }
