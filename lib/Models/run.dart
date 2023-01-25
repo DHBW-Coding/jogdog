@@ -1,18 +1,11 @@
-import 'package:flutter/material.dart';
+// Class used for accessing data of runs
+class Run {
+  Duration duration;
+  double avgSpeed;
+  double maxDeviation;
+  DateTime date;
+  DateTime timestampstart;
 
-class Run{
-
-  Duration duration = Duration(seconds: 0);
-  double avgSpeed = 0;
-  double maxDeviation = 0;
-  DateTime date = DateTime(2017);
-
-
-  Run(duration, avgSpeed, maxDeviation, date){
-    duration = duration;
-    avgSpeed = avgSpeed;
-    maxDeviation = maxDeviation;
-    date = date;
-  }
-
+  Run(this.duration, this.avgSpeed, this.maxDeviation, this.date,
+      this.timestampstart);
 }

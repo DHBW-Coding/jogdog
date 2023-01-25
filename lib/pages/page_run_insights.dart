@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:jog_dog/Models/run.dart';
 
 
-//TODO: handle Data from run better
 
 class RunInsights extends StatelessWidget {
-  RunInsights({super.key, required Run run}) {
-    this._run = run;
-  }
+  final Run run;
 
-  Run _run = Run(Duration(seconds: 14), 3, 5, DateTime.now());
+  RunInsights({super.key, required this.run}) 
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,9 +19,9 @@ class RunInsights extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                    'Run from ${_run.date.day.toString()}.${_run.date.month.toString()}.${_run.date.year.toString()}'),
-                Text('Your average run speed was: ${_run.avgSpeed}.'),
-                Text('The run lasted for: ${_run.duration.toString()}')
+                    'Run from ${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
+                Text('Your average run speed was: ${run.avgSpeed}.'),
+                Text('The run lasted for: ${run.duration.toString()}')
               ],
             )));
   }
