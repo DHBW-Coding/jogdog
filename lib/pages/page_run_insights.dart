@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:jog_dog/Models/run.dart';
 
-
-
 class RunInsights extends StatelessWidget {
   final Run run;
 
-  RunInsights({super.key, required this.run}) 
+  RunInsights({super.key, required this.run}) {}
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +18,7 @@ class RunInsights extends StatelessWidget {
                 Text(
                     'Run from ${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
                 Text('Your average run speed was: ${run.avgSpeed}.'),
-                Text('The run lasted for: ${run.duration.toString()}')
+                Text('The run lasted for: ${run.duration.toString()}'),
               ],
             )));
   }
