@@ -25,10 +25,9 @@ class StepSensorData {
 
 
   void onStepIncrease(StepCount event) {
-    if(events.isEmpty){
-      startStepCount = event.steps;
+    if(events.isNotEmpty){
+      dataLogger.i("Steps: ${events.last.steps - events.first.steps}");
     }
-    dataLogger.i("Steps: ${events.last.steps - events.first.steps}");
     if (events.length < 12) {
       events.add(event);
     } else {
