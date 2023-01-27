@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jog_dog/runSpeedTracker.dart';
-import 'package:jog_dog/widgets/connecttospotify.dart';
+import 'package:jog_dog/widgets/spotifybutton.dart';
 import 'package:jog_dog/widgets/sessiondisplay.dart';
 import 'package:jog_dog/widgets/speedometer.dart';
 import 'package:jog_dog/widgets/startsessionbutton.dart';
@@ -31,7 +31,10 @@ class _HomeState extends State<Home> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SessionDisplay(),
+              SessionDisplay(),
+              const SizedBox(
+                height: 15,
+              ),
               Speedometer(speedValue: _currentSliderValue),
               Slider(
                 value: _currentSliderValue,
@@ -44,7 +47,10 @@ class _HomeState extends State<Home> {
                 min: 1,
               ),
               StartSessionButton(currentSliderValue: _currentSliderValue),
-              const ConnectToSpotify(),
+              const SizedBox(
+                height: 15,
+              ),
+              const SpotifyButton(),
             ],
           ),
         ),

@@ -9,7 +9,10 @@ class RunInsights extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text(
+              '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
+        ),
         body: Container(
             alignment: Alignment.center,
             child: Column(

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
@@ -12,9 +13,16 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Container(
-      child: const Text('Gabriel wollte Settings :)'),
-    ));
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Settings'),
+        ),
+        body: Center(
+            child: Column(children: [
+          const Text('Permissions:'),
+          const Text('To start the app you have to accept these permissions.'),
+          ElevatedButton(
+              onPressed: () {}, child: const Text('Request Permission'))
+        ])));
   }
 }

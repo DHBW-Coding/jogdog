@@ -27,6 +27,7 @@ class _HistoryState extends State<History> {
       ),
       body: ListView.builder(
           itemCount: runs.length,
+          padding: const EdgeInsets.all(10),
           itemBuilder: ((context, index) {
             final run = runs[index];
             return Card(
