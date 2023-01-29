@@ -5,6 +5,8 @@ import 'package:jog_dog/pages/page_home.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:jog_dog/pages/page_history.dart';
+import 'package:jog_dog/pages/page_home.dart';
+import 'package:jog_dog/pages/page_settings.dart';
 import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debugLogger.dart';
 
@@ -33,40 +35,39 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late int index = 0;
-  final pages = [
-    const Center(child: Home(title: "Home")),
-    const Center(
-      child: LogWidgetContainer(),
-      //child: History(),
-    ),
-  ];
+  late int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      home: Scaffold(
-        body: pages[index],
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          showSelectedLabels: true,
-          currentIndex: index,
-          selectedItemColor: Theme.of(context).accentColor,
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.house_outlined), label: "Home"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.history), label: "History"),
-          ],
-          onTap: (index) => setState(() {
-            this.index = index;
-          }),
-        ),
-      ),
-    );
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
+        home: Scaffold(
+          bottomNavigationBar: NavigationBar(
+            selectedIndex: currentPageIndex,
+            destinations: const [
+              NavigationDestination(
+                  icon: Icon(Icons.house_outlined), label: "Home"),
+              NavigationDestination(
+                  icon: Icon(Icons.history), label: "History"),
+              NavigationDestination(
+                  icon: Icon(Icons.settings), label: 'Settings')
+            ],
+            onDestinationSelected: (int index) {
+              setState(() {
+                currentPageIndex = index;
+              });
+            },
+          ),
+          body: <Widget>[
+            const Home(
+              title: 'Home',
+            ),
+            const History(),
+            const LogWidgetContainer()
+          ][currentPageIndex],
+        ));
   }
 }
 
