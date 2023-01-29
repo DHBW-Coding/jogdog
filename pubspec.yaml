@@ -39,6 +39,9 @@ dependencies:
   clock: ^1.1.1
   geolocator: ^9.0.2
   pedometer: ^3.0.0
+  permission_handler: ^10.2.0
+  logger: ^1.1.0
+  logger_flutter_plus: ^1.0.5
 
 dev_dependencies:
   flutter_test:

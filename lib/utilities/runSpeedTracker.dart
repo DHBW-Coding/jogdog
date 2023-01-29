@@ -4,6 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:clock/clock.dart';
 
+import 'package:jog_dog/utilities/debugLogger.dart' as Logger;
+
 // Main Logic Function
 class RunMusicLogic {
 
@@ -37,19 +39,17 @@ class RunMusicLogic {
 // get Accelerometer, convert to one directional speed from three dimensional velocity
 class SensorData {
 
-  final Stopwatch _stopwatch = clock.stopwatch()..start();
   final List<double> _speeds = []; // List is a pointer pointing to diffrent doubles thats why final
 
   SensorData() {
     int i = 0;
-    userAccelerometerEvents.listen((var dataPoint) {
-      int timestamp = _stopwatch.elapsedMilliseconds;
-      // Calculate Speed in m/s from three dimensional acceleration (m/s^2) dividied by 1000ms 
-      _speeds.add(sqrt(pow(dataPoint.x, 2) + pow(dataPoint.z, 2) + pow(dataPoint.y, 2)) * timestamp / 1000);
-      _stopwatch.reset();
-      print(_speeds[i]);
+
+    Geolocator.getPositionStream().listen((Position dataPoint) {
+      _speeds.add(dataPoint.speed);
+      //TODO: Position.speedAccracy for data norming maybe
+      Logger.dataLogger.v(_speeds[i]);
       i++;
-    });
+     });
   }
 
   List<double> get speeds {
