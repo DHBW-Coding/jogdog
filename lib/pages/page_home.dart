@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jog_dog/utilities/runSpeedTracker.dart';
-import 'package:jog_dog/testStepSpeed.dart';
+import 'package:jog_dog/utilities/testStepSpeed.dart';
 
 import 'package:jog_dog/utilities/debugLogger.dart';
 
@@ -105,18 +105,18 @@ class _HomeState extends State<Home> {
 
   void startPressed(double currentSliderValue) 
   {
-    /*
+    
     double targetSpeed = currentSliderValue;
     const double tolerance = 1;
     RunMusicLogic runLogic = RunMusicLogic(targetSpeed, tolerance);
     var musicChangeFactor = runLogic.musicChangeFactor;
-    */
+    /*
     StepSensorData stepSensor = StepSensorData();
     stepSensor.stepPerSecond!.listen((event) {
       dataLogger.i(event);
 
     });
-
+    */
 
   }
 }
