@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 
 import 'package:jog_dog/providers/music_interface.dart';
 import 'package:jog_dog/utilities/debugLogger.dart' as logger;
+import 'package:jog_dog/utilities/sessionManager.dart';
 
 /// Main Logic Function to get the music speed change faktor 
 /// which should be forwarded to the musicInterface
@@ -23,6 +24,8 @@ class RunMusicLogic {
 
   RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.5]){
     _changeMusicSpeed();
+    Session session = Session(_sensors);
+    session.start();
   }
 
   void _changeMusicSpeed() {
