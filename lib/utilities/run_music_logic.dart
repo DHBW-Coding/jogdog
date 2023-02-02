@@ -24,7 +24,7 @@ class RunMusicLogic {
   RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.5]){
     _changeMusicSpeed();
     Session session = Session(_sensors);
-    session.start();
+    session.startTracking();
   }
 
   void _changeMusicSpeed() {
