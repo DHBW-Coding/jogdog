@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,7 +15,7 @@ import 'package:jog_dog/utilities/sessionManager.dart';
 /// 0.5 m/s on default
 class RunMusicLogic {
 
-  static final SensorData _sensors = SensorData();
+  final _sensors = SensorData();
   final double _tolerance; 
   final double _targetSpeed;
   final int musicSpeedSetRate = 0; // TODO: implement
@@ -46,7 +45,7 @@ class RunMusicLogic {
 // Get speed information from GPS in a list
 class SensorData {
 
-  final StreamController<double> _streamCtrl = StreamController();
+  final StreamController<double> _streamCtrl = StreamController.broadcast();
   final List<double> _speeds = []; // List is a pointer pointing to diffrent doubles thats why final
   final LocationSettings _settings = AndroidSettings( // TODO: Settings only valid for Android
       accuracy: LocationAccuracy.best,
