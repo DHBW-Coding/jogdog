@@ -32,14 +32,15 @@ class _HistoryState extends State<History> {
             final run = runs[index];
             return Card(
               child: ListTile(
-              title: Text(
+                title: Text(
                 '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
-              trailing: const Icon(Icons.run_circle),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: ((context) => RunInsights(run: run))));
-              },
-            ));
+                trailing: const Icon(Icons.run_circle),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => RunInsights(run: run))));
+                },
+              )
+            );
           })),
     );
   }
