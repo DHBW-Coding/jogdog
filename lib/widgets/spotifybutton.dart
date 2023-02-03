@@ -1,7 +1,6 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class SpotifyButton extends StatefulWidget {
@@ -51,8 +50,15 @@ class _SpotifyButtonState extends State<SpotifyButton>
   }
 }
 
-class SpotifyCard extends StatelessWidget {
+class SpotifyCard extends StatefulWidget {
   const SpotifyCard({super.key});
+
+  @override
+  _SpotifyCard createState() => _SpotifyCard();
+}
+
+class _SpotifyCard extends State<SpotifyCard> {
+  bool _isPlaying = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,20 +68,34 @@ class SpotifyCard extends StatelessWidget {
       child: SizedBox(
         width: 315,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            const Icon(Icons.account_balance),
-            IconButton(
-              icon: const Icon(Icons.skip_previous),
-              onPressed: () {},
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Icon(Icons.music_note),
             ),
-            IconButton(
-              icon: const Icon(Icons.play_arrow),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.skip_next),
-              onPressed: () {},
+            Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.skip_previous),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+                    onPressed: () {
+                      setState(() {
+                        _isPlaying = !_isPlaying;
+                      });
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.skip_next),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
             ),
           ],
         ),
