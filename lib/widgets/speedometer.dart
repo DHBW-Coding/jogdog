@@ -1,31 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class Speedometer extends StatelessWidget {
-  Speedometer({super.key, required double speedValue}) {
-    _currentSpeed = speedValue;
-  }
+  Speedometer({super.key,});
 
-  double _currentSpeed = 0;
+  int _currentSpeed = 5;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(150)),
-          child: SizedBox(
-              width: 300,
-              height: 300,
-              child: Center(
-                child: Text(
-                  "${_currentSpeed.round()} km/h",
-                  style: Theme.of(context).textTheme.headline2,
-                ),
-              )),
+    return SleekCircularSlider(
+      appearance: CircularSliderAppearance(
+        size: 300,
+        customColors: CustomSliderColors(
+          progressBarColor: Colors.blue,
+          trackColor: Colors.grey,
+          dotColor: Colors.blue,
         ),
-      ],
+        customWidths: CustomSliderWidths(
+          progressBarWidth: 20,
+          trackWidth: 20,
+          handlerSize: 20,
+          shadowWidth: 0,
+        ),
+        infoProperties: InfoProperties(
+          mainLabelStyle: const TextStyle(
+            color: Colors.blue,
+            fontSize: 50,
+          ),
+          modifier: (double value) {
+            return value.toInt().toString();
+          },
+        ),
+      ),
+      min: 1,
+      max: 15,
+      initialValue: _currentSpeed.toDouble(),
+      onChange: (double value) {
+        _currentSpeed = value.toInt();
+      },
     );
   }
 }
