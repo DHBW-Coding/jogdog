@@ -42,6 +42,8 @@ dependencies:
   permission_handler: ^10.2.0
   logger: ^1.1.0
   logger_flutter_plus: ^1.0.5
+  path_provider: ^2.0.12
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:
