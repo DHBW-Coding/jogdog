@@ -7,7 +7,7 @@ class Speedometer extends StatelessWidget {
   Speedometer({super.key,});
 
   ThemeMode theme = ThemeMode.system ;
-  int _currentSpeed = 5;
+  late int _currentSpeed = 5;
 
   @override
   Widget build(BuildContext context) {

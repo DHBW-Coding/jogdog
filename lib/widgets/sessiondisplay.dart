@@ -11,9 +11,8 @@ class SessionDisplay extends StatefulWidget {
 }
 
 class _SessionDisplay extends State<SessionDisplay> {
-  late int _time = 0;
   late bool _isRunning = false;
-  final Duration _duration = Duration();
+  final Duration _duration = const Duration();
   late Timer _timer;
 
   @override
@@ -43,7 +42,7 @@ class _SessionDisplay extends State<SessionDisplay> {
     } else {
       _timer = Timer.periodic(_duration, (timer) {
         setState(() {
-          _time++;
+          widget.currentTime++;
         });
       });
       setState(() {

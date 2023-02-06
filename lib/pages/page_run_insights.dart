@@ -4,7 +4,7 @@ import 'package:jog_dog/Models/run.dart';
 class RunInsights extends StatelessWidget {
   final Run run;
 
-  RunInsights({super.key, required this.run}) {}
+  const RunInsights({super.key, required this.run});
 
   @override
   Widget build(BuildContext context) {

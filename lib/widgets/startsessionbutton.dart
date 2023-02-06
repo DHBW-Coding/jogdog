@@ -6,6 +6,7 @@ class StartSessionButton extends StatefulWidget {
 
   final double currentSliderValue;
 
+  @override
   _StartSessionButtonState createState() => _StartSessionButtonState();
 }
 
