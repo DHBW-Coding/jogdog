@@ -23,6 +23,8 @@ class RunMusicLogic {
 
   RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.5]){
     _changeMusicSpeed();
+    SessionManager sessionManager = SessionManager(_sensors);
+    sessionManager.createNewSession();
   }
 
   void _changeMusicSpeed() {

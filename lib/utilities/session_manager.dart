@@ -32,6 +32,31 @@ class Session {
       .._runEnded = json['runEnded'];
   }
 
+  double getRunTime() {
+    return (_runEnded - _runStarted)/1000;
+  }
+
+  double getTopSpeed() {
+    double currentMaximum = 0;
+    if (_speeds.isNotEmpty) {
+      _speeds.forEach((key, value) {
+        if (value > currentMaximum) {
+          currentMaximum = value;
+        }
+      });
+    }
+    return currentMaximum;
+  }
+
+  double getAverageSpeed() {
+    double sum = 0;
+    if (_speeds.isNotEmpty) {
+      _speeds.forEach((key, value) { sum += value; });
+      return sum / _speeds.length;
+    }
+    return 0;
+  }
+
 }
 
 class SessionManager {
@@ -52,7 +77,7 @@ class SessionManager {
     _currentSession = Session();
     _currentSession._runStarted = DateTime.now().millisecondsSinceEpoch;
     if(kDebugMode) logger.dataLogger.v("Session started at ${DateTime.now().microsecondsSinceEpoch}");
-    startSessionTracking();
+    continueSessionTracking();
   }
 
   void loadSession(String uuid) {
@@ -63,7 +88,7 @@ class SessionManager {
     }
   }
 
-  void startSessionTracking() {
+  void continueSessionTracking() {
     if (_isRunning) { return; }
     _isRunning = true;
     _subscription = _sensorData.normelizedSpeedStream.listen((double speed) {
@@ -80,31 +105,6 @@ class SessionManager {
     if (!_isRunning) { return; }
     _isRunning = false;
     _currentSession._runEnded = DateTime.now().millisecondsSinceEpoch;
-  }
-
-  double getRunTime() {
-    return (_currentSession._runEnded - _currentSession._runStarted)/1000;
-  }
-
-  double getTopSpeed() {
-    double currentMaximum = 0;
-    if (_currentSession._speeds.isNotEmpty) {
-      _currentSession._speeds.forEach((key, value) {
-        if (value > currentMaximum) {
-          currentMaximum = value;
-        }
-      });
-    }
-    return currentMaximum;
-  }
-
-  double getAverageSpeed() {
-    double sum = 0;
-    if (_currentSession._speeds.isNotEmpty) {
-      _currentSession._speeds.forEach((key, value) { sum += value; });
-      return sum / _currentSession._speeds.length;
-    }
-    return 0;
   }
 
 }
