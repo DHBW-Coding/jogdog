@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
+import '../theme/theme.dart';
+
 class Speedometer extends StatelessWidget {
   Speedometer({super.key,});
 
+  ThemeMode theme = ThemeMode.system ;
   int _currentSpeed = 5;
 
   @override
@@ -12,9 +15,9 @@ class Speedometer extends StatelessWidget {
       appearance: CircularSliderAppearance(
         size: 300,
         customColors: CustomSliderColors(
-          progressBarColor: Colors.blue,
-          trackColor: Colors.grey,
-          dotColor: Colors.blue,
+          progressBarColor: theme == ThemeMode.dark ? AppTheme.darkTheme.primaryColor : AppTheme.lightTheme.primaryColor,
+          trackColor: theme == ThemeMode.dark ? AppTheme.darkTheme.highlightColor : AppTheme.lightTheme.highlightColor,
+          dotColor: theme == ThemeMode.dark ? AppTheme.darkTheme.primaryColor : AppTheme.lightTheme.primaryColor,
         ),
         customWidths: CustomSliderWidths(
           progressBarWidth: 20,
