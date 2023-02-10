@@ -8,7 +8,7 @@ class Speedometer extends StatelessWidget {
     super.key,
   });
 
-  ThemeMode theme = ThemeMode.system;
+  final ThemeMode theme = ThemeMode.system;
 
   late int _currentSpeed = 5;
 

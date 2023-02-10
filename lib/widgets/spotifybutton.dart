@@ -4,10 +4,10 @@ class SpotifyButton extends StatefulWidget {
   const SpotifyButton({super.key});
 
   @override
-  _SpotifyButtonState createState() => _SpotifyButtonState();
+  SpotifyButtonState createState() => SpotifyButtonState();
 }
 
-class _SpotifyButtonState extends State<SpotifyButton>
+class SpotifyButtonState extends State<SpotifyButton>
     with SingleTickerProviderStateMixin {
   bool _connected = false;
   late AnimationController _animationController;
@@ -51,10 +51,10 @@ class SpotifyCard extends StatefulWidget {
   const SpotifyCard({super.key});
 
   @override
-  _SpotifyCard createState() => _SpotifyCard();
+  SpotifyCardState createState() => SpotifyCardState();
 }
 
-class _SpotifyCard extends State<SpotifyCard> {
+class SpotifyCardState extends State<SpotifyCard> {
   bool _isPlaying = false;
 
   @override

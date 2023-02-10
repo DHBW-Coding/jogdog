@@ -7,10 +7,10 @@ class StartSessionButton extends StatefulWidget {
   final double currentSliderValue;
 
   @override
-  _StartSessionButtonState createState() => _StartSessionButtonState();
+  StartSessionButtonState createState() => StartSessionButtonState();
 }
 
-class _StartSessionButtonState extends State<StartSessionButton> {
+class StartSessionButtonState extends State<StartSessionButton> {
   bool _isStarted = false;
   late RunMusicLogic _runLogic;
 

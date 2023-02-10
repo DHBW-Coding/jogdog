@@ -7,10 +7,10 @@ class SessionDisplay extends StatefulWidget {
   int currentTime = 0;
 
   @override
-  _SessionDisplay createState() => _SessionDisplay();
+  SessionDisplayState createState() => SessionDisplayState();
 }
 
-class _SessionDisplay extends State<SessionDisplay> {
+class SessionDisplayState extends State<SessionDisplay> {
   late bool _isRunning = false;
   final Duration _duration = const Duration();
   late Timer _timer;
