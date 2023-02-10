@@ -19,13 +19,9 @@ class FileManager {
     return directory.path;
   }
 
-  Future<File> get _sessionFile async {
-    final path = await _localPath;
-    return File('$path/Sessions.json');
-  }
-
   Future<File> saveSession(Session session) async {
-    final file = await _sessionFile;
+    final path = await _localPath;
+    final file = File('$path/Sessions.json');
     String contents = await file.readAsString();
     Map<String, dynamic> sessions = jsonDecode(contents);
     sessions.addAll(session.toJson());
@@ -33,7 +29,8 @@ class FileManager {
   }
 
   Future<List<Session>> getSessions() async {
-    final file = await _sessionFile;
+    final path = await _localPath;
+    final file = File('$path/Sessions.json');
     String contents = await file.readAsString();
     Map<String, dynamic> sessions = jsonDecode(contents);
     List<Session> sessionList = [];

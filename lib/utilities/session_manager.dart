@@ -79,6 +79,7 @@ class SessionManager {
     _currentSession._runStarted = DateTime.now().millisecondsSinceEpoch;
     if(kDebugMode) logger.dataLogger.v("Session started at ${DateTime.now().microsecondsSinceEpoch}");
     continueSessionTracking();
+    saveSessionPeriodically();
   }
 
   void loadSession(String uuid) {
@@ -97,19 +98,36 @@ class SessionManager {
     if (_isRunning) { return; }
     _isRunning = true;
     _subscription = _sensorData.normelizedSpeedStream.listen((double speed) {
-      if (_isRunning) {
-        _currentSession._speeds[DateTime.now().millisecondsSinceEpoch] = speed;
-        if(kDebugMode) logger.dataLogger.v("Raw GPS Speed: $speed, Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
-      } else {
-        _subscription.cancel();
-      }
+      var time = DateTime.now().millisecondsSinceEpoch;
+      _currentSession._speeds[time] = speed;
+      _currentSession._runEnded = time;
+      if(kDebugMode) logger.dataLogger.v("Raw GPS Speed: $speed, Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
     });
+  }
+
+  void pauseSessionTracking() {
+    if (!_isRunning) { return; }
+    _isRunning = false;
+    _subscription.cancel();
   }
 
   void stopSessionTracking() {
     if (!_isRunning) { return; }
     _isRunning = false;
-    _currentSession._runEnded = DateTime.now().millisecondsSinceEpoch;
+    _subscription.cancel();
+    saveSession();
+  }
+
+  void saveSession() {
+    FileManager().saveSession(_currentSession);
+  }
+
+  void saveSessionPeriodically() {
+    if (!_isRunning) { return; }
+    Timer.periodic(const Duration(seconds: 30), (timer) {
+      if(!_isRunning) { timer.cancel(); }
+      saveSession();
+    });
   }
 
 }
