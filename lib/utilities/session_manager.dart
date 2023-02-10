@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:jog_dog/utilities/FileManager.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/debugLogger.dart' as logger;
 import 'package:uuid/uuid.dart';
@@ -61,7 +62,7 @@ class Session {
 
 class SessionManager {
 
-  final List<Session> _sessions = [];
+  late List<Session> _sessions = [];
   final SensorData _sensorData;
   late Session _currentSession;
   late StreamSubscription _subscription;
@@ -86,6 +87,10 @@ class SessionManager {
         _currentSession = element;
       }
     }
+  }
+
+  loadSessionsFromJson() {
+    _sessions = FileManager().getSessions() as List<Session>;
   }
 
   void continueSessionTracking() {
