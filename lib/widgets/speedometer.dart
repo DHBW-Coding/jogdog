@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
+import '../main.dart';
 import '../theme/theme.dart';
 
 class Speedometer extends StatelessWidget {
@@ -40,15 +42,19 @@ class Speedometer extends StatelessWidget {
             fontSize: 50,
           ),
           modifier: (double value) {
-            return value.toInt().toString();
+            return "${value.toInt()} km/h";
           },
         ),
       ),
       min: 5,
       max: 20,
-      initialValue: _currentSpeed.toDouble(),
+      initialValue: 10,
       onChange: (double value) {
         _currentSpeed = value.toInt();
+        if(kDebugMode){
+          logger.i("Speed: $value\n"
+              "Current Speed Displayed: $_currentSpeed");
+        }
       },
     );
   }

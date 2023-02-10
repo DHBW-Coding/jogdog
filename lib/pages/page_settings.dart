@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../utilities/debugLogger.dart';
 import '../main.dart';
@@ -32,17 +33,18 @@ class _SettingsState extends State<Settings> {
             const SizedBox(
               height: 15,
             ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const LogWidgetContainer()));
-                    });
-                  },
-                  child: const Text("Open Logger")),
-            ),
+            if (kDebugMode)
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const LogWidgetContainer()));
+                      });
+                    },
+                    child: const Text("Open Logger")),
+              ),
           ]),
         ),
       ),
