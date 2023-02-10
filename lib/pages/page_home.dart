@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
               const SizedBox(
                 height: 15,
               ),
-              Speedometer(),
+              Speedometer(isStarted: false),
               const StartSessionButton(currentSliderValue: 5),
               const SizedBox(
                 height: 15,
