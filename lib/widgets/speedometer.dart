@@ -10,7 +10,7 @@ class Speedometer extends StatelessWidget {
 
   final ThemeMode theme = ThemeMode.system;
 
-  late int _currentSpeed = 5;
+  late int _currentSpeed = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +44,8 @@ class Speedometer extends StatelessWidget {
           },
         ),
       ),
-      min: 1,
-      max: 15,
+      min: 5,
+      max: 20,
       initialValue: _currentSpeed.toDouble(),
       onChange: (double value) {
         _currentSpeed = value.toInt();
