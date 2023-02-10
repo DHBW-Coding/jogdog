@@ -17,7 +17,7 @@ class _StartSessionButtonState extends State<StartSessionButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 315,
+      width: double.infinity,
       child: _isStarted
           ? ElevatedButton(
               onPressed: () {
@@ -51,7 +51,5 @@ class _StartSessionButtonState extends State<StartSessionButton> {
     */
   }
 
-  void stopPressed() {
-
-  }
+  void stopPressed() {}
 }

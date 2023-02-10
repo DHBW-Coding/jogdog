@@ -32,7 +32,7 @@ class _SpotifyButtonState extends State<SpotifyButton>
                 child: const SpotifyCard(),
               )
             : SizedBox(
-                width: 315,
+                width: double.infinity,
                 child: ElevatedButton(
                   child: const Text("Connect to Spotify"),
                   onPressed: () {
@@ -60,43 +60,44 @@ class _SpotifyCard extends State<SpotifyCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-        child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        width: 315,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-              child: Icon(Icons.music_note),
-            ),
-            Flexible(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.skip_previous),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-                    onPressed: () {
-                      setState(() {
-                        _isPlaying = !_isPlaying;
-                      });
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.skip_next),
-                    onPressed: () {},
-                  ),
-                ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child: Icon(Icons.music_note),
               ),
-            ),
-          ],
+              Flexible(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.skip_previous),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+                      onPressed: () {
+                        setState(() {
+                          _isPlaying = !_isPlaying;
+                        });
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.skip_next),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

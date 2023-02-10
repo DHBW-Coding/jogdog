@@ -20,15 +20,15 @@ class _SessionDisplay extends State<SessionDisplay> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Card(
-          child: Container(
-              width: 315,
-              height: 30,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Center(child: Text(widget.currentTime.toString()))),
-        )
+        Expanded(
+          child: Card(
+            child: SizedBox(
+                width: double.infinity,
+                child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text("Time run: ${widget.currentTime}"))),
+          ),
+        ),
       ],
     );
   }

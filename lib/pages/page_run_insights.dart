@@ -9,20 +9,22 @@ class RunInsights extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-              '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
+      appBar: AppBar(
+        title: Text(
+            '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
+      ),
+      body: Container(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+                'Run from ${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
+            Text('Your average run speed was: ${run.avgSpeed}.'),
+            Text('The run lasted for: ${run.duration.toString()}'),
+          ],
         ),
-        body: Container(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                    'Run from ${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
-                Text('Your average run speed was: ${run.avgSpeed}.'),
-                Text('The run lasted for: ${run.duration.toString()}'),
-              ],
-            )));
+      ),
+    );
   }
 }
