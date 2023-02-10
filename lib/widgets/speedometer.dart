@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Widget that displays the speed the user is jogging 
+/// as well as selecting the users targeted speed
 class Speedometer extends StatelessWidget {
   Speedometer({super.key, required double speedValue}) {
     _currentSpeed = speedValue;

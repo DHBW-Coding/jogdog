@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
+
+/// Widget that displays the current Time since the Session started
 class SessionDisplay extends StatefulWidget {
   SessionDisplay({super.key});
 

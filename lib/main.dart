@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jog_dog/pages/page_home.dart';
+import 'package:jog_dog/providers/music_interface.dart';
+import 'package:jog_dog/utilities/local_music_controller.dart';
+import 'package:jog_dog/utilities/run_music_logic.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
@@ -13,6 +16,13 @@ import 'package:jog_dog/utilities/debugLogger.dart';
 var logger;
 
 void main() {
+
+
+  MusicInterface musicController = localMusicController();
+  RunMusicLogic run = RunMusicLogic(musicController: musicController, tolerance: 0.5);
+
+
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
   requestPermissions();
 
@@ -36,6 +46,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late int currentPageIndex = 0;
+  late MusicInterface musicController;
+
+  @override
+  void initState(){
+    super.initState();
+    musicController = localMusicController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +78,12 @@ class _MyAppState extends State<MyApp> {
             },
           ),
           body: <Widget>[
-            const Home(
+            Home(
               title: 'Home',
+              musicController: musicController,
             ),
             const History(),
-            const LogWidgetContainer()
+            const Settings()
           ][currentPageIndex],
         ));
   }
@@ -85,6 +103,7 @@ Future<bool> requestPermissions() async {
   Map<Permission, PermissionStatus> allPermissionsStatus = await [
     Permission.location,
     Permission.activityRecognition,
+    // Permission.audio  
   ].request();
 
   allPermissionsStatus.forEach((key, currentStatus) {

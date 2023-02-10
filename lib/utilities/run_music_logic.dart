@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:jog_dog/providers/music_interface.dart';
 //import 'package:sensors_plus/sensors_plus.dart';
 
-import 'package:jog_dog/providers/music_interface.dart';
+
 import 'package:jog_dog/utilities/debugLogger.dart' as logger;
 import 'package:jog_dog/utilities/sessionManager.dart';
 
-/// Main Logic Function to get the music speed change faktor 
+/// Main Logic Function to get the music speed change factor 
 /// which should be forwarded to the musicInterface
 /// [_targetSpeed] should be the value the user inputs over the UI
 /// and [_tolerance] can be set manually on the settings page or is
@@ -16,26 +17,36 @@ import 'package:jog_dog/utilities/sessionManager.dart';
 class RunMusicLogic {
 
   final _sensors = SensorData();
-  final double _tolerance; 
-  final double _targetSpeed;
+  final MusicInterface musicController;
+  double tolerance; 
+  double _targetSpeed = 0;
   final int musicSpeedSetRate = 0; // TODO: implement
   double _prevSpeed = 0;
 
-  RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.5]){
-    _changeMusicSpeed();
+  RunMusicLogic({required this.musicController, required this.tolerance,});
+
+  void run(){
     Session session = Session(_sensors);
     session.startTracking();
   }
 
+  void setTargetSpeed(double newTargetSpeed){
+    _targetSpeed = newTargetSpeed;
+  }
+
+  void setTolerance(double newTolerance){
+    tolerance = newTolerance;
+  }
+
   void _changeMusicSpeed() {
-    _sensors.normelizedSpeedStream.listen((currentSpeed) { 
+    _sensors.normalizedSpeedStream.listen((currentSpeed) { 
       logger.dataLogger.d(currentSpeed);
       double speedDiff = _prevSpeed - currentSpeed;
       double musicChangeFactor = currentSpeed / _targetSpeed;
       _prevSpeed = currentSpeed;
 
-      if (speedDiff.abs() > _tolerance && musicChangeFactor >= 0.1) {
-        MusicInterface.setSpeed(musicChangeFactor);
+      if (speedDiff.abs() > tolerance && musicChangeFactor >= 0.1) {
+        musicController.setPlaybackSpeed(musicChangeFactor);
         logger.dataLogger.i(musicChangeFactor);
       }
     });
@@ -46,7 +57,7 @@ class RunMusicLogic {
 class SensorData {
 
   final StreamController<double> _streamCtrl = StreamController.broadcast();
-  final List<double> _speeds = []; // List is a pointer pointing to diffrent doubles thats why final
+  final List<double> _speeds = []; // List is a pointer pointing to different doubles thats why final
   final LocationSettings _settings = AndroidSettings( // TODO: Settings only valid for Android
       accuracy: LocationAccuracy.best,
       timeLimit: const Duration(seconds: 10),
@@ -78,7 +89,7 @@ class SensorData {
   }
 
   /// Publish every 2 secondsy the current Speed (Normelization currently only median of data during this 2 seconds)
-  Stream<double> get normelizedSpeedStream{
+  Stream<double> get normalizedSpeedStream{
     return _streamCtrl.stream;
   }
 }

@@ -20,7 +20,7 @@ class Session {
     _isRunning = true;
     _runStarted = DateTime.now().millisecondsSinceEpoch;
     if(kDebugMode) logger.dataLogger.v("Session started at $_runStarted");
-    _subscription = _sensors.normelizedSpeedStream.listen((double speed) {
+    _subscription = _sensors.normalizedSpeedStream.listen((double speed) {
       if (_isRunning) {
         _speeds[DateTime.now().millisecondsSinceEpoch] = speed;
         if(kDebugMode) logger.dataLogger.v("Raw GPS Speed: $speed, Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
