@@ -1,21 +1,29 @@
-import 'package:flutter/animation.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:jog_dog/providers/music_interface.dart';
+import 'package:jog_dog/utilities/local_music_controller.dart';
 
+
+
+
+/// Button to connect to the music
 class SpotifyButton extends StatefulWidget {
-  const SpotifyButton({super.key});
+  SpotifyButton({super.key, required this.musicController});
 
+  MusicInterface musicController;
   @override
-  _SpotifyButtonState createState() => _SpotifyButtonState();
+  _SpotifyButtonState createState() => _SpotifyButtonState(musicController: musicController);
 }
 
 class _SpotifyButtonState extends State<SpotifyButton>
     with SingleTickerProviderStateMixin {
+
+  _SpotifyButtonState({required this.musicController});
+
   bool _connected = false;
   late AnimationController _animationController;
   late Animation<double> _animation;
+  MusicInterface musicController;
 
   @override
   void initState() {
@@ -33,14 +41,15 @@ class _SpotifyButtonState extends State<SpotifyButton>
         return _connected
             ? FadeTransition(
                 opacity: _animation,
-                child: const SpotifyCard(),
+                child: SpotifyCard(musicController: musicController,),
               )
             : SizedBox(
                 width: 315,
                 child: ElevatedButton(
-                  child: const Text("Connect to Spotify"),
+                  child: const Text("Load Music"),
                   onPressed: () {
                     _animationController.forward();
+                    musicController.loadMusic();
                     setState(() {
                       _connected = true;
                     });
@@ -52,7 +61,10 @@ class _SpotifyButtonState extends State<SpotifyButton>
 }
 
 class SpotifyCard extends StatelessWidget {
-  const SpotifyCard({super.key});
+   SpotifyCard({super.key, required this.musicController});
+
+   MusicInterface musicController;
+
 
   @override
   Widget build(BuildContext context) {
@@ -67,15 +79,21 @@ class SpotifyCard extends StatelessWidget {
             const Icon(Icons.account_balance),
             IconButton(
               icon: const Icon(Icons.skip_previous),
-              onPressed: () {},
+              onPressed: () {
+                musicController.setPlaybackSpeed(0.5);
+              },
             ),
             IconButton(
               icon: const Icon(Icons.play_arrow),
-              onPressed: () {},
+              onPressed: () {
+                  musicController.togglePlayState();
+              }
             ),
             IconButton(
               icon: const Icon(Icons.skip_next),
-              onPressed: () {},
+              onPressed: () {
+                musicController.setPlaybackSpeed(1.5);
+              },
             ),
           ],
         ),
