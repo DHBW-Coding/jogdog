@@ -17,6 +17,13 @@ class _HistoryState extends State<History> {
     Run(const Duration(minutes: 47), 14, 4, DateTime.now(), DateTime.now()),
     Run(const Duration(minutes: 75), 28, 7, DateTime.now(), DateTime.now()),
     Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
+    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
+    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
+    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
+    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
+    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
+    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
+    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
   ];
 
   @override
@@ -25,14 +32,17 @@ class _HistoryState extends State<History> {
       appBar: AppBar(
         title: const Text("History"),
       ),
-      body: ListView.builder(
-          itemCount: runs.length,
-          padding: const EdgeInsets.all(20),
-          itemBuilder: ((context, index) {
-            final run = runs[index];
-            return SizedBox(
-              width: double.infinity,
-              child: Card(
+      body: ListView.separated(
+        separatorBuilder: (BuildContext context, int index) =>
+            const SizedBox(height: 5),
+        itemCount: runs.length,
+        padding: const EdgeInsets.all(20),
+        itemBuilder: ((context, index) {
+          final run = runs[index];
+          return SizedBox(
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(5),
                 child: ListTile(
                   title: Text(
                       '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
@@ -43,8 +53,10 @@ class _HistoryState extends State<History> {
                   },
                 ),
               ),
-            );
-          })),
+            ),
+          );
+        }),
+      ),
     );
   }
 }
