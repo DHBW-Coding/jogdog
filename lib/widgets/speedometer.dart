@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 import '../main.dart';
-import '../theme/theme.dart';
 
 class Speedometer extends StatelessWidget {
   Speedometer({
@@ -11,7 +10,6 @@ class Speedometer extends StatelessWidget {
     required this.isStarted,
   });
   final bool isStarted;
-  final ThemeMode theme = ThemeMode.system;
 
   late int _currentSpeed = 10;
 
@@ -23,15 +21,9 @@ class Speedometer extends StatelessWidget {
         appearance: CircularSliderAppearance(
           size: 300,
           customColors: CustomSliderColors(
-            progressBarColor: theme == ThemeMode.dark
-                ? AppTheme.darkTheme.primaryColor
-                : AppTheme.lightTheme.primaryColor,
-            trackColor: theme == ThemeMode.dark
-                ? AppTheme.darkTheme.highlightColor
-                : AppTheme.lightTheme.highlightColor,
-            dotColor: theme == ThemeMode.dark
-                ? AppTheme.darkTheme.primaryColor
-                : AppTheme.lightTheme.primaryColor,
+            progressBarColor: Theme.of(context).colorScheme.primary,
+            trackColor: Theme.of(context).colorScheme.onInverseSurface,
+            dotColor: Theme.of(context).colorScheme.primary,
           ),
           customWidths: CustomSliderWidths(
             progressBarWidth: 20,
@@ -41,9 +33,7 @@ class Speedometer extends StatelessWidget {
           ),
           infoProperties: InfoProperties(
             mainLabelStyle: TextStyle(
-              color: theme == ThemeMode.dark
-                  ? AppTheme.darkTheme.primaryColor
-                  : AppTheme.lightTheme.primaryColor,
+              color: Theme.of(context).colorScheme.primary,
               fontSize: 50,
             ),
             modifier: (double value) {
