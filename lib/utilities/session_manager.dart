@@ -62,7 +62,7 @@ class Session {
 
 class SessionManager {
 
-  late List<Session> _sessions = [];
+  final List<Session> _sessions = [];
   final SensorData _sensorData;
   late Session _currentSession;
   late StreamSubscription _subscription;
@@ -91,7 +91,7 @@ class SessionManager {
   }
 
   loadSessionsFromJson() {
-    _sessions = FileManager().getSessions() as List<Session>;
+    //_sessions = FileManager().getSessions() as List<Session>;
   }
 
   void continueSessionTracking() {
@@ -119,7 +119,7 @@ class SessionManager {
   }
 
   void saveSession() {
-    FileManager().saveSession(_currentSession);
+    //FileManager().saveSession(_currentSession);
   }
 
   void saveSessionPeriodically() {

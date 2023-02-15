@@ -19,24 +19,13 @@ class FileManager {
     return directory.path;
   }
 
-  Future<File> saveSession(Session session) async {
+  Future<File> savetoJson(String fileName, Map<String, dynamic> object) async {
     final path = await _localPath;
-    final file = File('$path/Sessions.json');
+    final file = File('$path/$fileName.json');
     String contents = await file.readAsString();
-    Map<String, dynamic> sessions = jsonDecode(contents);
-    sessions.addAll(session.toJson());
-    return file.writeAsString(jsonEncode(sessions));
+    Map<String, dynamic> container = jsonDecode(contents);
+    container.addAll(object);
+    return file.writeAsString(jsonEncode(container));
   }
 
-  Future<List<Session>> getSessions() async {
-    final path = await _localPath;
-    final file = File('$path/Sessions.json');
-    String contents = await file.readAsString();
-    Map<String, dynamic> sessions = jsonDecode(contents);
-    List<Session> sessionList = [];
-    sessions.forEach((key, value) {
-      sessionList.add(Session.fromJson(value));
-    });
-    return sessionList;
-  }
 }

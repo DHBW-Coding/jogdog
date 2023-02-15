@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jog_dog/pages/page_home.dart';
+import 'package:jog_dog/utilities/run_music_logic.dart';
+import 'package:jog_dog/utilities/session_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:jog_dog/pages/page_history.dart';
 import 'package:jog_dog/pages/page_settings.dart';
@@ -9,11 +11,14 @@ import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debugLogger.dart';
 
 var logger;
+late SessionManager sessionManager;
+late SensorData sensorData;
 
 void main() {
   runApp(MyApp());
   requestPermissions();
-
+  sensorData = SensorData();
+  sessionManager = SessionManager(sensorData);
   // If in Debug Mode this Code will be executed
   // Else this code will be removed automatically
   if (kDebugMode) {
