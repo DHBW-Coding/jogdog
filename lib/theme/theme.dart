@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static ThemeData lightTheme = ThemeData(
+  static final ThemeData lightTheme = ThemeData(
+    colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.blue, secondaryContainer: Colors.orange, brightness: Brightness.light),
     useMaterial3: true,
-    brightness: Brightness.light,
-    primarySwatch: Colors.lightBlue,
   );
 
-  static ThemeData darkTheme = ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.dark,
-      primarySwatch: Colors.lightBlue,
-      hoverColor: Colors.cyan);
+  static final ThemeData darkTheme = ThemeData(
+    colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.blue, secondaryContainer: Colors.orange, brightness: Brightness.dark),
+    useMaterial3: true,
+  );
 }
