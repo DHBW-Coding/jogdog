@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
-import 'package:jog_dog/utilities/debug_logger.dart' as logger;
+import 'package:jog_dog/utilities/debugLogger.dart' as logger;
 
 class Session {
 

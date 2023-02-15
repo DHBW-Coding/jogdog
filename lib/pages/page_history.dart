@@ -31,15 +31,16 @@ class _HistoryState extends State<History> {
           itemBuilder: ((context, index) {
             final run = runs[index];
             return Card(
-                child: ListTile(
-              title: Text(
-                  '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
-              trailing: const Icon(Icons.run_circle),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: ((context) => RunInsights(run: run))));
-              },
-            ));
+              child: ListTile(
+                title: Text(
+                '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
+                trailing: const Icon(Icons.run_circle),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => RunInsights(run: run))));
+                },
+              )
+            );
           })),
     );
   }
