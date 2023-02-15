@@ -11,7 +11,7 @@ import 'package:jog_dog/utilities/debugLogger.dart';
 var logger;
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
   requestPermissions();
 
   // If in Debug Mode this Code will be executed
