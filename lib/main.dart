@@ -15,10 +15,8 @@ late SessionManager sessionManager;
 late SensorData sensorData;
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
   requestPermissions();
-  sensorData = SensorData();
-  sessionManager = SessionManager(sensorData);
   // If in Debug Mode this Code will be executed
   // Else this code will be removed automatically
   if (kDebugMode) {

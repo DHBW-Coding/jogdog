@@ -24,8 +24,7 @@ class RunMusicLogic {
   
   RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.1]){
     _changeMusicSpeed();
-    SessionManager sessionManager = SessionManager(_sensors);
-    sessionManager.createNewSession();
+    SessionManager().createNewSession();
   }
 
   void _changeMusicSpeed() {
@@ -48,6 +47,8 @@ class RunMusicLogic {
 /// Uses GPS Data to perform these kind of callculations
 class SensorData {
 
+  static final SensorData _instance = SensorData._internal();
+
   final StreamController<double> _streamCtrl = StreamController.broadcast();
   final List<double> _speeds = []; // List is a pointer pointing to diffrent doubles thats why final
   final LocationSettings _settings = AndroidSettings( // TODO: Settings only valid for Android
@@ -60,7 +61,11 @@ class SensorData {
     );
   bool isRunning = false;
 
-  SensorData() {
+  factory SensorData() {
+    return _instance;
+  }
+
+  SensorData._internal() {
 
     // TEST: Does the Periodic Timer "2-Secs-Wait" block the stream listening?
     Geolocator.getPositionStream(locationSettings: _settings).listen(

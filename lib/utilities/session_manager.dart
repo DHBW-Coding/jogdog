@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:jog_dog/utilities/FileManager.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/debugLogger.dart' as logger;
 import 'package:uuid/uuid.dart';
@@ -33,42 +32,23 @@ class Session {
       .._runEnded = json['runEnded'];
   }
 
-  double getRunTime() {
-    return (_runEnded - _runStarted)/1000;
-  }
-
-  double getTopSpeed() {
-    double currentMaximum = 0;
-    if (_speeds.isNotEmpty) {
-      _speeds.forEach((key, value) {
-        if (value > currentMaximum) {
-          currentMaximum = value;
-        }
-      });
-    }
-    return currentMaximum;
-  }
-
-  double getAverageSpeed() {
-    double sum = 0;
-    if (_speeds.isNotEmpty) {
-      _speeds.forEach((key, value) { sum += value; });
-      return sum / _speeds.length;
-    }
-    return 0;
-  }
-
 }
 
 class SessionManager {
 
+  static final SessionManager _instance = SessionManager._internal();
+
   final List<Session> _sessions = [];
-  final SensorData _sensorData;
+  final SensorData _sensorData = SensorData();
   late Session _currentSession;
   late StreamSubscription _subscription;
   bool _isRunning = false;
 
-  SessionManager(this._sensorData);
+  factory SessionManager() {
+    return _instance;
+  }
+
+  SessionManager._internal();
 
   void addSession(Session session) {
     _sessions.add(session);
@@ -128,6 +108,31 @@ class SessionManager {
       if(!_isRunning) { timer.cancel(); }
       saveSession();
     });
+  }
+
+  double getRunTime() {
+    return (_currentSession._runEnded - _currentSession._runStarted)/1000;
+  }
+
+  double getTopSpeed() {
+    double currentMaximum = 0;
+    if (_currentSession._speeds.isNotEmpty) {
+      _currentSession._speeds.forEach((key, value) {
+        if (value > currentMaximum) {
+          currentMaximum = value;
+        }
+      });
+    }
+    return currentMaximum;
+  }
+
+  double getAverageSpeed() {
+    double sum = 0;
+    if (_currentSession._speeds.isNotEmpty) {
+      _currentSession._speeds.forEach((key, value) { sum += value; });
+      return sum / _currentSession._speeds.length;
+    }
+    return 0;
   }
 
 }
