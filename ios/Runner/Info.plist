@@ -36,15 +36,16 @@
 	<string>Older devices need location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Need location when in use</string>
-	<key>UIBackgroundModes</key>
-    <array>
-    	<string>fetch</string>
-    	<string>location</string>
-    </array>
 	<key>NSMotionUsageDescription</key>
 	<string>motion</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>location</string>
+		<string>processing</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
