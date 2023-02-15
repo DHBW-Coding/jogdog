@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 //import 'package:sensors_plus/sensors_plus.dart';
 
 import 'package:jog_dog/providers/music_interface.dart';
-import 'package:jog_dog/utilities/debug_logger.dart' as logger;
+import 'package:jog_dog/utilities/debugLogger.dart' as logger;
 import 'package:jog_dog/utilities/sessionManager.dart';
 
 /// Main Logic Function to get the music speed change faktor 
@@ -94,7 +94,7 @@ class SensorData {
         }
       }
       else{
-        if(kDebugMode) logger.dataLogger.e("GPS Module active but no data reciving");
+        if(kDebugMode) logger.dataLogger.e("GPS Module active but no accurat data reciving");
       }
     });
   }
