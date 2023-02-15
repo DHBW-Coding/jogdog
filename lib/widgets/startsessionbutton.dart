@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/testStepSpeed.dart';
-import 'package:jog_dog/utilities/debugLogger.dart';
+import 'package:jog_dog/utilities/debug_logger.dart';
 
 class StartSessionButton extends StatelessWidget {
   StartSessionButton({super.key, required this.currentSliderValue}) {}
@@ -23,7 +23,7 @@ class StartSessionButton extends StatelessWidget {
 
   void startPressed() {
     double targetSpeed = currentSliderValue;
-    const double tolerance = 0.05;
+    const double tolerance = 0.1;
     RunMusicLogic runLogic = RunMusicLogic(targetSpeed, tolerance);
     /*
     StepSensorData stepSensor = StepSensorData();

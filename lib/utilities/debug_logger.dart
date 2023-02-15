@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:logger_flutter_plus/logger_flutter_plus.dart';
-import 'package:logger/logger.dart';
 
 Logger allLogger = Logger(output: _appOutput);
 Logger dataLogger = Logger(

@@ -8,7 +8,7 @@ import 'package:jog_dog/pages/page_history.dart';
 import 'package:jog_dog/pages/page_home.dart';
 import 'package:jog_dog/pages/page_settings.dart';
 import 'package:jog_dog/theme/theme.dart';
-import 'package:jog_dog/utilities/debugLogger.dart';
+import 'package:jog_dog/utilities/debug_logger.dart';
 
 var logger;
 

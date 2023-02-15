@@ -3,7 +3,7 @@ import 'dart:async';
 
 import 'package:pedometer/pedometer.dart';
 
-import 'package:jog_dog/utilities/debugLogger.dart';
+import 'package:jog_dog/utilities/debug_logger.dart';
 
 class StepSensorData {
 
