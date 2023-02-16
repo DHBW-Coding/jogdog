@@ -18,14 +18,14 @@ class Session {
   Map<String, dynamic> toJson() {
     return {
       _id : {
-        'runStarted': _runStarted,
-        'runEnded': _runEnded,
-        'speeds': _speeds,
+        'runStarted': _runStarted.toString(),
+        'runEnded': _runEnded.toString(),
+        'speeds': _speeds.toString(),
       }
     };
   }
 
-  factory Session.fromJson(Map<String, dynamic> json) {
+  factory Session.fromJson(Map<String, dynamic> json, String uuid) {
     return Session()
       .._id = json['id']
       .._speeds = json['speeds']
@@ -57,10 +57,11 @@ class SessionManager {
 
   void createNewSession() {
     _currentSession = Session();
-    _currentSession._runStarted = DateTime.now().millisecondsSinceEpoch;
+    var time = DateTime.now().millisecondsSinceEpoch;
+    _currentSession._runStarted = time;
+    _currentSession._runEnded = time;
     if(kDebugMode) logger.dataLogger.v("Session started at ${DateTime.now().microsecondsSinceEpoch}");
     continueSessionTracking();
-    saveSessionPeriodically();
   }
 
   void loadSession(String uuid) {
@@ -78,6 +79,7 @@ class SessionManager {
   void continueSessionTracking() {
     if (_isRunning) { return; }
     _isRunning = true;
+    saveSessionPeriodically();
     _subscription = _sensorData.normelizedSpeedStream.listen((double speed) {
       var time = DateTime.now().millisecondsSinceEpoch;
       _currentSession._speeds[time] = speed;
@@ -106,7 +108,7 @@ class SessionManager {
 
   void saveSessionPeriodically() {
     if (!_isRunning) { return; }
-    Timer.periodic(const Duration(seconds: 30), (timer) {
+    Timer.periodic(const Duration(seconds: 2), (timer) {
       if(!_isRunning) { timer.cancel(); }
       saveSession();
       });
