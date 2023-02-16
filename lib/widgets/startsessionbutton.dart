@@ -1,27 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:jog_dog/utilities/run_music_logic.dart';
 
-import 'package:jog_dog/utilities/testStepSpeed.dart';
-import 'package:jog_dog/utilities/debugLogger.dart';
-
-class StartSessionButton extends StatelessWidget {
+class StartSessionButton extends StatefulWidget {
   const StartSessionButton({super.key, required this.currentSliderValue});
+
   final double currentSliderValue;
+
+  @override
+  StartSessionButtonState createState() => StartSessionButtonState();
+}
+
+class StartSessionButtonState extends State<StartSessionButton> {
+  bool _isStarted = false;
+  late RunMusicLogic _runLogic;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 315,
-      child: ElevatedButton(
-        onPressed: startPressed,
-        child: const Text(
-          "Start Run",
-        ),
-      ),
+      width: double.infinity,
+      child: _isStarted
+          ? ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _isStarted = false;
+                  stopPressed();
+                });
+              },
+              child: const Text("Stop Run"))
+          : ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _isStarted = true;
+                  startPressed();
+                });
+              },
+              child: const Text("Start Run")),
     );
   }
 
   void startPressed() {
-    double targetSpeed = currentSliderValue;
+    double targetSpeed = widget.currentSliderValue;
     const double tolerance = 0.05;
     
 
@@ -34,4 +52,6 @@ class StartSessionButton extends StatelessWidget {
     });
     */
   }
+
+  void stopPressed() {}
 }

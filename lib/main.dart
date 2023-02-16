@@ -1,14 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jog_dog/pages/page_home.dart';
 import 'package:jog_dog/providers/music_interface.dart';
 import 'package:jog_dog/utilities/local_music_controller.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
 
 import 'package:permission_handler/permission_handler.dart';
-
 import 'package:jog_dog/pages/page_history.dart';
-import 'package:jog_dog/pages/page_home.dart';
 import 'package:jog_dog/pages/page_settings.dart';
 import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debugLogger.dart';
@@ -38,7 +37,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -56,6 +55,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
@@ -112,21 +115,23 @@ Future<bool> requestPermissions() async {
         logger.i("Permission: $key already granted");
       }
       reqSuc = true;
-
     } else if (currentStatus.isDenied) {
       //currentStatus = await key.request();
       if (kDebugMode) {
         logger.i("Permission: $key was not acceppted!");
       }
       reqSuc = true;
-      
     } else if (currentStatus.isPermanentlyDenied) {
-      if (kDebugMode) {logger.i("Permission: $key is permanently denied");}
+      if (kDebugMode) {
+        logger.i("Permission: $key is permanently denied");
+      }
       openAppSettings();
-      if (currentStatus.isGranted){
+      if (currentStatus.isGranted) {
         reqSuc = true;
-      }else{
-        if (kDebugMode) {logger.i("Permission: $key still denied");}
+      } else {
+        if (kDebugMode) {
+          logger.i("Permission: $key still denied");
+        }
       }
     }
   });
