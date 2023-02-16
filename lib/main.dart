@@ -86,7 +86,7 @@ Future<bool> requestPermissions() async {
   // requested when the method is called/map is instanziated
   Map<Permission, PermissionStatus> allPermissionsStatus = await [
     Permission.location,
-    Permission.activityRecognition,
+    //Permission.activityRecognition,
   ].request();
 
   allPermissionsStatus.forEach((key, currentStatus) {
