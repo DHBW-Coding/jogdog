@@ -16,12 +16,10 @@ var logger;
 
 void main() {
 
-
+  WidgetsFlutterBinding.ensureInitialized();
   MusicInterface musicController = localMusicController();
   RunMusicLogic run = RunMusicLogic(musicController: musicController, tolerance: 0.5);
 
-
-  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
   requestPermissions();
 

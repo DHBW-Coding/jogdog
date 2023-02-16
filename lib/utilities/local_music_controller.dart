@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:jog_dog/utilities/debugLogger.dart' as logger;
 
 import 'package:jog_dog/providers/music_interface.dart';
