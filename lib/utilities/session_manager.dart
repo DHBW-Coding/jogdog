@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:jog_dog/utilities/FileManager.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/debugLogger.dart' as logger;
 import 'package:uuid/uuid.dart';
@@ -81,7 +82,7 @@ class SessionManager {
       var time = DateTime.now().millisecondsSinceEpoch;
       _currentSession._speeds[time] = speed;
       _currentSession._runEnded = time;
-      if(kDebugMode) logger.dataLogger.v("Raw GPS Speed: $speed, Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
+      if(kDebugMode) logger.dataLogger.v("Runtime: ${getRunTimeAsString()}, Top Speed: ${getTopSpeed()}, Average Speed: ${getAverageSpeed()}, Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
     });
   }
 
@@ -99,7 +100,8 @@ class SessionManager {
   }
 
   void saveSession() {
-    //FileManager().saveSession(_currentSession);
+    FileManager fileManager = FileManager();
+    fileManager.savetoJson("Sessions", _currentSession.toJson());
   }
 
   void saveSessionPeriodically() {
@@ -107,7 +109,7 @@ class SessionManager {
     Timer.periodic(const Duration(seconds: 30), (timer) {
       if(!_isRunning) { timer.cancel(); }
       saveSession();
-    });
+      });
   }
 
   double getRunTime() {
@@ -133,6 +135,14 @@ class SessionManager {
       return sum / _currentSession._speeds.length;
     }
     return 0;
+  }
+
+  String getRunTimeAsString() {
+    double runTime = (_currentSession._runEnded - _currentSession._runStarted)/1000;
+    double hours = runTime / 3600;
+    double minutes = (runTime - hours * 3600) / 60;
+    double seconds = runTime - hours * 3600 - minutes * 60;
+    return "${hours.toString()}:${minutes.toString()}:${seconds.toString()}";
   }
 
 }

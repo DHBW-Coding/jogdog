@@ -11,8 +11,6 @@ import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debugLogger.dart';
 
 var logger;
-late SessionManager sessionManager;
-late SensorData sensorData;
 
 void main() {
   runApp(const MyApp());
