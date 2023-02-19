@@ -2,8 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jog_dog/pages/page_home.dart';
-import 'package:jog_dog/utilities/run_music_logic.dart';
-import 'package:jog_dog/utilities/session_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:jog_dog/pages/page_history.dart';
 import 'package:jog_dog/pages/page_settings.dart';
