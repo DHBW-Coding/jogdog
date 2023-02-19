@@ -8,12 +8,12 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-    <application
-        android:label="jog_dog"
+   <application
+        android:label="Jog Dog"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name="com.ryanheise.audioservice.AudioServiceActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
@@ -39,17 +39,4 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-    <!--<service android:name="com.ryanheise.audioserviece.AudioService"
-        android:foregroundServiceType="mediaPlayback"
-        android:exported="true">
-        <intent-filter>
-            <action android.name="android.media.browse.MediaBrowserService" />
-        </intent-filter>
-    </service>
-    <receiver android:name="com.ryanheise.audioserviece.MeidaButtonReceiver"
-        android:exported="true">
-        <intent-filter>
-            <action android.name="android.intent.action.MEDIA_BUTTON" />
-        </intent-filter>
-    </receiver> -->
 </manifest>

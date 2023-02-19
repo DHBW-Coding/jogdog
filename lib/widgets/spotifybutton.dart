@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:jog_dog/providers/music_interface.dart';
 import 'package:jog_dog/utilities/local_music_controller.dart';
@@ -10,15 +9,16 @@ import 'package:jog_dog/utilities/local_music_controller.dart';
 class SpotifyButton extends StatefulWidget {
   SpotifyButton({super.key, required this.musicController});
 
+
+  // Todo: MusicController anders übergeben?
   MusicInterface musicController;
   @override
-  _SpotifyButtonState createState() => _SpotifyButtonState(musicController: musicController);
+  SpotifyButtonState createState() => SpotifyButtonState(musicController: musicController);
 }
 
-class _SpotifyButtonState extends State<SpotifyButton>
+class SpotifyButtonState extends State<SpotifyButton>
     with SingleTickerProviderStateMixin {
-
-  _SpotifyButtonState({required this.musicController});
+  SpotifyButtonState({required this.musicController});
 
   bool _connected = false;
   late AnimationController _animationController;
@@ -44,7 +44,7 @@ class _SpotifyButtonState extends State<SpotifyButton>
                 child: SpotifyCard(musicController: musicController,),
               )
             : SizedBox(
-                width: 315,
+                width: double.infinity,
                 child: ElevatedButton(
                   child: const Text("Load Music"),
                   onPressed: () {
@@ -67,35 +67,56 @@ class SpotifyCard extends StatelessWidget {
 
 
   @override
+  SpotifyCardState createState() => SpotifyCardState();
+}
+
+class SpotifyCardState extends State<SpotifyCard> {
+  bool _isPlaying = false;
+
+  @override
   Widget build(BuildContext context) {
     return Card(
-        child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        width: 315,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            const Icon(Icons.account_balance),
-            IconButton(
-              icon: const Icon(Icons.skip_previous),
-              onPressed: () {
-                musicController.setPlaybackSpeed(0.5);
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.play_arrow),
-              onPressed: () {
-                  musicController.togglePlayState();
-              }
-            ),
-            IconButton(
-              icon: const Icon(Icons.skip_next),
-              onPressed: () {
-                musicController.setPlaybackSpeed(1.5);
-              },
-            ),
-          ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child: Icon(Icons.music_note),
+              ),
+              Flexible(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.skip_previous),
+                      onPressed: () {
+                        musicController.previous();
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+                      onPressed: () {
+                        setState(() {
+                          _isPlaying = !_isPlaying;
+                        });
+                        musicController.togglePlayState();
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.skip_next),
+                      onPressed: () {
+                        musicController.skip();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     ));

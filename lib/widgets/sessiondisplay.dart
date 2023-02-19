@@ -9,13 +9,12 @@ class SessionDisplay extends StatefulWidget {
   int currentTime = 0;
 
   @override
-  _SessionDisplay createState() => _SessionDisplay();
+  SessionDisplayState createState() => SessionDisplayState();
 }
 
-class _SessionDisplay extends State<SessionDisplay> {
-  late int _time = 0;
+class SessionDisplayState extends State<SessionDisplay> {
   late bool _isRunning = false;
-  final Duration _duration = Duration();
+  final Duration _duration = const Duration();
   late Timer _timer;
 
   @override
@@ -23,15 +22,15 @@ class _SessionDisplay extends State<SessionDisplay> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Card(
-          child: Container(
-              width: 315,
-              height: 30,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Center(child: Text(widget.currentTime.toString()))),
-        )
+        Expanded(
+          child: Card(
+            child: SizedBox(
+                width: double.infinity,
+                child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text("Time run: ${widget.currentTime}"))),
+          ),
+        ),
       ],
     );
   }
@@ -45,7 +44,7 @@ class _SessionDisplay extends State<SessionDisplay> {
     } else {
       _timer = Timer.periodic(_duration, (timer) {
         setState(() {
-          _time++;
+          widget.currentTime++;
         });
       });
       setState(() {
