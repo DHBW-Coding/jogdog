@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jog_dog/utilities/local_music_controller.dart';
 
+/// Button to connect to the music
 class SpotifyButton extends StatefulWidget {
   const SpotifyButton({super.key});
 
@@ -34,14 +36,16 @@ class SpotifyButtonState extends State<SpotifyButton>
             : SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  child: const Text("Connect to Spotify"),
+                  child: const Text("Load Music"),
                   onPressed: () {
                     _animationController.forward();
+                    localMusicController().loadMusic();
                     setState(() {
                       _connected = true;
                     });
                   },
-                ));
+                ),
+              );
       },
     );
   }
@@ -77,7 +81,9 @@ class SpotifyCardState extends State<SpotifyCard> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.skip_previous),
-                      onPressed: () {},
+                      onPressed: () {
+                        localMusicController().previous();
+                      },
                     ),
                     IconButton(
                       icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
@@ -85,11 +91,14 @@ class SpotifyCardState extends State<SpotifyCard> {
                         setState(() {
                           _isPlaying = !_isPlaying;
                         });
+                        localMusicController().togglePlayState();
                       },
                     ),
                     IconButton(
                       icon: const Icon(Icons.skip_next),
-                      onPressed: () {},
+                      onPressed: () {
+                        localMusicController().skip();
+                      },
                     ),
                   ],
                 ),
