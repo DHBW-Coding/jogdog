@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:jog_dog/providers/music_interface.dart';
 import 'package:jog_dog/utilities/debugLogger.dart' as logger;
+import 'package:jog_dog/utilities/local_music_controller.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
 
 /// Main Logic Function to get the music speed change factor
@@ -14,7 +14,6 @@ import 'package:jog_dog/utilities/session_manager.dart';
 class RunMusicLogic {
 
   final _sensors = SensorData();
-  final MusicInterface musicController;
   final double _tolerance; 
   final double _targetSpeed;
   final int musicSpeedSetRate = 0; // TODO: implement
@@ -22,7 +21,7 @@ class RunMusicLogic {
   bool isAtTargetSpeed = false;
 
   // Todo: MusikController requierd machen?
-  RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.1, this.musicController]){
+  RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.1]){
     _changeMusicSpeed();
     SessionManager sessionManager = SessionManager(_sensors);
     sessionManager.createNewSession();
@@ -38,7 +37,7 @@ class RunMusicLogic {
 
       if (_prevMusicSpeed == 0 || speedDiff.abs() >= _tolerance) {
         _prevMusicSpeed = musicChangeFactor;
-        MusicInterface.setSpeed(musicChangeFactor);
+        localMusicController().setPlaybackSpeed(musicChangeFactor);
         logger.dataLogger.i("Current musicChFac: $musicChangeFactor");
       }
     });

@@ -1,25 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jog_dog/pages/page_home.dart';
-import 'package:jog_dog/providers/music_interface.dart';
-import 'package:jog_dog/utilities/local_music_controller.dart';
-import 'package:jog_dog/utilities/run_music_logic.dart';
-import 'package:permission_handler/permission_handler.dart';
-
 import 'package:jog_dog/pages/page_history.dart';
 import 'package:jog_dog/pages/page_home.dart';
 import 'package:jog_dog/pages/page_settings.dart';
 import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debugLogger.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 var logger;
 
 void main() {
-  MusicInterface musicController = localMusicController();
-  RunMusicLogic run = RunMusicLogic(musicController: musicController, tolerance: 0.5);
-  WidgetsFlutterBinding.ensureInitialized();
-
   runApp(const MyApp());
   requestPermissions();
 
@@ -72,10 +63,8 @@ class _MyAppState extends State<MyApp> {
             },
           ),
           body: <Widget>[
-            Home(
+            const Home(
               title: 'Home',
-              // Todo: MusicController anders in Home übergeben
-              musicController: musicController,
             ),
             const History(),
             const Settings()

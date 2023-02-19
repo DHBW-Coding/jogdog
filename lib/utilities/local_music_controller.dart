@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:jog_dog/utilities/debugLogger.dart' as logger;
 
 import 'package:jog_dog/providers/music_interface.dart';
@@ -9,8 +7,13 @@ class localMusicController implements MusicInterface {
   bool isPlaying = false;
   Duration songTime = Duration.zero;
   late AudioPlayer player;
+  static final localMusicController _instance = localMusicController._internal();
 
-  localMusicController(){
+  factory localMusicController(){
+    return _instance;
+  }
+
+  localMusicController._internal(){
     player = AudioPlayer();
   }
 

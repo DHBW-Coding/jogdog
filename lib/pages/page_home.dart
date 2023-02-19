@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:jog_dog/providers/music_interface.dart';
-import 'package:jog_dog/widgets/spotifybutton.dart';
 import 'package:jog_dog/widgets/sessiondisplay.dart';
 import 'package:jog_dog/widgets/speedometer.dart';
+import 'package:jog_dog/widgets/spotifybutton.dart';
 import 'package:jog_dog/widgets/startsessionbutton.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key, required this.title, required this.musicController});
+  const Home({super.key, required this.title});
 
   final String title;
-  final MusicInterface musicController;
 
   @override
   State<Home> createState() => _HomeState();
@@ -37,7 +35,7 @@ class _HomeState extends State<Home> {
               const SizedBox(
                 height: 15,
               ),
-              SpotifyButton(musicController: widget.musicController,),
+              const SpotifyButton(),
             ],
           ),
         ),
