@@ -46,9 +46,17 @@ dependencies:
   path_provider: ^2.0.12
   uuid: ^3.0.7
 
+  #for the music implementation
+  rxdart: ^0.27.7
+  audio_video_progress_bar: ^1.0.0
+  just_audio: ^0.9.31
+  just_audio_background: ^0.0.1-beta.9
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -98,3 +106,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  assets:
+    - assets/music/

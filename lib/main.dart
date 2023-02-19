@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jog_dog/pages/page_home.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:jog_dog/pages/page_history.dart';
+import 'package:jog_dog/pages/page_home.dart';
 import 'package:jog_dog/pages/page_settings.dart';
 import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debugLogger.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 var logger;
 
