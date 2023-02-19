@@ -27,6 +27,7 @@ class RunMusicLogic {
     sessionManager.createNewSession();
   }
 
+
   void _changeMusicSpeed() {
     // Todo: Reschschreibfehler rausnehmen
     _sensors.normelizedSpeedStream.listen((currentSpeed) { 
