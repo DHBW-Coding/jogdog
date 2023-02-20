@@ -23,6 +23,7 @@ class ThemeSelectorState extends State<ThemeSelector> {
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {
         showModalBottomSheet<void>(
+          enableDrag: true,
           context: context,
           builder: (BuildContext context) {
             return StatefulBuilder(
@@ -57,7 +58,6 @@ class ThemeSelectorState extends State<ThemeSelector> {
               ),
             );
           },
-          enableDrag: true,
         );
       },
     );
