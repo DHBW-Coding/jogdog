@@ -36,7 +36,7 @@ class _SettingsState extends State<Settings> {
                   ],
                 ),
               ),
-              const Divider(
+              const SizedBox(
                 height: 50,
               ),
               Text("General", style: Theme.of(context).textTheme.headlineSmall),
@@ -53,7 +53,7 @@ class _SettingsState extends State<Settings> {
                   ],
                 ),
               ),
-              const Divider(
+              const SizedBox(
                 height: 50,
               ),
               Text("Support", style: Theme.of(context).textTheme.headlineSmall),
@@ -73,7 +73,7 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
               const SizedBox(
-                height: 30,
+                height: 20,
               ),
               Card(
                 child: Column(
@@ -89,21 +89,26 @@ class _SettingsState extends State<Settings> {
                   ],
                 ),
               ),
-              const Divider(
+              const SizedBox(
                 height: 50,
               ),
+              if(kDebugMode)
+                Text("Development", style: Theme.of(context).textTheme.headlineSmall),
               if (kDebugMode)
-                ListTile(
-                  title: const Text("Show debug console"),
-                  leading: const Icon(Icons.announcement_outlined),
-                  onTap: () {
-                    setState(
-                      () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const LogWidgetContainer()));
-                      },
-                    );
-                  },
+                Card(
+                  child: ListTile(
+                    title: const Text("Show debug console"),
+                    leading: const Icon(Icons.announcement_outlined),
+                    onTap: () {
+                      setState(
+                        () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const LogWidgetContainer()));
+                        },
+                      );
+                    },
+                  ),
                 ),
             ],
           ),
