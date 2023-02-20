@@ -7,6 +7,8 @@ class Settings {
   String get theme => _theme;
   double _tolerance = 0.05;
   double get tolerance => _tolerance;
+  int _targetSpeed = 10;
+  int get targetSpeed => _targetSpeed;
 
   Settings._internal();
 
@@ -26,6 +28,12 @@ class Settings {
   /// Sets the theme for the jog dog
   void setTheme(String theme) {
     _theme = theme;
+    SettingsFileManager().saveSettings(this);
+  }
+
+  /// Sets the target speed for the jog dog
+  void setTargetSpeed(int targetSpeed) {
+    _targetSpeed = targetSpeed;
     SettingsFileManager().saveSettings(this);
   }
 

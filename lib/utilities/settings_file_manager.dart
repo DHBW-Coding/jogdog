@@ -1,4 +1,4 @@
-import 'package:jog_dog/utilities/settings_manager.dart';
+import 'package:jog_dog/utilities/settings.dart';
 
 import '../providers/file_manager.dart';
 
