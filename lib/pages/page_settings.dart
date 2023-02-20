@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jog_dog/widgets/theme_selector.dart';
+import 'package:jog_dog/widgets/tolerance_selector.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../utilities/debugLogger.dart';
@@ -29,9 +30,12 @@ class _SettingsState extends State<Settings> {
             children: <Widget>[
               Text("Display", style: Theme.of(context).textTheme.headlineSmall),
               Card(
-                  child: Column(children: const [
-                ThemeSelector(),
-              ])),
+                child: Column(
+                  children: const [
+                    ThemeSelector(),
+                  ],
+                ),
+              ),
               const Divider(
                 height: 50,
               ),
@@ -39,6 +43,7 @@ class _SettingsState extends State<Settings> {
               Card(
                 child: Column(
                   children: [
+                    const ToleranceSelector(),
                     ListTile(
                       title: const Text("Clear all data"),
                       leading: const Icon(Icons.delete_forever_outlined),
