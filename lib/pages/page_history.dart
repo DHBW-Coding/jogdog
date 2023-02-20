@@ -31,12 +31,15 @@ class _HistoryState extends State<History> {
       appBar: AppBar(
         title: Text(
           "History",
-          style: Theme.of(context).textTheme.headlineMedium,
+          style: Theme
+              .of(context)
+              .textTheme
+              .headlineMedium,
         ),
       ),
       body: ListView.separated(
         separatorBuilder: (BuildContext context, int index) =>
-            const SizedBox(height: 5),
+        const SizedBox(height: 5),
         itemCount: runs.length,
         padding: const EdgeInsets.all(20),
         itemBuilder: ((context, index) {
@@ -47,7 +50,8 @@ class _HistoryState extends State<History> {
                 padding: const EdgeInsets.all(5),
                 child: ListTile(
                   title: Text(
-                      '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
+                      '${run.date.day.toString()}.${run.date.month
+                          .toString()}.${run.date.year.toString()}'),
                   trailing: const Icon(Icons.run_circle),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(

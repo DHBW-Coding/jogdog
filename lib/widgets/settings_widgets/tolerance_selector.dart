@@ -45,12 +45,15 @@ class ToleranceSelectorState extends State<ToleranceSelector> {
                       },
                     ),
                     onSelectedItemChanged: (value) {
-                      setToleranceState(() {
-                        selectedTolerance =  value * 5;
-                        if(kDebugMode) {
-                          allLogger.i("Selected tolerance $selectedTolerance");
-                        }
-                      });
+                      setToleranceState(
+                        () {
+                          selectedTolerance = value * 5;
+                          if (kDebugMode) {
+                            allLogger
+                                .i("Selected tolerance $selectedTolerance");
+                          }
+                        },
+                      );
                     },
                   ),
                 ),
