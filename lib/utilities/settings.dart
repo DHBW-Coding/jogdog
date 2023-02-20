@@ -41,6 +41,7 @@ class Settings {
   Settings.fromJson(Map<String, dynamic> json) {
     _theme = json['theme'];
     _tolerance = json['tolerance'];
+    _targetSpeed = json['targetSpeed'];
   }
 
   /// Creates a json map from a settings object
@@ -48,6 +49,7 @@ class Settings {
     return {
       'theme': _theme,
       'tolerance': _tolerance,
+      'targetSpeed': _targetSpeed,
     };
   }
 
