@@ -13,7 +13,6 @@ var logger;
 void main() {
   runApp(const MyApp());
   requestPermissions();
-
   // If in Debug Mode this Code will be executed
   // Else this code will be removed automatically
   if (kDebugMode) {
