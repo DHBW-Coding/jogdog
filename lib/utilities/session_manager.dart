@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:jog_dog/utilities/FileManager.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/debugLogger.dart' as logger;
+import 'package:jog_dog/utilities/session_file_manager.dart';
 import 'package:uuid/uuid.dart';
 
 class Session {
 
   String _id = const Uuid().v4();
+  String get id => _id;
   Map<int, double> _speeds = {};
   late int _runStarted;
   late int _runEnded;
@@ -17,20 +18,19 @@ class Session {
 
   Map<String, dynamic> toJson() {
     return {
-      _id : {
-        'runStarted': _runStarted.toString(),
-        'runEnded': _runEnded.toString(),
-        'speeds': _speeds.toString(),
-      }
+      'id': _id,
+      'runStarted': _runStarted,
+      'runEnded': _runEnded,
+      'speeds': _speeds.toString(),
     };
   }
 
-  factory Session.fromJson(Map<String, dynamic> json, String uuid) {
+  factory Session.fromJson(Map<String, dynamic> json) {
     return Session()
       .._id = json['id']
-      .._speeds = json['speeds']
       .._runStarted = json['runStarted']
-      .._runEnded = json['runEnded'];
+      .._runEnded = json['runEnded']
+      .._speeds = json['speeds'];
   }
 
 }
@@ -38,9 +38,7 @@ class Session {
 class SessionManager {
 
   static final SessionManager _instance = SessionManager._internal();
-
-  final List<Session> _sessions = [];
-  final SensorData _sensorData = SensorData();
+  late List<Session> _sessions = [];
   late Session _currentSession;
   late StreamSubscription _subscription;
   bool _isRunning = false;
@@ -64,23 +62,15 @@ class SessionManager {
     continueSessionTracking();
   }
 
-  void loadSession(String uuid) {
-    for (Session element in _sessions) {
-      if (element._id == uuid) {
-        _currentSession = element;
-      }
-    }
-  }
-
-  loadSessionsFromJson() {
-    //_sessions = FileManager().getSessions() as List<Session>;
+  void loadSessionsFromJson() {
+    _sessions = SessionFileManager().loadAllSessions() as List<Session>;
   }
 
   void continueSessionTracking() {
     if (_isRunning) { return; }
     _isRunning = true;
-    saveSessionPeriodically();
-    _subscription = _sensorData.normelizedSpeedStream.listen((double speed) {
+    _saveSessionPeriodically();
+    _subscription = SensorData().normelizedSpeedStream.listen((double speed) {
       var time = DateTime.now().millisecondsSinceEpoch;
       _currentSession._speeds[time] = speed;
       _currentSession._runEnded = time;
@@ -98,19 +88,18 @@ class SessionManager {
     if (!_isRunning) { return; }
     _isRunning = false;
     _subscription.cancel();
-    saveSession();
+    _saveSession();
   }
 
-  void saveSession() {
-    FileManager fileManager = FileManager();
-    fileManager.savetoJson("Sessions", _currentSession.toJson());
+  void _saveSession() {
+    SessionFileManager().saveSession(_currentSession);
   }
 
-  void saveSessionPeriodically() {
+  void _saveSessionPeriodically() {
     if (!_isRunning) { return; }
     Timer.periodic(const Duration(seconds: 2), (timer) {
       if(!_isRunning) { timer.cancel(); }
-      saveSession();
+      _saveSession();
       });
   }
 
