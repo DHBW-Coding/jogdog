@@ -21,6 +21,7 @@ class ThemeSelectorState extends State<ThemeSelector> {
     return ListTile(
       title: const Text('Select theme'),
       trailing: const Icon(Icons.arrow_forward_ios),
+      leading: const Icon(Icons.format_paint_outlined),
       onTap: () {
         showModalBottomSheet<void>(
           enableDrag: true,
