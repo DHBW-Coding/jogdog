@@ -47,4 +47,14 @@ class SessionFileManager extends FileManager {
     SessionManager().loadSessionsFromJson();
   }
 
+  /*
+  * Deletes all sessions from the local storage
+  */
+  Future<void> deleteAllSessions() async {
+    List<String> sessionIds = await listFiles("Sessions");
+    for (String id in sessionIds) {
+      await deleteSession(id);
+    }
+  }
+
 }
