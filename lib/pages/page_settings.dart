@@ -84,9 +84,7 @@ class _SettingsState extends State<Settings> {
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 50,
-              ),
+              const SizedBox(height: 50),
 
               ///Start of development Settings ---------------------------------
               if (kDebugMode)
