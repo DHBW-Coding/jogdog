@@ -20,15 +20,14 @@ class RunMusicLogic {
   double _prevMusicSpeed = 0;
   bool isAtTargetSpeed = false;
 
-  // Todo: MusikController requierd machen?
+  /// Todo: MusikController requierd machen?
   RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.1]){
     _changeMusicSpeed();
-    SessionManager sessionManager = SessionManager(_sensors);
-    sessionManager.createNewSession();
+    SessionManager().createNewSession();
   }
 
   void _changeMusicSpeed() {
-    // Todo: Reschschreibfehler rausnehmen
+    /// Todo: Reschschreibfehler rausnehmen
     _sensors.normelizedSpeedStream.listen((currentSpeed) { 
       logger.dataLogger.d("Current NormSpeed: $currentSpeed");
       double musicChangeFactor = currentSpeed / _targetSpeed;
@@ -48,6 +47,8 @@ class RunMusicLogic {
 /// Uses GPS Data to perform these kind of callculations
 class SensorData {
 
+  static final SensorData _instance = SensorData._internal();
+
   final StreamController<double> _streamCtrl = StreamController.broadcast();
   final List<double> _speeds = []; // List is a pointer pointing to different doubles thats why final
   final LocationSettings _settings = AndroidSettings( // TODO: Settings only valid for Android
@@ -60,9 +61,13 @@ class SensorData {
     );
   bool isRunning = false;
 
-  SensorData() {
+  factory SensorData() {
+    return _instance;
+  }
 
-    // Todo: [Test] Does the Periodic Timer "2-Secs-Wait" block the stream listening?
+  SensorData._internal() {
+
+    /// Todo: [Test] Does the Periodic Timer "2-Secs-Wait" block the stream listening?
     Geolocator.getPositionStream(locationSettings: _settings).listen(
       (Position dataPoint) {
         if(kDebugMode) logger.dataLogger.v("SpeedAccuracy:${dataPoint.speedAccuracy}");
@@ -76,7 +81,7 @@ class SensorData {
       }
     );
 
-// TODO: create stop streamlistening method
+    /// TODO: create stop streamlistening method
     int i = 0;
     const int sec = 2;
     const int secToTrack = 8;
