@@ -32,6 +32,7 @@ class ThemeSelectorState extends State<ThemeSelector> {
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: themes.length,
                     itemBuilder: (context, index) {
                       String theme = themes.keys.elementAt(index);
