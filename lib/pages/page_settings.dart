@@ -83,7 +83,7 @@ class _SettingsState extends State<Settings> {
                       leading: const Icon(Icons.attach_money_outlined),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: () {
-                        launchUrlString("https://www.paypal.me/jberger18");
+                        launchUrlString("https://www.paypal.me/jberger18", mode: LaunchMode.externalApplication);
                       },
                     ),
                   ],
