@@ -42,9 +42,9 @@ abstract class FileManager {
   * If the file is located in a Subfolder, the path must be given as well
   * Example: loadFromJson("Sessions/1234")
    */
-  Future<Map<String, dynamic>> loadFromJson(String name) async {
+  Future<Map<String, dynamic>> loadFromJson(String filePath) async {
     final path = await _localPath;
-    final file = File('$path/$name.json');
+    final file = File('$path/$filePath.json');
     String contents = '';
     Map<String, dynamic> container = {};
     try {
@@ -76,9 +76,9 @@ abstract class FileManager {
   * If the file is located in a Subfolder, the path must be given as well
   * Example: savetoJson("Sessions/1234", {"key": "value"})
    */
-  Future<File> savetoJson(String fileName, Map<String, dynamic> object) async {
+  Future<File> savetoJson(String filePath, Map<String, dynamic> object) async {
     final path = await _localPath;
-    final file = File('$path/$fileName.json');
+    final file = File('$path/$filePath.json');
     String contents = '';
     Map<String, dynamic> container = {};
     try {
@@ -146,13 +146,13 @@ abstract class FileManager {
   * If the file does not exist, nothing happens
   * Example: deleteFile("Sessions/1234")
    */
-  Future<void> deleteFile(String fileName) async {
+  Future<void> deleteFile(String filePath) async {
     final path = await _localPath;
-    final file = File('$path/$fileName');
+    final file = File('$path/$filePath');
     try {
       if (await file.exists()) {
         file.delete();
-        if(kDebugMode) logger.dataLogger.i("File exists, deleting file: $fileName");
+        if(kDebugMode) logger.dataLogger.i("File exists, deleting file: $filePath");
       } else {
         if(kDebugMode) logger.dataLogger.i("File does not exist, nothing to delete");
       }

@@ -120,6 +120,13 @@ class SessionManager {
   }
 
   /*
+  * Deletes the session with the given id
+   */
+  void deleteSession(String id) {
+    SessionFileManager().deleteSession(id);
+  }
+
+  /*
   * Saves the current session to the local storage periodically
    */
   void _saveSessionPeriodically() {
@@ -143,7 +150,7 @@ class SessionManager {
       _sessionCount++;
       loadSessionsFromJson();
     } else {
-      SessionFileManager().deleteSession(_currentSession.id);
+      deleteSession(_currentSession.id);
     }
   }
 

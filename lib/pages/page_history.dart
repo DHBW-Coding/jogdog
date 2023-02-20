@@ -12,9 +12,6 @@ class History extends StatefulWidget {
 
 class _HistoryState extends State<History> {
   // TODO: fill with data from last runs :)
-
-
-
   List<Run> runs = [
     Run(const Duration(minutes: 40), 10, 6, DateTime.now(), DateTime.now()),
     Run(const Duration(minutes: 47), 14, 4, DateTime.now(), DateTime.now()),
