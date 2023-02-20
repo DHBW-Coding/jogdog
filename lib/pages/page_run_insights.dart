@@ -11,7 +11,9 @@ class RunInsights extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
+          '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
       ),
       body: Container(
         alignment: Alignment.center,

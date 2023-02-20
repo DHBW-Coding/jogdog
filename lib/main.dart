@@ -63,9 +63,7 @@ class _MyAppState extends State<MyApp> {
             },
           ),
           body: <Widget>[
-            const Home(
-              title: 'Home',
-            ),
+            const Home(),
             const History(),
             const Settings()
           ][currentPageIndex],

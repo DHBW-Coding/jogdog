@@ -5,9 +5,7 @@ import 'package:jog_dog/widgets/spotifybutton.dart';
 import 'package:jog_dog/widgets/startsessionbutton.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key, required this.title});
-
-  final String title;
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
@@ -18,7 +16,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text("Home", style: Theme.of(context).textTheme.headlineMedium,),
       ),
       body: Center(
         child: Padding(
