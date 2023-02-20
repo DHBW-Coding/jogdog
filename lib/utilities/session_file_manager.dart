@@ -12,21 +12,39 @@ class SessionFileManager extends FileManager {
 
   SessionFileManager._internal();
 
+  /*
+  * Saves a session to the local storage
+   */
   Future<void> saveSession(Session session) async {
     await savetoJson("Sessions/${session.id}", session.toJson());
   }
 
-  Future<Session> loadSessions(String id) async {
+  /*
+  * Loads a session from the local storage and returns a session
+   */
+  Future<Session> loadSession(String id) async {
     return Session.fromJson(await loadFromJson("Sessions/$id"));
   }
 
+  /*
+  * Loads all sessions from the local storage and returns a list
+  * The list is empty if no sessions exist
+   */
   Future<List<Session>> loadAllSessions() async {
     List<Session> sessions = [];
     List<String> sessionIds = await listFiles("Sessions");
     for (String id in sessionIds) {
-      sessions.add(await loadSessions(id));
+      sessions.add(await loadSession(id));
     }
     return sessions;
+  }
+
+  /*
+  * Deletes a session from the local storage
+   */
+  Future<void> deleteSession(String id) async {
+    await deleteFile("Sessions/$id.json");
+    SessionManager().loadSessionsFromJson();
   }
 
 }
