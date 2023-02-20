@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:jog_dog/widgets/settings_widgets/theme_selector.dart';
 import 'package:jog_dog/widgets/settings_widgets/tolerance_selector.dart';
 
-import '../widgets/settings_widgets/clear_data_button.dart';
+import '../widgets/settings_widgets/about_us_button.dart';
+import '../widgets/settings_widgets/clear_all_sessions_button.dart';
 import '../widgets/settings_widgets/debugger_button.dart';
 import '../widgets/settings_widgets/get_in_touch_button.dart';
+import '../widgets/settings_widgets/privacy_policy_button.dart';
+import '../widgets/settings_widgets/reset_settings_button.dart';
 import '../widgets/settings_widgets/tip_button.dart';
 
 class Settings extends StatefulWidget {
@@ -51,7 +54,10 @@ class _SettingsState extends State<Settings> {
                     ToleranceSelector(),
 
                     /// A button to delete all session that are stored
-                    ClearDataButton(),
+                    ClearAllSessionsButton(),
+
+                    /// A button to restore all default settings
+                    ResetSettingsButton(),
                   ],
                 ),
               ),
@@ -64,6 +70,8 @@ class _SettingsState extends State<Settings> {
                   children: const [
                     /// Opens a mail with pre written mail and subject
                     GetInTouchButton(),
+                    PrivacyPolicyButton(),
+                    AboutUsButton(),
                   ],
                 ),
               ),

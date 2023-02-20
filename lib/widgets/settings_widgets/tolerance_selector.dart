@@ -16,7 +16,7 @@ class ToleranceSelectorState extends State<ToleranceSelector> {
   Widget build(BuildContext context) {
     return ListTile(
       title: const Text("Select tolerance"),
-      leading: const Icon(Icons.toll_outlined),
+      leading: const Icon(Icons.speed_outlined),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {
         showModalBottomSheet<void>(
