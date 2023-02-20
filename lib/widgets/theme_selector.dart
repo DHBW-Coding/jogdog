@@ -19,7 +19,7 @@ class ThemeSelectorState extends State<ThemeSelector> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text('Select Theme'),
+      title: const Text('Select theme'),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {
         showModalBottomSheet<void>(
