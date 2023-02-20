@@ -126,6 +126,10 @@ class SessionManager {
     SessionFileManager().deleteSession(id);
   }
 
+  void deleteAllSessions() {
+    SessionFileManager().deleteAllSessions();
+  }
+
   /*
   * Saves the current session to the local storage periodically
    */
