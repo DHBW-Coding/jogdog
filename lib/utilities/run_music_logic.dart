@@ -20,14 +20,14 @@ class RunMusicLogic {
   double _prevMusicSpeed = 0;
   bool isAtTargetSpeed = false;
 
-  // Todo: MusikController requierd machen?
+  /// Todo: MusikController requierd machen?
   RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.1]){
     _changeMusicSpeed();
     SessionManager().createNewSession();
   }
 
   void _changeMusicSpeed() {
-    // Todo: Reschschreibfehler rausnehmen
+    /// Todo: Reschschreibfehler rausnehmen
     _sensors.normelizedSpeedStream.listen((currentSpeed) { 
       logger.dataLogger.d("Current NormSpeed: $currentSpeed");
       double musicChangeFactor = currentSpeed / _targetSpeed;
@@ -67,7 +67,7 @@ class SensorData {
 
   SensorData._internal() {
 
-    // Todo: [Test] Does the Periodic Timer "2-Secs-Wait" block the stream listening?
+    /// Todo: [Test] Does the Periodic Timer "2-Secs-Wait" block the stream listening?
     Geolocator.getPositionStream(locationSettings: _settings).listen(
       (Position dataPoint) {
         if(kDebugMode) logger.dataLogger.v("SpeedAccuracy:${dataPoint.speedAccuracy}");
@@ -81,7 +81,7 @@ class SensorData {
       }
     );
 
-// TODO: create stop streamlistening method
+    /// TODO: create stop streamlistening method
     int i = 0;
     const int sec = 2;
     const int secToTrack = 8;

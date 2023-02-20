@@ -17,6 +17,7 @@ class Session {
 
   Session();
 
+  /// Returns the runtime of the session as a string
   Map<String, dynamic> toJson() {
     return {
       'id': _id,
@@ -26,6 +27,7 @@ class Session {
     };
   }
 
+  /// Returns a session from a json map
   factory Session.fromJson(Map<String, dynamic> json) {
     return Session()
       .._id = json['id']
@@ -52,17 +54,13 @@ class SessionManager {
 
   SessionManager._internal();
 
-  /*
-  * Loads all sessions from the local storage
-   */
+  /// Loads all sessions from the local storage
   void loadSessionsFromJson() {
     _sessions = SessionFileManager().loadAllSessions() as List<Session>;
     _sessionCount = _sessions.length;
   }
 
-  /*
-  * Creates a new session and starts tracking
-   */
+  /// Creates a new session and starts tracking
   void createNewSession() {
     _currentSession = Session();
     var time = DateTime.now().millisecondsSinceEpoch;
@@ -72,9 +70,7 @@ class SessionManager {
     continueSessionTracking();
   }
 
-  /*
-  * Starts tracking the current session
-   */
+  /// Starts tracking the current session
   void continueSessionTracking() {
     if (_isRunning) { return; }
     _isRunning = true;
@@ -92,18 +88,14 @@ class SessionManager {
     });
   }
 
-  /*
-  * Pauses tracking the current session
-   */
+  /// Pauses tracking the current session
   void pauseSessionTracking() {
     if (!_isRunning) { return; }
     _isRunning = false;
     _subscription.cancel();
   }
 
-  /*
-  * Stops tracking the current session
-   */
+  /// Stops tracking the current session
   void stopSessionTracking(bool keep) {
     if (!_isRunning) { return; }
     _isRunning = false;
@@ -112,35 +104,31 @@ class SessionManager {
     keepSessionAtEndOfRun(keep);
   }
 
-  /*
-  * Saves the current session to the local storage
-   */
+  /// Saves the current session to the local storage
   void _saveSession() {
     SessionFileManager().saveSession(_currentSession);
   }
 
-  /*
-  * Deletes the session with the given id
-   */
+  /// Deletes the session with the given id
   void deleteSession(String id) {
     SessionFileManager().deleteSession(id);
   }
 
+  /// Deletes all sessions
   void deleteAllSessions() {
     SessionFileManager().deleteAllSessions();
   }
 
-  /*
-  * Saves the current session to the local storage periodically
-   */
+  /// Saves the current session to the local storage periodically
   void _saveSessionPeriodically() {
     if (!_isRunning) { return; }
-    Timer.periodic(const Duration(seconds: 2), (timer) {
+    Timer.periodic(const Duration(seconds: 30), (timer) {
       if(!_isRunning) { timer.cancel(); }
       _saveSession();
       });
   }
 
+  /// Saves the current session or deletes it
   void keepSessionAtEndOfRun(bool keep) {
     if (keep) {
       if (_sessionCount > 49) {
@@ -158,16 +146,12 @@ class SessionManager {
     }
   }
 
-  /*
-  * Returns the run time of the session as a string
-   */
+  /// Returns the run time of the session as a string
   double getRunTime(Session session) {
     return (session._runEnded - session._runStarted)/1000;
   }
 
-  /*
-  * Returns the top speed of the session
-   */
+  /// Returns the top speed of the session
   double getTopSpeed(Session session) {
     double currentMaximum = 0;
     if (session._speeds.isNotEmpty) {
@@ -180,9 +164,7 @@ class SessionManager {
     return currentMaximum;
   }
 
-  /*
-  * Returns the average speed of the session
-   */
+  /// Returns the average speed of the session
   double getAverageSpeed(Session session) {
     double sum = 0;
     if (session._speeds.isNotEmpty) {
@@ -192,9 +174,7 @@ class SessionManager {
     return 0;
   }
 
-  /*
-  * Returns the run time of the session as a string
-   */
+  /// Returns the run time of the session as a string
   String getRunTimeAsString(Session session) {
     double runTime = (session._runEnded - session._runStarted)/1000;
     double hours = runTime / 3600;
@@ -203,16 +183,12 @@ class SessionManager {
     return "${hours.floor()}:${minutes.floor()}:${seconds.floor()}";
   }
 
-  /*
-  * Returns the start time of the session as a string
-   */
+  /// Returns the start time of the session as a string
   String getStartTimeAsString(Session session) {
     return DateFormat('HH:mm:ss  dd:MM:yyyy').format(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
   }
 
-  /*
-  * Returns the end time of the session as a string
-   */
+  /// Returns the end time of the session as a string
   String getEndTimeAsString(Session session) {
     return DateFormat('HH:mm:ss  dd:MM:yyyy').format(DateTime.fromMillisecondsSinceEpoch(session._runEnded));
   }
