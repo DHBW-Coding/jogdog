@@ -1,6 +1,6 @@
 import 'package:jog_dog/utilities/settings_manager.dart';
 
-import '../providers/FileManager.dart';
+import '../providers/file_manager.dart';
 
 class SettingsFileManager extends FileManager {
   static final SettingsFileManager _instance = SettingsFileManager._internal();

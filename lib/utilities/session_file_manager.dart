@@ -1,6 +1,6 @@
 import 'package:jog_dog/utilities/session_manager.dart';
 
-import '../providers/FileManager.dart';
+import '../providers/file_manager.dart';
 
 class SessionFileManager extends FileManager {
 
