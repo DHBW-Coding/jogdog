@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:jog_dog/widgets/theme_selector.dart';
-import 'package:jog_dog/widgets/tolerance_selector.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:jog_dog/widgets/settings_widgets/theme_selector.dart';
+import 'package:jog_dog/widgets/settings_widgets/tolerance_selector.dart';
 
-import '../utilities/debugLogger.dart';
+import '../widgets/settings_widgets/clear_data_button.dart';
+import '../widgets/settings_widgets/debugger_button.dart';
+import '../widgets/settings_widgets/get_in_touch_button.dart';
+import '../widgets/settings_widgets/tip_button.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -28,86 +30,67 @@ class _SettingsState extends State<Settings> {
           padding: const EdgeInsets.all(20),
           child: ListView(
             children: <Widget>[
+              ///Start of Display Settings -------------------------------------
               Text("Display", style: Theme.of(context).textTheme.headlineSmall),
               Card(
                 child: Column(
                   children: const [
+                    /// Opens a bottomModalSheet to select the theme of the app
                     ThemeSelector(),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 50,
-              ),
+              const SizedBox(height: 50),
+
+              ///Start of General Settings -------------------------------------
               Text("General", style: Theme.of(context).textTheme.headlineSmall),
               Card(
                 child: Column(
-                  children: [
-                    const ToleranceSelector(),
-                    ListTile(
-                      title: const Text("Clear all data"),
-                      leading: const Icon(Icons.delete_forever_outlined),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () {},
-                    ),
+                  children: const [
+                    ///Opens a modalBottomSheet to select the tolerance of a run
+                    ToleranceSelector(),
+
+                    /// A button to delete all session that are stored
+                    ClearDataButton(),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 50,
-              ),
+              const SizedBox(height: 50),
+
+              ///Start of Support Settings -------------------------------------
               Text("Support", style: Theme.of(context).textTheme.headlineSmall),
               Card(
                 child: Column(
-                  children: [
-                    ListTile(
-                      title: const Text("Get in touch"),
-                      leading: const Icon(Icons.mail_outline),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        launchUrlString(
-                            "mailto:ExampleMail@gmail.com?subject=Support%20Jog%20Dog&body=Hi%20there!");
-                      },
-                    ),
+                  children: const [
+                    /// Opens a mail with pre written mail and subject
+                    GetInTouchButton(),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Card(
                 child: Column(
-                  children: [
-                    ListTile(
-                      title: const Text("Tip us a coffee"),
-                      leading: const Icon(Icons.attach_money_outlined),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        launchUrlString("https://www.paypal.me/jberger18", mode: LaunchMode.externalApplication);
-                      },
-                    ),
+                  children: const [
+                    /// Opens a link to tip the developers
+                    TipButton(),
                   ],
                 ),
               ),
               const SizedBox(
                 height: 50,
               ),
-              if(kDebugMode)
-                Text("Development", style: Theme.of(context).textTheme.headlineSmall),
+
+              ///Start of development Settings ---------------------------------
+              if (kDebugMode)
+                Text("Development",
+                    style: Theme.of(context).textTheme.headlineSmall),
               if (kDebugMode)
                 Card(
-                  child: ListTile(
-                    title: const Text("Show debug console"),
-                    leading: const Icon(Icons.announcement_outlined),
-                    onTap: () {
-                      setState(
-                        () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  const LogWidgetContainer()));
-                        },
-                      );
-                    },
+                  child: Column(
+                    children: const [
+                      ///Open the debugging console
+                      DebuggerButton(),
+                    ],
                   ),
                 ),
             ],
