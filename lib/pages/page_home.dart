@@ -21,23 +21,20 @@ class _HomeState extends State<Home> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SessionDisplay(),
-              const SizedBox(
-                height: 15,
-              ),
-              Speedometer(isStarted: false),
-              const StartSessionButton(currentSliderValue: 5),
-              const SizedBox(
-                height: 15,
-              ),
-              const SpotifyButton(),
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SessionDisplay(),
+            const SizedBox(
+              height: 15,
+            ),
+            Speedometer(isStarted: false),
+            const StartSessionButton(currentSliderValue: 5),
+            const SizedBox(
+              height: 15,
+            ),
+            const SpotifyButton(),
+          ],
         ),
       ),
     );

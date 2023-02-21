@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:jog_dog/Models/run.dart';
 import 'package:jog_dog/pages/page_run_insights.dart';
+import 'package:jog_dog/utilities/session_manager.dart';
 
 class History extends StatefulWidget {
   const History({super.key});
@@ -11,20 +10,11 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  // TODO: fill with data from last runs :)
-  List<Run> runs = [
-    Run(const Duration(minutes: 40), 10, 6, DateTime.now(), DateTime.now()),
-    Run(const Duration(minutes: 47), 14, 4, DateTime.now(), DateTime.now()),
-    Run(const Duration(minutes: 75), 28, 7, DateTime.now(), DateTime.now()),
-    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
-    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
-    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
-    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
-    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
-    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
-    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
-    Run(const Duration(minutes: 26), 12, 2, DateTime.now(), DateTime.now()),
-  ];
+  @override
+  void initState() {
+    SessionManager().loadSessionsFromJson();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +25,57 @@ class _HistoryState extends State<History> {
       body: ListView.separated(
         separatorBuilder: (BuildContext context, int index) =>
             const SizedBox(height: 5),
-        itemCount: runs.length,
-        padding: const EdgeInsets.all(20),
+        itemCount: SessionManager().sessions.length,
         itemBuilder: ((context, index) {
-          final run = runs[index];
+          final session = SessionManager().sessions[index];
           return SizedBox(
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(5),
                 child: ListTile(
-                  title: Text(
-                      '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
+                  title: Text(SessionManager().getDateAsString(session)),
+                  subtitle: Text(
+                      "${SessionManager().getStartTimeAsString(session)} - ${SessionManager().getEndTimeAsString(session)}"),
                   trailing: const Icon(Icons.run_circle),
+                  leading: const Icon(Icons.notes_outlined),
+                  onLongPress: () {
+                    setState(
+                      () {
+                        showDialog<void>(
+                          context: context,
+                          barrierDismissible: false, // user must tap button!
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text(
+                                  'You are about to delete this session!'),
+                              content: const Text(
+                                  'Are you sure you want to delete this session? This action cannot be undone.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('Cancel'),
+                                  onPressed: () =>
+                                      Navigator.pop(context, "Cancel"),
+                                ),
+                                TextButton(
+                                  child: const Text('Delete'),
+                                  onPressed: () {
+                                    SessionManager().deleteSession(session.id);
+                                    Navigator.pop(context, "Delete");
+                                  }
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: ((context) => RunInsights(run: run))));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: ((context) => RunInsights(session: session)),
+                      ),
+                    );
                   },
                 ),
               ),

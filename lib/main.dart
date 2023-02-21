@@ -41,34 +41,36 @@ class _MyAppState extends State<MyApp> {
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        home: Scaffold(
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: currentPageIndex,
-            destinations: const [
-              NavigationDestination(
-                  icon: Icon(Icons.house_outlined), label: "Home"),
-              NavigationDestination(
-                  icon: Icon(Icons.history), label: "History"),
-              NavigationDestination(
-                  icon: Icon(Icons.settings), label: 'Settings')
-            ],
-            onDestinationSelected: (int index) {
-              setState(() {
-                currentPageIndex = index;
-              });
-            },
-          ),
-          body: <Widget>[
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      home: Scaffold(
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: currentPageIndex,
+          destinations: const [
+            NavigationDestination(
+                icon: Icon(Icons.house_outlined), label: "Home"),
+            NavigationDestination(icon: Icon(Icons.history), label: "History"),
+            NavigationDestination(icon: Icon(Icons.settings), label: 'Settings')
+          ],
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
+          },
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(15),
+          child: <Widget>[
             const Home(
               title: 'Home',
             ),
             const History(),
             const Settings()
           ][currentPageIndex],
-        ));
+        ),
+      ),
+    );
   }
 }
 

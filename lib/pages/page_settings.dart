@@ -19,37 +19,33 @@ class _SettingsState extends State<Settings> {
         title: const Text('Settings'),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
+        child: Column(
+          children: [
+            SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        requestPermissions();
+                      });
+                    },
+                    child: const Text('Request Permission'))),
+            const SizedBox(
+              height: 15,
+            ),
+            if (kDebugMode)
               SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          requestPermissions();
-                        });
-                      },
-                      child: const Text('Request Permission'))),
-              const SizedBox(
-                height: 15,
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const LogWidgetContainer()));
+                      });
+                    },
+                    child: const Text("Open Logger")),
               ),
-              if (kDebugMode)
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  const LogWidgetContainer()));
-                        });
-                      },
-                      child: const Text("Open Logger")),
-                ),
-            ],
-          ),
+          ],
         ),
       ),
     );
