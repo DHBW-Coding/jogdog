@@ -6,6 +6,7 @@ import 'package:jog_dog/pages/page_home.dart';
 import 'package:jog_dog/pages/page_settings.dart';
 import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debugLogger.dart';
+import 'package:jog_dog/utilities/session_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 var logger;
@@ -13,6 +14,7 @@ var logger;
 void main() {
   runApp(const MyApp());
   requestPermissions();
+  SessionManager().loadSessionsFromJson();
   // If in Debug Mode this Code will be executed
   // Else this code will be removed automatically
   if (kDebugMode) {
@@ -60,7 +62,7 @@ class _MyAppState extends State<MyApp> {
           },
         ),
         body: Padding(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: <Widget>[
             const Home(
               title: 'Home',

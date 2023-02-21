@@ -11,12 +11,6 @@ class History extends StatefulWidget {
 
 class _HistoryState extends State<History> {
   @override
-  void initState() {
-    SessionManager().loadSessionsFromJson();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
