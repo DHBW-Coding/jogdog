@@ -5,9 +5,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:jog_dog/utilities/debugLogger.dart' as logger;
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 abstract class FileManager {
-
   /// Returns the path to the application documents directory
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -22,9 +22,13 @@ abstract class FileManager {
     final dir = Directory('${directory.path}/$path');
     List<String> files = [];
     try {
-      files = dir.listSync().map((e) => e.path).toList();
+      files = dir
+          .listSync()
+          .whereType<File>()
+          .map((entity) => basenameWithoutExtension(entity.path))
+          .toList();
     } catch (e) {
-      if(kDebugMode) {
+      if (kDebugMode) {
         print(e);
         logger.dataLogger.e("Error while listing files: $e");
       }
@@ -43,7 +47,7 @@ abstract class FileManager {
     Map<String, dynamic> container = {};
     try {
       contents = await file.readAsString();
-      if(kDebugMode) logger.dataLogger.i("Read file: $contents");
+      if (kDebugMode) logger.dataLogger.i("Read file: $contents");
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -53,10 +57,10 @@ abstract class FileManager {
     try {
       if (contents.isNotEmpty) {
         container = jsonDecode(contents);
-        if(kDebugMode) logger.dataLogger.i("Decoded json: $container");
+        if (kDebugMode) logger.dataLogger.i("Decoded json: $container");
       }
     } catch (e) {
-      if(kDebugMode) {
+      if (kDebugMode) {
         print(e);
         logger.dataLogger.e("Error while decoding json: $e");
       }
@@ -75,7 +79,7 @@ abstract class FileManager {
     Map<String, dynamic> container = {};
     try {
       contents = await file.readAsString();
-      if(kDebugMode) logger.dataLogger.i("Read file: $contents");
+      if (kDebugMode) logger.dataLogger.i("Read file: $contents");
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -85,10 +89,10 @@ abstract class FileManager {
     try {
       if (contents.isNotEmpty) {
         container = jsonDecode(contents);
-        if(kDebugMode) logger.dataLogger.i("Decoded json: $container");
+        if (kDebugMode) logger.dataLogger.i("Decoded json: $container");
       }
     } catch (e) {
-      if(kDebugMode) {
+      if (kDebugMode) {
         print(e);
         logger.dataLogger.e("Error while decoding json: $e");
       }
@@ -97,23 +101,29 @@ abstract class FileManager {
     String toWrite = '';
     try {
       toWrite = jsonEncode(container);
-      if(kDebugMode) logger.dataLogger.i("Encoded to json: $toWrite");
+      if (kDebugMode) logger.dataLogger.i("Encoded to json: $toWrite");
     } catch (e) {
-      if(kDebugMode) {
+      if (kDebugMode) {
         print(e);
         logger.dataLogger.e("Error while encoding to json: $e");
       }
     }
     try {
       if (await file.exists()) {
-        if(kDebugMode) logger.dataLogger.i("File exists, writing to file: $toWrite");
+        if (kDebugMode) {
+          logger.dataLogger.i("File exists, writing to file: $toWrite");
+        }
         return file.writeAsString(toWrite);
       } else {
-        if(kDebugMode) logger.dataLogger.i("File does not exist, creating file and writing to file: $toWrite");
-        return file.create(recursive: true).then((value) => file.writeAsString(toWrite));
+        if (kDebugMode) {
+          logger.dataLogger.i(
+              "File does not exist, creating file and writing to file: $toWrite");
+        }
+        return file
+            .create(recursive: true)
+            .then((value) => file.writeAsString(toWrite));
       }
     } catch (e) {
-
       /// If an error occurs, because there is no space left on the device
       /// the error is caught and the user is informed
       if (e.toString().contains("No space left on device")) {
@@ -121,7 +131,7 @@ abstract class FileManager {
         /// TODO: Show user the option to delete old files to free up space
       }
 
-      if(kDebugMode) {
+      if (kDebugMode) {
         logger.dataLogger.e("Error while writing to file: $e");
         print(e);
       }
@@ -140,16 +150,19 @@ abstract class FileManager {
     try {
       if (await file.exists()) {
         file.delete();
-        if(kDebugMode) logger.dataLogger.i("File exists, deleting file: $filePath");
+        if (kDebugMode) {
+          logger.dataLogger.i("File exists, deleting file: $filePath");
+        }
       } else {
-        if(kDebugMode) logger.dataLogger.i("File does not exist, nothing to delete");
+        if (kDebugMode) {
+          logger.dataLogger.i("File does not exist, nothing to delete");
+        }
       }
     } catch (e) {
-      if(kDebugMode) {
+      if (kDebugMode) {
         print(e);
         logger.dataLogger.e("Error while deleting file: $e");
       }
     }
   }
-
 }
