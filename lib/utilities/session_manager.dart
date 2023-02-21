@@ -11,7 +11,7 @@ class Session {
 
   String _id = const Uuid().v4();
   String get id => _id;
-  Map<int, double> _speeds = {};
+  Map<String, dynamic> _speeds = {};
   late int _runStarted;
   late int _runEnded;
 
@@ -23,7 +23,7 @@ class Session {
       'id': _id,
       'runStarted': _runStarted,
       'runEnded': _runEnded,
-      'speeds': _speeds.toString(),
+      'speeds': _speeds,
     };
   }
 
@@ -55,8 +55,8 @@ class SessionManager {
   SessionManager._internal();
 
   /// Loads all sessions from the local storage
-  void loadSessionsFromJson() {
-    _sessions = SessionFileManager().loadAllSessions() as List<Session>;
+  Future<void> loadSessionsFromJson() async {
+    _sessions = await SessionFileManager().loadAllSessions();
     _sessionCount = _sessions.length;
   }
 
@@ -77,12 +77,12 @@ class SessionManager {
     _saveSessionPeriodically();
     _subscription = SensorData().normelizedSpeedStream.listen((double speed) {
       var time = DateTime.now().millisecondsSinceEpoch;
-      _currentSession._speeds[time] = speed;
+      _currentSession._speeds["$time"] = speed;
       _currentSession._runEnded = time;
       if(kDebugMode) {
         logger.dataLogger.v("Runtime: ${getRunTimeAsString(_currentSession)}, "
           "Top Speed: ${getTopSpeed(_currentSession)}, "
-          "Average Speed: ${getAverageSpeed(_currentSession)}, "
+          "Average Speed: ${getAverageSpeedAsString(_currentSession)}, "
           "Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
       }
     });
@@ -165,32 +165,37 @@ class SessionManager {
   }
 
   /// Returns the average speed of the session
-  double getAverageSpeed(Session session) {
+  String getAverageSpeedAsString(Session session) {
     double sum = 0;
     if (session._speeds.isNotEmpty) {
       session._speeds.forEach((key, value) { sum += value; });
-      return sum / session._speeds.length;
+      return (sum / session._speeds.length).toStringAsFixed(2);
     }
-    return 0;
+    return "";
   }
 
   /// Returns the run time of the session as a string
   String getRunTimeAsString(Session session) {
-    double runTime = (session._runEnded - session._runStarted)/1000;
-    double hours = runTime / 3600;
-    double minutes = (runTime - hours * 3600) / 60;
-    double seconds = runTime - hours * 3600 - minutes * 60;
+    int runTime = session._runEnded - session._runStarted;
+    Duration duration = Duration(milliseconds: runTime);
+    double hours = duration.inHours.toDouble();
+    double minutes = duration.inMinutes.toDouble() - (hours * 60);
+    double seconds = duration.inSeconds.toDouble() - (minutes * 60);
     return "${hours.floor()}:${minutes.floor()}:${seconds.floor()}";
+  }
+
+  String getDateAsString(Session session){
+    return DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
   }
 
   /// Returns the start time of the session as a string
   String getStartTimeAsString(Session session) {
-    return DateFormat('HH:mm:ss  dd:MM:yyyy').format(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
+    return DateFormat('HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
   }
 
   /// Returns the end time of the session as a string
   String getEndTimeAsString(Session session) {
-    return DateFormat('HH:mm:ss  dd:MM:yyyy').format(DateTime.fromMillisecondsSinceEpoch(session._runEnded));
+    return DateFormat('HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(session._runEnded));
   }
 
 }
