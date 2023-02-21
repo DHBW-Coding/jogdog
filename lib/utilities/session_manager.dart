@@ -52,7 +52,9 @@ class SessionManager {
     return _instance;
   }
 
-  SessionManager._internal();
+  SessionManager._internal() {
+    loadSessionsFromJson();
+  }
 
   /// Loads all sessions from the local storage
   Future<void> loadSessionsFromJson() async {
@@ -77,7 +79,7 @@ class SessionManager {
     _saveSessionPeriodically();
     _subscription = SensorData().normelizedSpeedStream.listen((double speed) {
       var time = DateTime.now().millisecondsSinceEpoch;
-      _currentSession._speeds["$time"] = speed;
+      _currentSession._speeds[time.toString()] = speed;
       _currentSession._runEnded = time;
       if(kDebugMode) {
         logger.dataLogger.v("Runtime: ${getRunTimeAsString(_currentSession)}, "
