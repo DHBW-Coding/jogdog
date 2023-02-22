@@ -20,21 +20,27 @@ class StartSessionButtonState extends State<StartSessionButton> {
       width: double.infinity,
       child: _isStarted
           ? ElevatedButton(
+              child: const Text("Stop Run"),
               onPressed: () {
-                setState(() {
-                  _isStarted = false;
-                  stopPressed();
-                });
+                setState(
+                  () {
+                    _isStarted = false;
+                    stopPressed();
+                  },
+                );
               },
-              child: const Text("Stop Run"))
+            )
           : ElevatedButton(
+              child: const Text("Start Run"),
               onPressed: () {
-                setState(() {
-                  _isStarted = true;
-                  startPressed();
-                });
+                setState(
+                  () {
+                    _isStarted = true;
+                    startPressed();
+                  },
+                );
               },
-              child: const Text("Start Run")),
+            ),
     );
   }
 

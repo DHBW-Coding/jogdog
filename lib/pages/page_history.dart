@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:jog_dog/Models/run.dart';
 import 'package:jog_dog/pages/page_run_insights.dart';
 
@@ -30,11 +29,17 @@ class _HistoryState extends State<History> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("History"),
+        title: Text(
+          "History",
+          style: Theme
+              .of(context)
+              .textTheme
+              .headlineMedium,
+        ),
       ),
       body: ListView.separated(
         separatorBuilder: (BuildContext context, int index) =>
-            const SizedBox(height: 5),
+        const SizedBox(height: 5),
         itemCount: runs.length,
         padding: const EdgeInsets.all(20),
         itemBuilder: ((context, index) {
@@ -45,7 +50,8 @@ class _HistoryState extends State<History> {
                 padding: const EdgeInsets.all(5),
                 child: ListTile(
                   title: Text(
-                      '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
+                      '${run.date.day.toString()}.${run.date.month
+                          .toString()}.${run.date.year.toString()}'),
                   trailing: const Icon(Icons.run_circle),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
