@@ -22,9 +22,9 @@ class _HistoryState extends State<History> {
         title: const Text("History"),
       ),
       body: SessionManager().sessions.isEmpty
-          ? ListTile(
-              title: const Text("No sessions found"),
-              subtitle: const Text("Start a session to see it here"),
+          ? const ListTile(
+              title: Text("No sessions found"),
+              subtitle: Text("Start a session to see it here"),
             )
           : ListView.separated(
               separatorBuilder: (BuildContext context, int index) =>
@@ -68,9 +68,6 @@ class _HistoryState extends State<History> {
                                             () {
                                               SessionManager()
                                                   .deleteSession(session.id);
-                                              SessionManager()
-                                                  .sessions
-                                                  .remove(session);
                                             },
                                           );
                                           Navigator.pop(context, "Delete");

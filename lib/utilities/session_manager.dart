@@ -115,14 +115,16 @@ class SessionManager {
     SessionFileManager().saveSession(_currentSession);
   }
 
-  /// Deletes the session with the given id
+  /// Deletes the session with the given id from the local storage and the list
   void deleteSession(String id) {
     SessionFileManager().deleteSession(id);
+    sessions.removeWhere((session) => session.id == id);
   }
 
-  /// Deletes all sessions
+  /// Deletes all sessions from the local storage and the list
   void deleteAllSessions() {
     SessionFileManager().deleteAllSessions();
+    sessions.clear();
   }
 
   /// Saves the current session to the local storage periodically

@@ -78,12 +78,6 @@ class _MyAppState extends State<MyApp> {
 
 Future<bool> requestPermissions() async {
   bool reqSuc = false;
-  if (await Permission.location.serviceStatus.isDisabled) {
-    if (kDebugMode) {
-      logger.e("No Location Service Found!");
-    }
-    return false;
-  }
 
   // All needed Permissions should be stored in this map and will be
   // requested when the method is called/map is instanziated
@@ -92,32 +86,34 @@ Future<bool> requestPermissions() async {
     //Permission.activityRecognition,
   ].request();
 
-  allPermissionsStatus.forEach((key, currentStatus) {
-    if (currentStatus.isGranted) {
-      if (kDebugMode) {
-        logger.i("Permission: $key already granted");
-      }
-      reqSuc = true;
-    } else if (currentStatus.isDenied) {
-      //currentStatus = await key.request();
-      if (kDebugMode) {
-        logger.i("Permission: $key was not acceppted!");
-      }
-      reqSuc = true;
-    } else if (currentStatus.isPermanentlyDenied) {
-      if (kDebugMode) {
-        logger.i("Permission: $key is permanently denied");
-      }
-      openAppSettings();
+  allPermissionsStatus.forEach(
+    (key, currentStatus) {
       if (currentStatus.isGranted) {
-        reqSuc = true;
-      } else {
         if (kDebugMode) {
-          logger.i("Permission: $key still denied");
+          logger.i("Permission: $key already granted");
+        }
+        reqSuc = true;
+      } else if (currentStatus.isDenied) {
+        //currentStatus = await key.request();
+        if (kDebugMode) {
+          logger.i("Permission: $key was not acceppted!");
+        }
+        reqSuc = true;
+      } else if (currentStatus.isPermanentlyDenied) {
+        if (kDebugMode) {
+          logger.i("Permission: $key is permanently denied");
+        }
+        openAppSettings();
+        if (currentStatus.isGranted) {
+          reqSuc = true;
+        } else {
+          if (kDebugMode) {
+            logger.i("Permission: $key still denied");
+          }
         }
       }
-    }
-  });
+    },
+  );
 
   return reqSuc;
 }
