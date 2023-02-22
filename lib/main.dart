@@ -79,6 +79,13 @@ class _MyAppState extends State<MyApp> {
 Future<bool> requestPermissions() async {
   bool reqSuc = false;
 
+  if(await Permission.location.isGranted) {
+    if(kDebugMode) {
+      logger.i("Permission: location already granted");
+    }
+    return true;
+  }
+
   // All needed Permissions should be stored in this map and will be
   // requested when the method is called/map is instanziated
   Map<Permission, PermissionStatus> allPermissionsStatus = await [
