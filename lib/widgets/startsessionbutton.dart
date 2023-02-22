@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
+import 'package:jog_dog/utilities/session_manager.dart';
 
 class StartSessionButton extends StatefulWidget {
   const StartSessionButton({super.key, required this.currentSliderValue});
@@ -11,28 +12,36 @@ class StartSessionButton extends StatefulWidget {
 }
 
 class StartSessionButtonState extends State<StartSessionButton> {
-  bool _isStarted = false;
+  bool _isRunning = SessionManager().isRunning;
   late RunMusicLogic _runLogic;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: _isStarted
+      child: _isRunning
           ? ElevatedButton(
               onPressed: () {
-                setState(() {
-                  _isStarted = false;
-                  stopPressed();
-                });
+                setState(
+                  () {
+                    _isRunning = false;
+                    stopPressed();
+                  },
+                );
               },
               child: const Text("Stop Run"))
           : ElevatedButton(
               onPressed: () {
-                setState(() {
-                  _isStarted = true;
-                  startPressed();
-                });
+                setState(
+                  () {
+                    _isRunning = true;
+                    if (_isRunning) {
+                      startPressed();
+                    } else {
+                      stopPressed();
+                    }
+                  },
+                );
               },
               child: const Text("Start Run")),
     );
@@ -42,14 +51,9 @@ class StartSessionButtonState extends State<StartSessionButton> {
     double targetSpeed = widget.currentSliderValue;
     const double tolerance = 0.05;
     _runLogic = RunMusicLogic(targetSpeed, tolerance);
-    /*
-    StepSensorData stepSensor = StepSensorData();
-    stepSensor.stepPerSecond!.listen((event) {
-      dataLogger.i(event);
-
-    });
-    */
   }
 
-  void stopPressed() {}
+  void stopPressed() {
+    SessionManager().stopSessionTracking(true);
+  }
 }

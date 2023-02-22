@@ -47,19 +47,23 @@ class SessionManager {
   late StreamSubscription _subscription;
   bool _isRunning = false;
   int _sessionCount = 0;
+  bool get isRunning => _isRunning;
 
   factory SessionManager() {
     return _instance;
   }
 
-  SessionManager._internal() {
-    loadSessionsFromJson();
-  }
+  SessionManager._internal();
 
   /// Loads all sessions from the local storage
   Future<void> loadSessionsFromJson() async {
     _sessions = await SessionFileManager().loadAllSessions();
     _sessionCount = _sessions.length;
+    sortSessionsByDate();
+  }
+
+  void sortSessionsByDate() {
+    _sessions.sort((a, b) => b._runStarted.compareTo(a._runStarted));
   }
 
   /// Creates a new session and starts tracking

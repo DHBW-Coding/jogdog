@@ -11,6 +11,11 @@ class History extends StatefulWidget {
 
 class _HistoryState extends State<History> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -53,9 +58,15 @@ class _HistoryState extends State<History> {
                                 TextButton(
                                   child: const Text('Delete'),
                                   onPressed: () {
-                                    SessionManager().deleteSession(session.id);
+                                    setState(
+                                      () {
+                                        SessionManager()
+                                            .deleteSession(session.id);
+                                        SessionManager().sessions.remove(session);
+                                      },
+                                    );
                                     Navigator.pop(context, "Delete");
-                                  }
+                                  },
                                 ),
                               ],
                             );
