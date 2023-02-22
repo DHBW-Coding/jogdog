@@ -21,6 +21,7 @@ class StartSessionButtonState extends State<StartSessionButton> {
       width: double.infinity,
       child: _isRunning
           ? ElevatedButton(
+              child: const Text("Stop Run"),
               onPressed: () {
                 setState(
                   () {
@@ -29,9 +30,10 @@ class StartSessionButtonState extends State<StartSessionButton> {
                   },
                 );
               },
-              child: const Text("Stop Run"))
+      )
           : ElevatedButton(
               onPressed: () {
+    child: const Text("Start Run"),)
                 setState(
                   () {
                     _isRunning = !_isRunning;
@@ -43,7 +45,7 @@ class StartSessionButtonState extends State<StartSessionButton> {
                   },
                 );
               },
-              child: const Text("Start Run")),
+              ,
     );
   }
 
@@ -51,6 +53,13 @@ class StartSessionButtonState extends State<StartSessionButton> {
     double targetSpeed = widget.currentSliderValue;
     const double tolerance = 0.05;
     _runLogic = RunMusicLogic(targetSpeed, tolerance);
+    /*
+    StepSensorData stepSensor = StepSensorData();
+    stepSensor.stepPerSecond!.listen((event) {
+      dataLogger.i(event);
+
+    });
+    */
   }
 
   void stopPressed() {

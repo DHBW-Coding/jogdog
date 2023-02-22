@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jog_dog/Models/run.dart';
 import 'package:jog_dog/pages/page_run_insights.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
 
@@ -11,15 +12,16 @@ class History extends StatefulWidget {
 
 class _HistoryState extends State<History> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("History"),
+        title: Text(
+          "History",
+          style: Theme
+              .of(context)
+              .textTheme
+              .headlineMedium,
+        ),
       ),
       body: SessionManager().sessions.isEmpty
           ? const ListTile(
