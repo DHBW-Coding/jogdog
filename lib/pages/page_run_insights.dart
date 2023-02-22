@@ -1,29 +1,109 @@
 import 'package:flutter/material.dart';
-import 'package:jog_dog/Models/run.dart';
+import 'package:jog_dog/utilities/session_manager.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class RunInsights extends StatelessWidget {
-  final Run run;
+  final Session session;
 
-  const RunInsights({super.key, required this.run});
+  const RunInsights({super.key, required this.session});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}',
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-      ),
-      body: Container(
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          title: Text(
+        SessionManager().getDateAsString(session),
+        style: Theme.of(context).textTheme.headlineMedium,
+      )),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: ListView(
           children: [
-            Text(
-                'Run from ${run.date.day.toString()}.${run.date.month.toString()}.${run.date.year.toString()}'),
-            Text('Your average run speed was: ${run.avgSpeed}.'),
-            Text('The run lasted for: ${run.duration.toString()}'),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// Shows the date of the session
+                    Text(
+                      "Date",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.calendar_today),
+                      title: Text(SessionManager().getDateAsString(session)),
+                    ),
+                    const Divider(height: 20),
+
+                    /// Shows the time the session started and ended
+                    Text(
+                      "Run from",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.directions_run_outlined),
+                      title: Text(
+                          '${SessionManager().getStartTimeAsString(session)} - ${SessionManager().getEndTimeAsString(session)}'),
+                    ),
+                    const Divider(height: 20),
+
+                    /// Shows the total time of the session
+                    Text(
+                      "Total time",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.timer),
+                      title: Text(SessionManager().getRunTimeAsString(session)),
+                    ),
+                    const Divider(height: 20),
+
+                    ///Shows the top speed of the session
+                    Text(
+                      "Top speed",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.speed),
+                      title:
+                          Text('${SessionManager().getTopSpeed(session)} km/h'),
+                    ),
+                    const Divider(height: 20),
+
+                    /// Shows the average speed of the session
+                    Text(
+                      "Average speed",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.speed),
+                      title: Text(
+                          '${SessionManager().getAverageSpeedAsString(session)} km/h'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const Divider(height: 50),
+            Card(
+              child: SfCartesianChart(
+                title: ChartTitle(text: 'Speed over time'),
+                primaryXAxis: NumericAxis(
+                  title: AxisTitle(text: 'Minutes into session'),
+                ),
+                primaryYAxis: NumericAxis(),
+                series: <ChartSeries>[
+                  LineSeries<MapEntry<String, dynamic>, double>(
+                    dataSource:
+                        SessionManager().getSpeeds(session).entries.toList(),
+                    xValueMapper: (entry, _) => SessionManager()
+                        .getRunTimeAtTimestamp(session, int.parse(entry.key)),
+                    yValueMapper: (entry, _) => entry.value,
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

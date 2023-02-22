@@ -19,6 +19,7 @@ class SessionFileManager extends FileManager {
   Future<List<Session>> loadAllSessions() async {
     List<Session> sessions = [];
     List<String> sessionIds = await listFiles("Sessions");
+
     for (String id in sessionIds) {
       sessions.add(await loadSession(id));
     }
@@ -28,7 +29,6 @@ class SessionFileManager extends FileManager {
   /// Deletes a session from the local storage
   Future<void> deleteSession(String id) async {
     await deleteFile("Sessions/$id.json");
-    SessionManager().loadSessionsFromJson();
   }
 
   /// Deletes all sessions from the local storage

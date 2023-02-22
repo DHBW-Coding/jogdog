@@ -47,19 +47,23 @@ class SessionManager {
   late StreamSubscription _subscription;
   bool _isRunning = false;
   int _sessionCount = 0;
+  bool get isRunning => _isRunning;
 
   factory SessionManager() {
     return _instance;
   }
 
-  SessionManager._internal() {
-    loadSessionsFromJson();
-  }
+  SessionManager._internal();
 
   /// Loads all sessions from the local storage
   Future<void> loadSessionsFromJson() async {
     _sessions = await SessionFileManager().loadAllSessions();
     _sessionCount = _sessions.length;
+    sortSessionsByDate();
+  }
+
+  void sortSessionsByDate() {
+    _sessions.sort((a, b) => b._runStarted.compareTo(a._runStarted));
   }
 
   /// Creates a new session and starts tracking
@@ -111,14 +115,16 @@ class SessionManager {
     SessionFileManager().saveSession(_currentSession);
   }
 
-  /// Deletes the session with the given id
+  /// Deletes the session with the given id from the local storage and the list
   void deleteSession(String id) {
     SessionFileManager().deleteSession(id);
+    _sessions.removeWhere((session) => session.id == id);
   }
 
-  /// Deletes all sessions
+  /// Deletes all sessions from the local storage and the list
   void deleteAllSessions() {
     SessionFileManager().deleteAllSessions();
+    sessions.clear();
   }
 
   /// Saves the current session to the local storage periodically
@@ -148,13 +154,25 @@ class SessionManager {
     }
   }
 
+  Map<String, dynamic> getSpeeds(Session session) {
+    return session._speeds;
+  }
+
+  double getRunTimeAtTimestamp(Session session, int currentTime) {
+    int runTime =  (currentTime - session._runStarted);
+    Duration duration = Duration(milliseconds: runTime);
+    double hours = duration.inHours.toDouble();
+    double minutes = duration.inMinutes.toDouble() - (hours * 60);
+    return minutes;
+  }
+
   /// Returns the run time of the session as a string
   double getRunTime(Session session) {
     return (session._runEnded - session._runStarted)/1000;
   }
 
   /// Returns the top speed of the session
-  double getTopSpeed(Session session) {
+  String getTopSpeed(Session session) {
     double currentMaximum = 0;
     if (session._speeds.isNotEmpty) {
       session._speeds.forEach((key, value) {
@@ -163,7 +181,7 @@ class SessionManager {
         }
       });
     }
-    return currentMaximum;
+    return currentMaximum.toStringAsFixed(2);
   }
 
   /// Returns the average speed of the session
@@ -192,12 +210,12 @@ class SessionManager {
 
   /// Returns the start time of the session as a string
   String getStartTimeAsString(Session session) {
-    return DateFormat('HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
+    return DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
   }
 
   /// Returns the end time of the session as a string
   String getEndTimeAsString(Session session) {
-    return DateFormat('HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(session._runEnded));
+    return DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(session._runEnded));
   }
 
 }

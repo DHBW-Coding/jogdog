@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
+import 'package:jog_dog/utilities/session_manager.dart';
 
 class StartSessionButton extends StatefulWidget {
   const StartSessionButton({super.key, required this.currentSliderValue});
@@ -11,20 +12,20 @@ class StartSessionButton extends StatefulWidget {
 }
 
 class StartSessionButtonState extends State<StartSessionButton> {
-  bool _isStarted = false;
+  bool _isRunning = SessionManager().isRunning;
   late RunMusicLogic _runLogic;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: _isStarted
+      child: _isRunning
           ? ElevatedButton(
               child: const Text("Stop Run"),
               onPressed: () {
                 setState(
                   () {
-                    _isStarted = false;
+                    _isRunning = false;
                     stopPressed();
                   },
                 );
@@ -35,8 +36,12 @@ class StartSessionButtonState extends State<StartSessionButton> {
               onPressed: () {
                 setState(
                   () {
-                    _isStarted = true;
-                    startPressed();
+                    _isRunning = !_isRunning;
+                    if (_isRunning) {
+                      startPressed();
+                    } else {
+                      stopPressed();
+                    }
                   },
                 );
               },
@@ -57,5 +62,7 @@ class StartSessionButtonState extends State<StartSessionButton> {
     */
   }
 
-  void stopPressed() {}
+  void stopPressed() {
+    SessionManager().stopSessionTracking(true);
+  }
 }

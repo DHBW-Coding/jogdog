@@ -16,11 +16,14 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home", style: Theme.of(context).textTheme.headlineMedium,),
+        title: Text(
+          "Home",
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

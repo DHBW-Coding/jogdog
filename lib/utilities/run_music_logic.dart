@@ -20,7 +20,7 @@ class RunMusicLogic {
   double _prevMusicSpeed = 0;
   bool isAtTargetSpeed = false;
 
-  /// Todo: MusikController requierd machen?
+  /// Todo: MusicController required machen?
   RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.1]){
     _changeMusicSpeed();
     SessionManager().createNewSession();
