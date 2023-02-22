@@ -44,42 +44,7 @@ class _HistoryState extends State<History> {
                           trailing: const Icon(Icons.run_circle),
                           leading: const Icon(Icons.notes_outlined),
                           onLongPress: () {
-                            setState(
-                              () {
-                                showDialog<void>(
-                                  context: context,
-                                  barrierDismissible:
-                                      false, // user must tap button!
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text(
-                                          'You are about to delete this session!'),
-                                      content: const Text(
-                                          'Are you sure you want to delete this session? This action cannot be undone.'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('Cancel'),
-                                          onPressed: () =>
-                                              Navigator.pop(context, "Cancel"),
-                                        ),
-                                        TextButton(
-                                          child: const Text('Delete'),
-                                          onPressed: () {
-                                            setState(
-                                              () {
-                                                SessionManager()
-                                                    .deleteSession(session.id);
-                                              },
-                                            );
-                                            Navigator.pop(context, "Delete");
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            );
+                            deleteSessionDialog(context, session);
                           },
                           onTap: () {
                             Navigator.of(context).push(
@@ -96,6 +61,37 @@ class _HistoryState extends State<History> {
                 }),
               ),
       ),
+    );
+  }
+
+  deleteSessionDialog(BuildContext context, Session session) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('You are about to delete this session!'),
+          content: const Text(
+              'Are you sure you want to delete this session? This action cannot be undone.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () => Navigator.pop(context, "Cancel"),
+            ),
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () {
+                setState(
+                  () {
+                    SessionManager().deleteSession(session.id);
+                  },
+                );
+                Navigator.pop(context, "Delete");
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
