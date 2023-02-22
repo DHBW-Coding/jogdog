@@ -54,6 +54,7 @@ dependencies:
   url_launcher: ^6.1.9
   intl: ^0.18.0
   syncfusion_flutter_charts: ^20.4.51
+  path: ^1.8.2
 
 
 dev_dependencies:

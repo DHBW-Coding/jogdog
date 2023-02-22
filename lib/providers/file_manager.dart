@@ -1,11 +1,11 @@
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:jog_dog/utilities/debugLogger.dart' as logger;
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 abstract class FileManager {
   /// Returns the path to the application documents directory
@@ -45,24 +45,11 @@ abstract class FileManager {
     final file = File('$path/$filePath.json');
     String contents = '';
     Map<String, dynamic> container = {};
-    try {
+    if (await file.exists()) {
       contents = await file.readAsString();
-      if (kDebugMode) logger.dataLogger.i("Read file: $contents");
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-        logger.dataLogger.e("Error while reading file: $e");
-      }
-    }
-    try {
       if (contents.isNotEmpty) {
         container = jsonDecode(contents);
         if (kDebugMode) logger.dataLogger.i("Decoded json: $container");
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-        logger.dataLogger.e("Error while decoding json: $e");
       }
     }
     return container;
@@ -77,37 +64,17 @@ abstract class FileManager {
     final file = File('$path/$filePath.json');
     String contents = '';
     Map<String, dynamic> container = {};
-    try {
+    if (await file.exists()) {
       contents = await file.readAsString();
-      if (kDebugMode) logger.dataLogger.i("Read file: $contents");
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-        logger.dataLogger.e("Error while reading file: $e");
-      }
-    }
-    try {
       if (contents.isNotEmpty) {
         container = jsonDecode(contents);
         if (kDebugMode) logger.dataLogger.i("Decoded json: $container");
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-        logger.dataLogger.e("Error while decoding json: $e");
-      }
     }
     container.addAll(object);
     String toWrite = '';
-    try {
-      toWrite = jsonEncode(container);
-      if (kDebugMode) logger.dataLogger.i("Encoded to json: $toWrite");
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-        logger.dataLogger.e("Error while encoding to json: $e");
-      }
-    }
+    toWrite = jsonEncode(container);
+
     try {
       if (await file.exists()) {
         if (kDebugMode) {
