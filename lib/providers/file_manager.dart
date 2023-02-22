@@ -21,17 +21,12 @@ abstract class FileManager {
     final directory = await getApplicationDocumentsDirectory();
     final dir = Directory('${directory.path}/$path');
     List<String> files = [];
-    try {
+    if (await dir.exists()){
       files = dir
           .listSync()
           .whereType<File>()
           .map((entity) => basenameWithoutExtension(entity.path))
           .toList();
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-        logger.dataLogger.e("Error while listing files: $e");
-      }
     }
     return files;
   }
@@ -114,21 +109,14 @@ abstract class FileManager {
   Future<void> deleteFile(String filePath) async {
     final path = await _localPath;
     final file = File('$path/$filePath');
-    try {
-      if (await file.exists()) {
-        file.delete();
-        if (kDebugMode) {
-          logger.dataLogger.i("File exists, deleting file: $filePath");
-        }
-      } else {
-        if (kDebugMode) {
-          logger.dataLogger.i("File does not exist, nothing to delete");
-        }
-      }
-    } catch (e) {
+    if (await file.exists()) {
+      file.delete();
       if (kDebugMode) {
-        print(e);
-        logger.dataLogger.e("Error while deleting file: $e");
+        logger.dataLogger.i("File exists, deleting file: $filePath");
+      }
+    } else {
+      if (kDebugMode) {
+        logger.dataLogger.i("File does not exist, nothing to delete");
       }
     }
   }

@@ -45,7 +45,9 @@ class _SettingsState extends State<Settings> {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+          child: Center(
         child: ListView(
           children: <Widget>[
             ///Start of Display Settings -------------------------------------
@@ -118,7 +120,7 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
           ],
-        ),
+        ),),
       ),
     );
   }

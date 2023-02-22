@@ -61,14 +61,11 @@ class _MyAppState extends State<MyApp> {
             });
           },
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(15),
-          child: <Widget>[
+        body: <Widget>[
             const Home(),
             const History(),
             const Settings()
           ][currentPageIndex],
-        ),
       ),
     );
   }

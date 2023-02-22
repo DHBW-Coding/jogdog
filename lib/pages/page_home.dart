@@ -16,23 +16,29 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home", style: Theme.of(context).textTheme.headlineMedium,),
+        title: Text(
+          "Home",
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SessionDisplay(),
-            const SizedBox(
-              height: 15,
-            ),
-            Speedometer(isStarted: false),
-            const StartSessionButton(currentSliderValue: 5),
-            const SizedBox(
-              height: 15,
-            ),
-            const SpotifyButton(),
-          ],
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SessionDisplay(),
+              const SizedBox(
+                height: 15,
+              ),
+              Speedometer(isStarted: false),
+              const StartSessionButton(currentSliderValue: 5),
+              const SizedBox(
+                height: 15,
+              ),
+              const SpotifyButton(),
+            ],
+          ),
         ),
       ),
     );
