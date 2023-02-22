@@ -34,7 +34,7 @@ class StartSessionButtonState extends State<StartSessionButton> {
               onPressed: () {
                 setState(
                   () {
-                    _isRunning = true;
+                    _isRunning = !_isRunning;
                     if (_isRunning) {
                       startPressed();
                     } else {

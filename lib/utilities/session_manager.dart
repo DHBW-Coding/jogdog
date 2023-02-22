@@ -118,7 +118,7 @@ class SessionManager {
   /// Deletes the session with the given id from the local storage and the list
   void deleteSession(String id) {
     SessionFileManager().deleteSession(id);
-    sessions.removeWhere((session) => session.id == id);
+    _sessions.removeWhere((session) => session.id == id);
   }
 
   /// Deletes all sessions from the local storage and the list
