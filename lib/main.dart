@@ -79,11 +79,16 @@ class _MyAppState extends State<MyApp> {
 Future<bool> requestPermissions() async {
   bool reqSuc = false;
 
-  if(await Permission.location.isGranted) {
-    if(kDebugMode) {
+  if (await Permission.location.serviceStatus.isEnabled) {
+    if (kDebugMode) {
       logger.i("Permission: location already granted");
     }
     return true;
+  } else if (await Permission.location.serviceStatus.isDisabled) {
+    if (kDebugMode) {
+      logger.e("No Location Service Found!");
+    }
+    return false;
   }
 
   // All needed Permissions should be stored in this map and will be
