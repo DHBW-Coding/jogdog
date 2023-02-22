@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jog_dog/utilities/session_manager.dart';
 
 class ClearAllSessionsButton extends StatelessWidget {
   const ClearAllSessionsButton({super.key});
@@ -25,7 +26,7 @@ class ClearAllSessionsButton extends StatelessWidget {
                 ),
                 TextButton(
                     onPressed: () {
-                      // Todo: Delete sessions
+                      SessionManager().deleteAllSessions();
                       Navigator.pop(context, "Ok");
                     },
                     child: const Text("Ok"))
