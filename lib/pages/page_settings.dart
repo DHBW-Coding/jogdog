@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:jog_dog/widgets/settings_widgets/playlist_selector.dart';
 import 'package:jog_dog/widgets/settings_widgets/theme_selector.dart';
 import 'package:jog_dog/widgets/settings_widgets/tolerance_selector.dart';
 
@@ -19,6 +20,22 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  // Todo: Get the playlists from the database
+  final List<String> playlists = <String>[
+    'Playlist 1',
+    'Playlist 2',
+    'Playlist 3',
+    'Playlist 4',
+    'Playlist 5',
+    'Playlist 6',
+    'Playlist 7',
+    'Playlist 8',
+    'Playlist 9',
+    'Playlist 10',
+  ];
+
+  late String dropdownValue = playlists.first;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +69,9 @@ class _SettingsState extends State<Settings> {
                   children: const [
                     ///Opens a modalBottomSheet to select the tolerance of a run
                     ToleranceSelector(),
+
+                    ///Opens a DropdownButton to select a playlist
+                    PlaylistSelector(),
 
                     /// A button to delete all session that are stored
                     ClearAllSessionsButton(),

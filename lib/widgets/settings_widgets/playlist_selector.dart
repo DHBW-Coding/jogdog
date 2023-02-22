@@ -2,22 +2,36 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jog_dog/utilities/debugLogger.dart';
 
-class ToleranceSelector extends StatefulWidget {
-  const ToleranceSelector({super.key});
+class PlaylistSelector extends StatefulWidget {
+  const PlaylistSelector({super.key});
 
   @override
-  ToleranceSelectorState createState() => ToleranceSelectorState();
+  PlaylistSelectorState createState() => PlaylistSelectorState();
 }
 
-class ToleranceSelectorState extends State<ToleranceSelector> {
-  late int selectedTolerance = 5;
-  late int _selectedItem = 1;
+class PlaylistSelectorState extends State<PlaylistSelector> {
+  // Todo: Get Playlists from the database and add them to this list
+  List<String> playlists = <String>[
+    "Rock",
+    "Pop",
+    "Hip Hop",
+    "Rap",
+    "Country",
+    "Jazz",
+    "Classical",
+    "Metal",
+    "EDM",
+    "Reggae",
+    "Folk",
+  ];
+  late String selectedPlaylist = playlists[_selectedItem];
+  late int _selectedItem = 0;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text("Select tolerance"),
-      leading: const Icon(Icons.speed_outlined),
+      title: const Text("Select Playlist"),
+      leading: const Icon(Icons.my_library_music_outlined),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {
         showModalBottomSheet<void>(
@@ -25,7 +39,7 @@ class ToleranceSelectorState extends State<ToleranceSelector> {
           context: context,
           builder: (BuildContext context) {
             return StatefulBuilder(
-              builder: (context, setToleranceState) => SizedBox(
+              builder: (context, setPlaylistState) => SizedBox(
                 height: 300,
                 child: Center(
                   child: ListWheelScrollView.useDelegate(
@@ -38,22 +52,22 @@ class ToleranceSelectorState extends State<ToleranceSelector> {
                     overAndUnderCenterOpacity: 0.5,
                     physics: const FixedExtentScrollPhysics(),
                     childDelegate: ListWheelChildBuilderDelegate(
-                      childCount: 21,
+                      childCount: playlists.length,
                       builder: (context, index) {
                         return Text(
-                          "${index * 5}%",
+                          playlists[index],
                           style: Theme.of(context).textTheme.titleLarge,
                         );
                       },
                     ),
                     onSelectedItemChanged: (value) {
-                      setToleranceState(
+                      setPlaylistState(
                         () {
-                          selectedTolerance = value * 5;
                           _selectedItem = value;
+                          selectedPlaylist = playlists[value];
                           if (kDebugMode) {
                             allLogger.i(
-                                "Selected tolerance $selectedTolerance\n Selected item $_selectedItem");
+                                "Selected tolerance $selectedPlaylist\n Selected item $_selectedItem");
                           }
                         },
                       );
