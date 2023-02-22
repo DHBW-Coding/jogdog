@@ -30,10 +30,10 @@ class StartSessionButtonState extends State<StartSessionButton> {
                   },
                 );
               },
-      )
+            )
           : ElevatedButton(
+              child: const Text("Start Run"),
               onPressed: () {
-    child: const Text("Start Run"),)
                 setState(
                   () {
                     _isRunning = !_isRunning;
@@ -45,7 +45,7 @@ class StartSessionButtonState extends State<StartSessionButton> {
                   },
                 );
               },
-              ,
+            ),
     );
   }
 

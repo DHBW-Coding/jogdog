@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jog_dog/Models/run.dart';
 import 'package:jog_dog/pages/page_run_insights.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
 

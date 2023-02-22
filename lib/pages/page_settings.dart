@@ -46,81 +46,78 @@ class _SettingsState extends State<Settings> {
         ),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: ListView(
-            children: <Widget>[
-              ///Start of Display Settings -------------------------------------
-              Text("Display", style: Theme.of(context).textTheme.headlineSmall),
+        child: ListView(
+          children: <Widget>[
+            ///Start of Display Settings -------------------------------------
+            Text("Display", style: Theme.of(context).textTheme.headlineSmall),
+            Card(
+              child: Column(
+                children: const [
+                  /// Opens a bottomModalSheet to select the theme of the app
+                  ThemeSelector(),
+                ],
+              ),
+            ),
+            const SizedBox(height: 50),
+
+            ///Start of General Settings -------------------------------------
+            Text("General", style: Theme.of(context).textTheme.headlineSmall),
+            Card(
+              child: Column(
+                children: const [
+                  ///Opens a modalBottomSheet to select the tolerance of a run
+                  ToleranceSelector(),
+
+                  ///Opens a DropdownButton to select a playlist
+                  PlaylistSelector(),
+
+                  /// A button to delete all session that are stored
+                  ClearAllSessionsButton(),
+
+                  /// A button to restore all default settings
+                  ResetSettingsButton(),
+                ],
+              ),
+            ),
+            const SizedBox(height: 50),
+
+            ///Start of Support Settings -------------------------------------
+            Text("Support", style: Theme.of(context).textTheme.headlineSmall),
+            Card(
+              child: Column(
+                children: const [
+                  /// Opens a mail with pre written mail and subject
+                  GetInTouchButton(),
+                  PrivacyPolicyButton(),
+                  AboutUsButton(),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Card(
+              child: Column(
+                children: const [
+                  /// Opens a link to tip the developers
+                  TipButton(),
+                ],
+              ),
+            ),
+            const SizedBox(height: 50),
+
+            ///Start of development Settings ---------------------------------
+            if (kDebugMode)
+              Text("Development",
+                  style: Theme.of(context).textTheme.headlineSmall),
+            if (kDebugMode)
               Card(
                 child: Column(
                   children: const [
-                    /// Opens a bottomModalSheet to select the theme of the app
-                    ThemeSelector(),
+                    ///Open the debugging console
+                    DebuggerButton(),
                   ],
                 ),
               ),
-              const SizedBox(height: 50),
-
-              ///Start of General Settings -------------------------------------
-              Text("General", style: Theme.of(context).textTheme.headlineSmall),
-              Card(
-                child: Column(
-                  children: const [
-                    ///Opens a modalBottomSheet to select the tolerance of a run
-                    ToleranceSelector(),
-
-                    ///Opens a DropdownButton to select a playlist
-                    PlaylistSelector(),
-
-                    /// A button to delete all session that are stored
-                    ClearAllSessionsButton(),
-
-                    /// A button to restore all default settings
-                    ResetSettingsButton(),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 50),
-
-              ///Start of Support Settings -------------------------------------
-              Text("Support", style: Theme.of(context).textTheme.headlineSmall),
-              Card(
-                child: Column(
-                  children: const [
-                    /// Opens a mail with pre written mail and subject
-                    GetInTouchButton(),
-                    PrivacyPolicyButton(),
-                    AboutUsButton(),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              Card(
-                child: Column(
-                  children: const [
-                    /// Opens a link to tip the developers
-                    TipButton(),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 50),
-
-              ///Start of development Settings ---------------------------------
-              if (kDebugMode)
-                Text("Development",
-                    style: Theme.of(context).textTheme.headlineSmall),
-              if (kDebugMode)
-                Card(
-                  child: Column(
-                    children: const [
-                      ///Open the debugging console
-                      DebuggerButton(),
-                    ],
-                  ),
-                ),
-            ],
-          ),
+          ],
         ),
       ),
     );
