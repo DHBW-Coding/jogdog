@@ -68,7 +68,6 @@ class SensorData {
           notificationTitle: "JogDog jogging in Background",
           notificationText:
           "Your jog Dog will also check your speed if the app is in Background, but only if you are in an active running session!",
-          enableWakeLock: true,
         ),
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
@@ -77,7 +76,6 @@ class SensorData {
         activityType: ActivityType.fitness,
         allowBackgroundLocationUpdates: true,
         timeLimit: const Duration(seconds: 10),
-        pauseLocationUpdatesAutomatically: true,
         showBackgroundLocationIndicator: false,
       );
     } else {
