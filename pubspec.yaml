@@ -51,6 +51,10 @@ dependencies:
   audio_video_progress_bar: ^1.0.0
   just_audio: ^0.9.31
   just_audio_background: ^0.0.1-beta.9
+  url_launcher: ^6.1.9
+  intl: ^0.18.0
+  syncfusion_flutter_charts: ^20.4.51
+  path: ^1.8.2
 
 
 dev_dependencies:
