@@ -1,4 +1,4 @@
-import 'package:jog_dog/utilities/debugLogger.dart' as logger;
+import 'package:jog_dog/utilities/debug_logger.dart' as logger;
 
 import 'package:jog_dog/providers/music_interface.dart';
 import 'package:just_audio/just_audio.dart';
