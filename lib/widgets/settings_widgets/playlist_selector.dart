@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:jog_dog/utilities/debugLogger.dart';
+import 'package:jog_dog/utilities/debug_Logger.dart';
 
 class PlaylistSelector extends StatefulWidget {
   const PlaylistSelector({super.key});

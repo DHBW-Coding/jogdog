@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:jog_dog/utilities/debugLogger.dart' as logger;
+import 'package:jog_dog/utilities/debug_Logger.dart' as logger;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 

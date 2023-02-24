@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
-import 'package:jog_dog/utilities/debugLogger.dart' as logger;
+import 'package:jog_dog/utilities/debug_Logger.dart' as logger;
 import 'package:jog_dog/utilities/session_file_manager.dart';
 import 'package:uuid/uuid.dart';
 

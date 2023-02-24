@@ -5,7 +5,7 @@ import 'package:jog_dog/pages/page_history.dart';
 import 'package:jog_dog/pages/page_home.dart';
 import 'package:jog_dog/pages/page_settings.dart';
 import 'package:jog_dog/theme/theme.dart';
-import 'package:jog_dog/utilities/debugLogger.dart';
+import 'package:jog_dog/utilities/debug_Logger.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -90,6 +90,7 @@ Future<bool> requestPermissions() async {
   // requested when the method is called/map is instantiated
   Map<Permission, PermissionStatus> allPermissionsStatus = await [
     Permission.location,
+    Permission.storage,
     //Permission.activityRecognition,
   ].request();
 
