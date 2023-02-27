@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,9 +17,8 @@ class RunMusicLogic {
   final _sensors = SensorData();
   final double _tolerance; 
   final double _targetSpeed;
-  final int musicSpeedSetRate = 0; // TODO: implement
+  final int musicSpeedSetRate = 0; // TODO: implement eig hinfällig da wird die API anfragen nicht mehr begrenzen müssen
   double _prevMusicSpeed = 0;
-  bool isAtTargetSpeed = false;
 
   /// Todo: MusicController required machen?
   RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.1]){
@@ -40,6 +40,14 @@ class RunMusicLogic {
         logger.dataLogger.i("Current musicChFac: $musicChangeFactor");
       }
     });
+  }
+
+  void _stopRun(){
+
+  }
+  
+  void _startRun(){
+    //TODO: Kurve die die Musik immer Lauter und Schneller macht
   }
 }
 
@@ -106,20 +114,25 @@ class SensorData {
     });
   }
 
-  /// Checks if last values are nearly 0 m/s
+  /// Checks if last values are note deviated too much
   bool _isDataReliable(List<double> speeds){
     int lenght = speeds.length;
-    if(lenght <= 3){
+    if(lenght <= 5)return false;
+    List<double> newest5speeds = speeds.getRange(lenght-5, lenght).toList();
+    if(newest5speeds.where((x) => x == 0.00).length >= 2) return false;
+
+    double m = median(newest5speeds);
+    double variance = newest5speeds.map((x) => pow(x - m, 2)).reduce((a, b) => (a + b)) / (lenght - 1);
+    double stdDev = sqrt(variance);
+
+    if(kDebugMode) logger.dataLogger.i("Standart Deviation of last 5 Speeds: $stdDev");
+
+    if(stdDev > 1.5){
       return false;
     }
-    for(int i = 1; i<4; i++){
-
-      if(speeds[lenght-i] == 0.0 || speeds[lenght-i] > 0.5) // If the Data is exactly 0.0 then there is no GPS Data
-      {
-        return false;
-      }
+    else{
+      return true;
     }
-    return true;
   }
 
   /// Publish every 2 secondsy the current Speed (Normelization currently only median of data during this 2 seconds)
