@@ -48,6 +48,7 @@ class SessionManager {
   bool _isRunning = false;
   int _sessionCount = 0;
   bool get isRunning => _isRunning;
+  final double _msToKmhFactor = 3.6;
 
   factory SessionManager() {
     return _instance;
@@ -83,7 +84,7 @@ class SessionManager {
     _saveSessionPeriodically();
     _subscription = SensorData().normelizedSpeedStream.listen((double speed) {
       var time = DateTime.now().millisecondsSinceEpoch;
-      _currentSession._speeds[time.toString()] = speed;
+      _currentSession._speeds[time.toString()] = speed * _msToKmhFactor;
       _currentSession._runEnded = time;
       if(kDebugMode) {
         logger.dataLogger.v("Runtime: ${getRunTimeAsString(_currentSession)}, "
