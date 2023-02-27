@@ -8,15 +8,15 @@ abstract class MusicInterface {
   /// Toggles the music: play, pause 
   void togglePlayState();
 
-  /// loads the music to be played
+  /// loads the music/playlist to be played
   void loadMusic();
 
   /// skips to [time] in the song 
   void setSongTime(Duration time);
 
-  /// skips the song and plays the next one
+  /// skips the song and plays the next one in the Playlist
   void skip();
 
-  /// plays the song that came before the current one
+  /// plays the song before the current one in the Playlist
   void previous();
 }
