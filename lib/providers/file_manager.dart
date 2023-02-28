@@ -21,7 +21,7 @@ abstract class FileManager {
     final directory = await getApplicationDocumentsDirectory();
     final dir = Directory('${directory.path}/$path');
     List<String> files = [];
-    if (await dir.exists()){
+    if (await dir.exists()) {
       files = dir
           .listSync()
           .whereType<File>()

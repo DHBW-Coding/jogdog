@@ -8,7 +8,6 @@ import 'package:jog_dog/utilities/session_file_manager.dart';
 import 'package:uuid/uuid.dart';
 
 class Session {
-
   String _id = const Uuid().v4();
   String get id => _id;
   Map<String, dynamic> _speeds = {};
@@ -35,11 +34,9 @@ class Session {
       .._runEnded = json['runEnded']
       .._speeds = json['speeds'];
   }
-
 }
 
 class SessionManager {
-
   static final SessionManager _instance = SessionManager._internal();
   late List<Session> _sessions = [];
   List<Session> get sessions => _sessions;
@@ -73,38 +70,46 @@ class SessionManager {
     var time = DateTime.now().millisecondsSinceEpoch;
     _currentSession._runStarted = time;
     _currentSession._runEnded = time;
-    if(kDebugMode) logger.dataLogger.v("Session started at ${DateTime.now().microsecondsSinceEpoch}");
+    if (kDebugMode)
+      logger.dataLogger
+          .v("Session started at ${DateTime.now().microsecondsSinceEpoch}");
     continueSessionTracking();
   }
 
   /// Starts tracking the current session
   void continueSessionTracking() {
-    if (_isRunning) { return; }
+    if (_isRunning) {
+      return;
+    }
     _isRunning = true;
     _saveSessionPeriodically();
-    _subscription = SensorData().normelizedSpeedStream.listen((double speed) {
+    _subscription = SensorData().normalizedSpeedStream.listen((double speed) {
       var time = DateTime.now().millisecondsSinceEpoch;
       _currentSession._speeds[time.toString()] = speed * _msToKmhFactor;
       _currentSession._runEnded = time;
-      if(kDebugMode) {
+      if (kDebugMode) {
         logger.dataLogger.v("Runtime: ${getRunTimeAsString(_currentSession)}, "
-          "Top Speed: ${getTopSpeed(_currentSession)}, "
-          "Average Speed: ${getAverageSpeedAsString(_currentSession)}, "
-          "Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
+            "Top Speed: ${getTopSpeed(_currentSession)}, "
+            "Average Speed: ${getAverageSpeedAsString(_currentSession)}, "
+            "Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
       }
     });
   }
 
   /// Pauses tracking the current session
   void pauseSessionTracking() {
-    if (!_isRunning) { return; }
+    if (!_isRunning) {
+      return;
+    }
     _isRunning = false;
     _subscription.cancel();
   }
 
   /// Stops tracking the current session
   void stopSessionTracking(bool keep) {
-    if (!_isRunning) { return; }
+    if (!_isRunning) {
+      return;
+    }
     _isRunning = false;
     _subscription.cancel();
     _saveSession();
@@ -130,11 +135,15 @@ class SessionManager {
 
   /// Saves the current session to the local storage periodically
   void _saveSessionPeriodically() {
-    if (!_isRunning) { return; }
+    if (!_isRunning) {
+      return;
+    }
     Timer.periodic(const Duration(seconds: 30), (timer) {
-      if(!_isRunning) { timer.cancel(); }
+      if (!_isRunning) {
+        timer.cancel();
+      }
       _saveSession();
-      });
+    });
   }
 
   /// Saves the current session or deletes it
@@ -160,7 +169,7 @@ class SessionManager {
   }
 
   double getRunTimeAtTimestamp(Session session, int currentTime) {
-    int runTime =  (currentTime - session._runStarted);
+    int runTime = (currentTime - session._runStarted);
     Duration duration = Duration(milliseconds: runTime);
     double hours = duration.inHours.toDouble();
     double minutes = duration.inMinutes.toDouble() - (hours * 60);
@@ -169,7 +178,7 @@ class SessionManager {
 
   /// Returns the run time of the session as a string
   double getRunTime(Session session) {
-    return (session._runEnded - session._runStarted)/1000;
+    return (session._runEnded - session._runStarted) / 1000;
   }
 
   /// Returns the top speed of the session
@@ -189,7 +198,9 @@ class SessionManager {
   String getAverageSpeedAsString(Session session) {
     double sum = 0;
     if (session._speeds.isNotEmpty) {
-      session._speeds.forEach((key, value) { sum += value; });
+      session._speeds.forEach((key, value) {
+        sum += value;
+      });
       return (sum / session._speeds.length).toStringAsFixed(2);
     }
     return "";
@@ -205,18 +216,20 @@ class SessionManager {
     return "${hours.floor()}:${minutes.floor()}:${seconds.floor()}";
   }
 
-  String getDateAsString(Session session){
-    return DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
+  String getDateAsString(Session session) {
+    return DateFormat('dd.MM.yyyy')
+        .format(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
   }
 
   /// Returns the start time of the session as a string
   String getStartTimeAsString(Session session) {
-    return DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
+    return DateFormat('HH:mm')
+        .format(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
   }
 
   /// Returns the end time of the session as a string
   String getEndTimeAsString(Session session) {
-    return DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(session._runEnded));
+    return DateFormat('HH:mm')
+        .format(DateTime.fromMillisecondsSinceEpoch(session._runEnded));
   }
-
 }
