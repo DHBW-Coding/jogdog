@@ -13,7 +13,6 @@ class StartSessionButton extends StatefulWidget {
 
 class StartSessionButtonState extends State<StartSessionButton> {
   bool _isRunning = SessionManager().isRunning;
-  late RunMusicLogic _runLogic;
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +51,11 @@ class StartSessionButtonState extends State<StartSessionButton> {
   void startPressed() {
     double targetSpeed = widget.currentSliderValue;
     const double tolerance = 0.05;
-    _runLogic = RunMusicLogic(targetSpeed, tolerance);
-    /*
-    StepSensorData stepSensor = StepSensorData();
-    stepSensor.stepPerSecond!.listen((event) {
-      dataLogger.i(event);
-
-    });
-    */
+    /// TODO: Add a way to set the tolerance from settings
+    RunMusicLogic().startRun(targetSpeed, tolerance);
   }
 
   void stopPressed() {
-    SessionManager().stopSessionTracking(true);
+    RunMusicLogic().finishRun();
   }
 }

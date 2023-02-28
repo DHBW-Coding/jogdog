@@ -70,9 +70,10 @@ class SessionManager {
     var time = DateTime.now().millisecondsSinceEpoch;
     _currentSession._runStarted = time;
     _currentSession._runEnded = time;
-    if (kDebugMode)
+    if (kDebugMode) {
       logger.dataLogger
           .v("Session started at ${DateTime.now().microsecondsSinceEpoch}");
+    }
     continueSessionTracking();
   }
 
@@ -112,7 +113,6 @@ class SessionManager {
     }
     _isRunning = false;
     _subscription.cancel();
-    _saveSession();
     keepSessionAtEndOfRun(keep);
   }
 
@@ -141,6 +141,7 @@ class SessionManager {
     Timer.periodic(const Duration(seconds: 30), (timer) {
       if (!_isRunning) {
         timer.cancel();
+        return;
       }
       _saveSession();
     });
@@ -150,11 +151,7 @@ class SessionManager {
   void keepSessionAtEndOfRun(bool keep) {
     if (keep) {
       if (_sessionCount > 49) {
-        /*
-        *  TODO: Show dialog to ask if the user wants to delete oldest sessions
-        *  TODO: If yes, delete the oldest session and save the current one
-        */
-        return;
+        deleteSession(_sessions.last.id);
       }
       _saveSession();
       _sessionCount++;
