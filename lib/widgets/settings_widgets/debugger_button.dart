@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../utilities/debug_Logger.dart';
+import '../../utilities/debug_logger.dart';
 
 class DebuggerButton extends StatelessWidget {
   const DebuggerButton({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:jog_dog/utilities/debug_Logger.dart';
+import 'package:jog_dog/utilities/debug_logger.dart';
 
 class ToleranceSelector extends StatefulWidget {
   const ToleranceSelector({super.key});
