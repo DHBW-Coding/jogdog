@@ -83,7 +83,7 @@ class SessionManager {
     }
     _isRunning = true;
     _saveSessionPeriodically();
-    _subscription = SensorData().normelizedSpeedStream.listen((double speed) {
+    _subscription = SensorData().normalizedSpeedStream.listen((double speed) {
       var time = DateTime.now().millisecondsSinceEpoch;
       _currentSession._speeds[time.toString()] = speed * _msToKmhFactor;
       _currentSession._runEnded = time;
