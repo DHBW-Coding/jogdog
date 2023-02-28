@@ -29,12 +29,12 @@ class _HomeState extends State<Home> {
             children: [
               SessionDisplay(),
               const SizedBox(
-                height: 15,
+                height: 50,
               ),
               Speedometer(isStarted: false),
               const StartSessionButton(currentSliderValue: 5),
               const SizedBox(
-                height: 15,
+                height: 20,
               ),
               const SpotifyButton(),
             ],

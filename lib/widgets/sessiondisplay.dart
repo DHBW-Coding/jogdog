@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 
 /// Widget that displays the current Time since the Session started
 class SessionDisplay extends StatefulWidget {
@@ -25,10 +25,18 @@ class SessionDisplayState extends State<SessionDisplay> {
         Expanded(
           child: Card(
             child: SizedBox(
-                width: double.infinity,
-                child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Text("Time run: ${widget.currentTime}"))),
+              height: 60,
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Center(
+                  child: Text(
+                    "${widget.currentTime ~/ 60}:${widget.currentTime % 60}",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                )
+              ),
+            ),
           ),
         ),
       ],

@@ -34,6 +34,7 @@ class SpotifyButtonState extends State<SpotifyButton>
                 child: const SpotifyCard(),
               )
             : SizedBox(
+                height: 40,
                 width: double.infinity,
                 child: ElevatedButton(
                   child: const Text("Load Music"),
