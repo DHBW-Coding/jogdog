@@ -3,10 +3,9 @@ import 'dart:async';
 
 import 'package:pedometer/pedometer.dart';
 
-import 'package:jog_dog/utilities/debug_Logger.dart';
+import 'package:jog_dog/utilities/debug_logger.dart';
 
 class StepSensorData {
-
   Stream<double>? stepPerSecond;
 
   var startStepCount;
@@ -23,18 +22,17 @@ class StepSensorData {
       ..listen(onPedestrianStatusChange).onError(pedestrianStatusError);
   }
 
-
   void onStepIncrease(StepCount event) {
-    if(events.isNotEmpty){
+    if (events.isNotEmpty) {
       dataLogger.i("Steps: ${events.last.steps - events.first.steps}");
     }
     if (events.length < 12) {
       events.add(event);
     } else {
-      double stepPerTime = (
-              events.last.timeStamp.difference(events.first.timeStamp)
-              .inMilliseconds / (1000 * (events.last.steps - events.first.steps))
-              );
+      double stepPerTime = (events.last.timeStamp
+              .difference(events.first.timeStamp)
+              .inMilliseconds /
+          (1000 * (events.last.steps - events.first.steps)));
       streamCtrl.add(stepPerTime);
       events.removeFirst();
       events.removeFirst();
@@ -56,5 +54,4 @@ class StepSensorData {
     allLogger.e("pedestrainStepError accoured: $error");
     //
   }
-
 }

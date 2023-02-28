@@ -5,7 +5,7 @@ import 'package:jog_dog/pages/page_history.dart';
 import 'package:jog_dog/pages/page_home.dart';
 import 'package:jog_dog/pages/page_settings.dart';
 import 'package:jog_dog/theme/theme.dart';
-import 'package:jog_dog/utilities/debug_Logger.dart';
+import 'package:jog_dog/utilities/debug_logger.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -62,10 +62,10 @@ class _MyAppState extends State<MyApp> {
           },
         ),
         body: <Widget>[
-            const Home(),
-            const History(),
-            const Settings()
-          ][currentPageIndex],
+          const Home(),
+          const History(),
+          const Settings()
+        ][currentPageIndex],
       ),
     );
   }
