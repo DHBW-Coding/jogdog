@@ -27,31 +27,31 @@ class RunMusicLogic {
   }
 
   void _changeMusicSpeed() {
-    /// Todo: Reschschreibfehler rausnehmen
-    _sensors.normelizedSpeedStream.listen((currentSpeed) { 
+    _sensors.normalizedSpeedStream.listen((currentSpeed) { 
       logger.dataLogger.d("Current NormSpeed: $currentSpeed");
       double musicChangeFactor = currentSpeed / _targetSpeed;
-      double speedDiff = _prevMusicSpeed - musicChangeFactor;
+      double speedDiff = (_prevMusicSpeed - musicChangeFactor).abs();
 
-
-      if (_prevMusicSpeed == 0 || speedDiff.abs() >= _tolerance) {
+      if (_prevMusicSpeed == 0 || speedDiff >= _tolerance) {
         _prevMusicSpeed = musicChangeFactor;
-        localMusicController().setPlaybackSpeed(musicChangeFactor);
+
+        if(0.25 < musicChangeFactor && musicChangeFactor < 2){
+          localMusicController().setPlaybackSpeed(musicChangeFactor);
+        }else{
+          localMusicController().setPlaybackSpeed(musicChangeFactor < 0.25 ? 0.25 : 2);
+        }
+        
         logger.dataLogger.i("Current musicChFac: $musicChangeFactor");
       }
     });
   }
-
-  void _stopRun(){
-
-  }
   
-  void _startRun(){
+  void _fadeMusicIn(){
     //TODO: Kurve die die Musik immer Lauter und Schneller macht
   }
 }
 
-/// Sensor Class to report current normelized speed of the device
+/// Sensor Class to report current normalized speed of the device
 /// Uses GPS Data to perform these kind of callculations
 class SensorData {
 
@@ -62,7 +62,7 @@ class SensorData {
   final LocationSettings _settings = AndroidSettings( // TODO: Settings only valid for Android
       accuracy: LocationAccuracy.best,
       timeLimit: const Duration(seconds: 10),
-      intervalDuration: const Duration(milliseconds: 500),
+      intervalDuration: const Duration(milliseconds: 250),
       foregroundNotificationConfig: const ForegroundNotificationConfig(
         notificationTitle: "JogDog jogging in Background", 
         notificationText: "Your jog Dog will also check your speed if the app is in Background, but only if you are in an active running session!")
@@ -75,11 +75,10 @@ class SensorData {
 
   SensorData._internal() {
 
-    /// Todo: [Test] Does the Periodic Timer "2-Secs-Wait" block the stream listening?
     Geolocator.getPositionStream(locationSettings: _settings).listen(
       (Position dataPoint) {
         if(kDebugMode) logger.dataLogger.v("SpeedAccuracy:${dataPoint.speedAccuracy}");
-        if(dataPoint.speedAccuracy < 0.7 && dataPoint.speedAccuracy != 0.0){
+        if(dataPoint.speedAccuracy < 0.7){
           _speeds.add(dataPoint.speed);
         }
         if(kDebugMode) logger.dataLogger.v("Raw GPS Speed: ${dataPoint.speed}");
@@ -102,7 +101,15 @@ class SensorData {
         }
       }
       else if(_speeds.isNotEmpty){
-        _streamCtrl.add(median(_speeds)); // TEST: If data is not good enough make something better
+        var normedSpeed = median(_speeds);
+        _streamCtrl.add(normedSpeed); 
+        
+        // if(normedSpeed < 0.6){
+        //   i++;
+        //   if(i == 4) isRunning = false;
+        // }else{
+        //   i = 0;
+        // }       
 
         if(_speeds.length > 5){
           _speeds.removeRange(0, _speeds.length - 5);
@@ -112,6 +119,9 @@ class SensorData {
         if(kDebugMode) logger.dataLogger.e("GPS Module active but no accurat data reciving");
       }
     });
+
+
+
   }
 
   /// Checks if last values are note deviated too much
@@ -135,8 +145,8 @@ class SensorData {
     }
   }
 
-  /// Publish every 2 secondsy the current Speed (Normelization currently only median of data during this 2 seconds)
-  Stream<double> get normelizedSpeedStream{
+  /// Publish every 2 secondsy the current Speed (normalization currently only median of data during this 2 seconds)
+  Stream<double> get normalizedSpeedStream{
     return _streamCtrl.stream;
   }
 }
