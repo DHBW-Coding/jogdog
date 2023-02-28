@@ -13,15 +13,14 @@ import 'package:jog_dog/utilities/session_manager.dart';
 /// and [_tolerance] can be set manually on the settings page or is
 /// 0.5 m/s on default
 class RunMusicLogic {
-
   final _sensors = SensorData();
-  final double _tolerance; 
+  final double _tolerance;
   final double _targetSpeed;
   final int musicSpeedSetRate = 0; // TODO: implement eig hinfällig da wird die API anfragen nicht mehr begrenzen müssen
   double _prevMusicSpeed = 0;
 
   /// Todo: MusicController required machen?
-  RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.1]){
+  RunMusicLogic([this._targetSpeed = 10, this._tolerance = 0.1]) {
     _changeMusicSpeed();
     SessionManager().createNewSession();
   }
@@ -54,7 +53,6 @@ class RunMusicLogic {
 /// Sensor Class to report current normalized speed of the device
 /// Uses GPS Data to perform these kind of callculations
 class SensorData {
-
   static final SensorData _instance = SensorData._internal();
 
   final StreamController<double> _streamCtrl = StreamController.broadcast();
@@ -74,6 +72,30 @@ class SensorData {
   }
 
   SensorData._internal() {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      _settings = AndroidSettings(
+        accuracy: LocationAccuracy.best,
+        timeLimit: const Duration(seconds: 10),
+        intervalDuration: const Duration(milliseconds: 500),
+        foregroundNotificationConfig: const ForegroundNotificationConfig(
+          notificationTitle: "JogDog jogging in Background",
+          notificationText:
+              "Your jog Dog will also check your speed if the app is in Background, but only if you are in an active running session!",
+        ),
+      );
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      _settings = AppleSettings(
+        accuracy: LocationAccuracy.best,
+        activityType: ActivityType.fitness,
+        allowBackgroundLocationUpdates: true,
+        timeLimit: const Duration(seconds: 10),
+        showBackgroundLocationIndicator: false,
+      );
+    } else {
+      _settings = const LocationSettings(
+        accuracy: LocationAccuracy.best,
+      );
+    }
 
     Geolocator.getPositionStream(locationSettings: _settings).listen(
       (Position dataPoint) {
@@ -93,9 +115,10 @@ class SensorData {
     const int sec = 2;
     const int secToTrack = 8;
     Timer.periodic(const Duration(seconds: sec), (timer) {
-      if(!isRunning){
+      if (!isRunning) {
         i++;
-        if(_isDataReliable(_speeds) || i>=(secToTrack/sec)){ // Wait until data is reliable or 8 sec
+        if (_isDataReliable(_speeds) || i >= (secToTrack / sec)) {
+          // Wait until data is reliable or 8 sec
           isRunning = true;
           i = 0;
         }
@@ -111,12 +134,12 @@ class SensorData {
         //   i = 0;
         // }       
 
-        if(_speeds.length > 5){
+        if (_speeds.length > 5) {
           _speeds.removeRange(0, _speeds.length - 5);
         }
-      }
-      else{
-        if(kDebugMode) logger.dataLogger.e("GPS Module active but no accurat data reciving");
+      } else {
+        if (kDebugMode)
+          logger.dataLogger.e("GPS Module active but no accurat data reciving");
       }
     });
 
@@ -160,11 +183,11 @@ double median(List values) {
   values.sort();
 
   int n = values.length;
-  if(n.isOdd){
-    num x = (n+1)/2;
+  if (n.isOdd) {
+    num x = (n + 1) / 2;
     return values[x.toInt() - 1];
-  }else{
-    num x = n/2;
+  } else {
+    num x = n / 2;
     return (values[x.toInt() - 1] + values[x.toInt()]) / 2;
   }
 }

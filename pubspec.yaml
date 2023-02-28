@@ -55,7 +55,7 @@ dependencies:
   intl: ^0.18.0
   syncfusion_flutter_charts: ^20.4.51
   path: ^1.8.2
-
+  file_picker: ^5.2.5
 
 dev_dependencies:
   flutter_test:

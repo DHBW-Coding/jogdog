@@ -62,10 +62,10 @@ class _MyAppState extends State<MyApp> {
           },
         ),
         body: <Widget>[
-            const Home(),
-            const History(),
-            const Settings()
-          ][currentPageIndex],
+          const Home(),
+          const History(),
+          const Settings()
+        ][currentPageIndex],
       ),
     );
   }
@@ -90,6 +90,7 @@ Future<bool> requestPermissions() async {
   // requested when the method is called/map is instantiated
   Map<Permission, PermissionStatus> allPermissionsStatus = await [
     Permission.location,
+    Permission.storage,
     //Permission.activityRecognition,
   ].request();
 
