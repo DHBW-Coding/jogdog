@@ -57,14 +57,7 @@ class SensorData {
 
   final StreamController<double> _streamCtrl = StreamController.broadcast();
   final List<double> _speeds = []; // List is a pointer pointing to different doubles thats why final
-  final LocationSettings _settings = AndroidSettings( // TODO: Settings only valid for Android
-      accuracy: LocationAccuracy.best,
-      timeLimit: const Duration(seconds: 10),
-      intervalDuration: const Duration(milliseconds: 250),
-      foregroundNotificationConfig: const ForegroundNotificationConfig(
-        notificationTitle: "JogDog jogging in Background", 
-        notificationText: "Your jog Dog will also check your speed if the app is in Background, but only if you are in an active running session!")
-    );
+  late LocationSettings _settings;
   bool isRunning = false;
 
   factory SensorData() {
@@ -76,7 +69,7 @@ class SensorData {
       _settings = AndroidSettings(
         accuracy: LocationAccuracy.best,
         timeLimit: const Duration(seconds: 10),
-        intervalDuration: const Duration(milliseconds: 500),
+        intervalDuration: const Duration(milliseconds: 250),
         foregroundNotificationConfig: const ForegroundNotificationConfig(
           notificationTitle: "JogDog jogging in Background",
           notificationText:
