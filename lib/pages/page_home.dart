@@ -53,26 +53,26 @@ class _HomeState extends State<Home> {
   }
 
   sessionDisplay() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: Card(
-            child: SizedBox(
-              height: 60,
-              width: double.infinity,
-              child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Center(
-                    child: Text(
-                      "${(currentTime / 3600).floor().toString().padLeft(2, "0")}:${((currentTime / 60) % 60).floor().toString().padLeft(2, "0")}:${(currentTime % 60).floor().toString().padLeft(2, "0")}",
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                  )),
+    return Card(
+      child: SizedBox(
+        width: double.infinity,
+        child: Center(
+          child: ListTile(
+            leading: const Icon(Icons.timer),
+            title: Text(
+              //Time in HH:MM:SS format from currentTime
+              "${(currentTime / 3600).floor().toString().padLeft(2, "0")}:"
+              "${((currentTime % 3600) / 60).floor().toString().padLeft(2, "0")}:"
+              "${(currentTime % 60).toString().padLeft(2, "0")}",
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            subtitle: Text(
+              "Time into session",
+              style: Theme.of(context).textTheme.labelLarge,
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -81,23 +81,22 @@ class _HomeState extends State<Home> {
       absorbing: _isRunning,
       child: SleekCircularSlider(
         appearance: CircularSliderAppearance(
-          size: 300,
+          size: 350,
           customColors: CustomSliderColors(
             progressBarColor: Theme.of(context).colorScheme.primary,
             trackColor: Theme.of(context).colorScheme.onInverseSurface,
             dotColor: Theme.of(context).colorScheme.primary,
           ),
           customWidths: CustomSliderWidths(
-            progressBarWidth: 20,
-            trackWidth: 20,
-            handlerSize: 20,
+            progressBarWidth: 25,
+            trackWidth: 25,
+            handlerSize: 25,
             shadowWidth: 0,
           ),
           infoProperties: InfoProperties(
-            mainLabelStyle: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              fontSize: 50,
-            ),
+            mainLabelStyle: Theme.of(context).textTheme.displayMedium,
+            bottomLabelText: "Selected Speed",
+            bottomLabelStyle: Theme.of(context).textTheme.labelLarge,
             modifier: (double value) {
               return "${value.toInt()} km/h";
             },
@@ -119,7 +118,7 @@ class _HomeState extends State<Home> {
 
   startRunButton() {
     return SizedBox(
-      height: 50,
+      height: 45,
       width: double.infinity,
       child: _isRunning
           ? ElevatedButton(

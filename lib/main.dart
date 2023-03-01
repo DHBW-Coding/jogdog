@@ -54,7 +54,7 @@ Future<void> requestPermissions() async {
   // requested when the method is called/map is instantiated
   Map<Permission, PermissionStatus> allPermissionsStatus = await [
     Permission.location,
-    Permission.storage,
+    Permission.manageExternalStorage,
   ].request();
 
   allPermissionsStatus.forEach(
