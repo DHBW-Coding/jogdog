@@ -30,7 +30,7 @@ class RunMusicLogic {
   void startRun(double targetSpeed, double tolerance) {
     _targetSpeed = targetSpeed / 3.6;
     _tolerance = tolerance;
-    SensorData()._startGPSStream();
+    SensorData().startDataStream();
     SessionManager().createNewSession();
     _fadeMusicIn();
   }
@@ -38,9 +38,6 @@ class RunMusicLogic {
   void finishRun() {
     SessionManager().stopSessionTracking(true);
     _normalizedSpeedSubscription.cancel();
-    //SensorData().stopGPSStreams();
-    //Kann man machen ist aber eig unnötig wenn man die abfrage so macht wie in 
-    //Zeile 182 (Ungetestet)
   }
 
   void _fadeMusicIn() {
@@ -137,8 +134,6 @@ class SensorData {
     });
   }
 
-  //void stopDataStreams();
-
   void startDataStream() {
     if(!gpsInUsage){
       _startGPSStream();
@@ -175,9 +170,6 @@ class SensorData {
         }
       }
 
-      // TODO: Jetzt wird garantiert, dass alle Streams beendet werden und GPS nicht 
-      //       sendet wenn der DataStream die Daten nicht braucht
-      //       Entweder So, oder wir lagern das in eine stopDataStreams(); Methode aus
       if (!_streamCtrl.hasListener) {
         timer.cancel();
         _gpsSubscription.cancel();
