@@ -3,25 +3,23 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
+
 import 'package:jog_dog/utilities/debug_logger.dart' as logger;
 import 'package:jog_dog/utilities/local_music_controller.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
 
 /// Main Logic Function to get the music speed change factor
-/// which should be forwarded to the musicInterface
+/// which should be forwarded to a musicInterface
 /// [_targetSpeed] should be the value the user inputs over the UI
 /// and [_tolerance] can be set manually on the settings page or is
 /// 0.5 m/s on default
 class RunMusicLogic {
   static final RunMusicLogic _instance = RunMusicLogic._internal();
+  // int musicSpeedSetRate = 0;
+  double _prevMusicSpeed = 0;
   late double _tolerance;
   late double _targetSpeed;
-  int musicSpeedSetRate =
-      0; // TODO: implement eig hinfällig da wird die API anfragen nicht mehr begrenzen müssen
-  double _prevMusicSpeed = 0;
   late StreamSubscription _normalizedSpeedSubscription;
-
-  /// Todo: MusicController required machen?
 
   factory RunMusicLogic() {
     return _instance;
@@ -32,15 +30,22 @@ class RunMusicLogic {
   void startRun(double targetSpeed, double tolerance) {
     _targetSpeed = targetSpeed / 3.6;
     _tolerance = tolerance;
-    SensorData().startGPSStream();
-    _changeMusicSpeed();
+    SensorData()._startGPSStream();
     SessionManager().createNewSession();
+    _fadeMusicIn();
   }
 
   void finishRun() {
     SessionManager().stopSessionTracking(true);
     _normalizedSpeedSubscription.cancel();
-    SensorData().stopGPSStream();
+    //SensorData().stopGPSStreams();
+    //Kann man machen ist aber eig unnötig wenn man die abfrage so macht wie in 
+    //Zeile 182 (Ungetestet)
+  }
+
+  void _fadeMusicIn() {
+    //TODO: Kurve die die Musik immer Lauter und Schneller macht
+    _changeMusicSpeed();
   }
 
   void _changeMusicSpeed() {
@@ -65,9 +70,6 @@ class RunMusicLogic {
     });
   }
 
-  void _fadeMusicIn() {
-    //TODO: Kurve die die Musik immer Lauter und Schneller macht
-  }
 }
 
 /// Sensor Class to report current normalized speed of the device
@@ -76,11 +78,11 @@ class SensorData {
   static final SensorData _instance = SensorData._internal();
 
   final StreamController<double> _streamCtrl = StreamController.broadcast();
-  final List<double> _speeds = []; // List is a pointer pointing to different doubles thats why final
-  late LocationSettings _settings;
-  late StreamSubscription _GPSsubscription;
+  final List<double> _speeds = [];
   bool isDataReliable = false;
   bool gpsInUsage = false;
+  late LocationSettings _settings;
+  late StreamSubscription _gpsSubscription;
 
   factory SensorData() {
     return _instance;
@@ -99,7 +101,8 @@ class SensorData {
         foregroundNotificationConfig: const ForegroundNotificationConfig(
           notificationTitle: "JogDog jogging in Background",
           notificationText:
-          "Your jog Dog will also check your speed if the app is in Background, but only if you are in an active running session!",
+          "Your jog Dog will also check your speed if the app is in Background,"
+          "but only if you are in an active running session!",
         ),
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
@@ -117,42 +120,38 @@ class SensorData {
     }
   }
 
-  void startGPSStream() {
+  void _startGPSStream() {
     if (gpsInUsage) return;
     gpsInUsage = true;
-    _GPSsubscription = Geolocator.getPositionStream(locationSettings: _settings).listen(
-        (Position dataPoint) {
+    _gpsSubscription = Geolocator.getPositionStream(locationSettings: _settings)
+    .listen((Position dataPoint) {
       if (kDebugMode) {
-        logger.dataLogger.v("SpeedAccuracy:${dataPoint.speedAccuracy}");
+        logger.dataLogger.v("SpeedAccuracy: ${dataPoint.speedAccuracy}");
       }
       if (dataPoint.speedAccuracy < 0.7) {
         _speeds.add(dataPoint.speed);
       }
       if (kDebugMode) logger.dataLogger.v("Raw GPS Speed: ${dataPoint.speed}");
     }, onError: (err) {
-      if (kDebugMode) logger.dataLogger.e("Error on PositionStream: $err");
+      if (kDebugMode) logger.dataLogger.v("Error on PositionStream: $err");
     });
-    _startDataStream();
   }
 
-  void stopGPSStream() {
-    _GPSsubscription.cancel();
-    gpsInUsage = false;
-  }
+  //void stopDataStreams();
 
-  void _startDataStream() {
+  void startDataStream() {
+    if(!gpsInUsage){
+      _startGPSStream();
+    }
+
     int i = 0;
     const int sec = 2;
     const int secToTrack = 8;
     Timer.periodic(const Duration(seconds: sec), (timer) {
-      if (!gpsInUsage) {
-        timer.cancel();
-        return;
-      }
       if (!isDataReliable) {
         i++;
+        // Wait until data is reliable or 8 sec
         if (_isDataReliable(_speeds) || i >= (secToTrack / sec)) {
-          // Wait until data is reliable or 8 sec
           isDataReliable = true;
           i = 0;
         }
@@ -175,6 +174,17 @@ class SensorData {
           logger.dataLogger.e("GPS Module active but no accurat data reciving");
         }
       }
+
+      // TODO: Jetzt wird garantiert, dass alle Streams beendet werden und GPS nicht 
+      //       sendet wenn der DataStream die Daten nicht braucht
+      //       Entweder So, oder wir lagern das in eine stopDataStreams(); Methode aus
+      if (!_streamCtrl.hasListener) {
+        timer.cancel();
+        _gpsSubscription.cancel();
+        gpsInUsage = false;
+        return;
+      }
+
     });
   }
 
@@ -202,12 +212,13 @@ class SensorData {
     }
   }
 
-  /// Publish every 2 seconds the current Speed (normalization currently only median of data during this 2 seconds)
+  /// Publish every 2 seconds the current Speed
   Stream<double> get normalizedSpeedStream {
     return _streamCtrl.stream;
   }
 }
 
+/// Calulates the median of the givens [values] of a list
 double median(List values) {
   values.sort();
 
