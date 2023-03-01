@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/debug_logger.dart' as logger;
+import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/session_file_manager.dart';
 import 'package:uuid/uuid.dart';
 
 class Session {
   String _id = const Uuid().v4();
+
   String get id => _id;
   Map<String, dynamic> _speeds = {};
   late int _runStarted;
@@ -39,11 +40,13 @@ class Session {
 class SessionManager {
   static final SessionManager _instance = SessionManager._internal();
   late List<Session> _sessions = [];
+
   List<Session> get sessions => _sessions;
   late Session _currentSession;
   late StreamSubscription _subscription;
   bool _isRunning = false;
   int _sessionCount = 0;
+
   bool get isRunning => _isRunning;
   final double _msToKmhFactor = 3.6;
 
@@ -84,17 +87,20 @@ class SessionManager {
     }
     _isRunning = true;
     _saveSessionPeriodically();
-    _subscription = SensorData().normalizedSpeedStream.listen((double speed) {
-      var time = DateTime.now().millisecondsSinceEpoch;
-      _currentSession._speeds[time.toString()] = speed * _msToKmhFactor;
-      _currentSession._runEnded = time;
-      if (kDebugMode) {
-        logger.dataLogger.v("Runtime: ${getRunTimeAsString(_currentSession)}, "
-            "Top Speed: ${getTopSpeed(_currentSession)}, "
-            "Average Speed: ${getAverageSpeedAsString(_currentSession)}, "
-            "Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
-      }
-    });
+    _subscription = SensorData().normalizedSpeedStream.listen(
+      (double speed) {
+        var time = DateTime.now().millisecondsSinceEpoch;
+        _currentSession._speeds[time.toString()] = speed * _msToKmhFactor;
+        _currentSession._runEnded = time;
+        if (kDebugMode) {
+          logger.dataLogger
+              .v("Runtime: ${getRunTimeAsString(_currentSession)}, "
+                  "Top Speed: ${getTopSpeed(_currentSession)}, "
+                  "Average Speed: ${getAverageSpeedAsString(_currentSession)}, "
+                  "Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
+        }
+      },
+    );
   }
 
   /// Pauses tracking the current session

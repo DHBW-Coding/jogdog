@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
-
 import 'package:jog_dog/utilities/debug_logger.dart' as logger;
 import 'package:jog_dog/utilities/local_music_controller.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
@@ -15,6 +14,7 @@ import 'package:jog_dog/utilities/session_manager.dart';
 /// 0.5 m/s on default
 class RunMusicLogic {
   static final RunMusicLogic _instance = RunMusicLogic._internal();
+
   // int musicSpeedSetRate = 0;
   double _prevMusicSpeed = 0;
   late double _tolerance;
@@ -30,17 +30,14 @@ class RunMusicLogic {
   void startRun(double targetSpeed, double tolerance) {
     _targetSpeed = targetSpeed / 3.6;
     _tolerance = tolerance;
-    SensorData()._startGPSStream();
+    SensorData().startTracking();
     SessionManager().createNewSession();
     _fadeMusicIn();
   }
 
   void finishRun() {
     SessionManager().stopSessionTracking(true);
-    _normalizedSpeedSubscription.cancel();
-    //SensorData().stopGPSStreams();
-    //Kann man machen ist aber eig unnötig wenn man die abfrage so macht wie in 
-    //Zeile 182 (Ungetestet)
+    SensorData().stopTracking();
   }
 
   void _fadeMusicIn() {
@@ -49,31 +46,31 @@ class RunMusicLogic {
   }
 
   void _changeMusicSpeed() {
+    _normalizedSpeedSubscription = SensorData().normalizedSpeedStream.listen(
+      (currentSpeed) {
+        logger.dataLogger.d("Current NormSpeed: $currentSpeed");
+        double musicChangeFactor = currentSpeed / _targetSpeed;
+        double speedDiff = (_prevMusicSpeed - musicChangeFactor).abs();
 
-    _normalizedSpeedSubscription = SensorData().normalizedSpeedStream.listen((currentSpeed) {
-      logger.dataLogger.d("Current NormSpeed: $currentSpeed");
-      double musicChangeFactor = currentSpeed / _targetSpeed;
-      double speedDiff = (_prevMusicSpeed - musicChangeFactor).abs();
+        if (_prevMusicSpeed == 0 || speedDiff >= _tolerance) {
+          _prevMusicSpeed = musicChangeFactor;
 
-      if (_prevMusicSpeed == 0 || speedDiff >= _tolerance) {
-        _prevMusicSpeed = musicChangeFactor;
+          if (0.25 < musicChangeFactor && musicChangeFactor < 2) {
+            localMusicController().setPlaybackSpeed(musicChangeFactor);
+          } else {
+            localMusicController()
+                .setPlaybackSpeed(musicChangeFactor < 0.25 ? 0.25 : 2);
+          }
 
-        if (0.25 < musicChangeFactor && musicChangeFactor < 2) {
-          localMusicController().setPlaybackSpeed(musicChangeFactor);
-        } else {
-          localMusicController()
-              .setPlaybackSpeed(musicChangeFactor < 0.25 ? 0.25 : 2);
+          logger.dataLogger.i("Current musicChFac: $musicChangeFactor");
         }
-
-        logger.dataLogger.i("Current musicChFac: $musicChangeFactor");
-      }
-    });
+      },
+    );
   }
-
 }
 
 /// Sensor Class to report current normalized speed of the device
-/// Uses GPS Data to perform these kind of callculations
+/// Uses GPS Data to perform these kind of calculations
 class SensorData {
   static final SensorData _instance = SensorData._internal();
 
@@ -83,6 +80,7 @@ class SensorData {
   bool gpsInUsage = false;
   late LocationSettings _settings;
   late StreamSubscription _gpsSubscription;
+  late Timer dataStreamTimer;
 
   factory SensorData() {
     return _instance;
@@ -101,8 +99,8 @@ class SensorData {
         foregroundNotificationConfig: const ForegroundNotificationConfig(
           notificationTitle: "JogDog jogging in Background",
           notificationText:
-          "Your jog Dog will also check your speed if the app is in Background,"
-          "but only if you are in an active running session!",
+              "Your jog Dog will also check your speed if the app is in Background,"
+              "but only if you are in an active running session!",
         ),
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
@@ -120,72 +118,80 @@ class SensorData {
     }
   }
 
+  void startTracking() {
+    _startGPSStream();
+    _startDataStream();
+  }
+
+  void stopTracking() {
+    _gpsSubscription.cancel();
+  }
+
   void _startGPSStream() {
     if (gpsInUsage) return;
     gpsInUsage = true;
-    _gpsSubscription = Geolocator.getPositionStream(locationSettings: _settings)
-    .listen((Position dataPoint) {
-      if (kDebugMode) {
-        logger.dataLogger.v("SpeedAccuracy: ${dataPoint.speedAccuracy}");
-      }
-      if (dataPoint.speedAccuracy < 0.7) {
-        _speeds.add(dataPoint.speed);
-      }
-      if (kDebugMode) logger.dataLogger.v("Raw GPS Speed: ${dataPoint.speed}");
-    }, onError: (err) {
-      if (kDebugMode) logger.dataLogger.v("Error on PositionStream: $err");
-    });
+    _gpsSubscription =
+        Geolocator.getPositionStream(locationSettings: _settings).listen(
+      (Position dataPoint) {
+        if (kDebugMode) {
+          logger.dataLogger.v("SpeedAccuracy: ${dataPoint.speedAccuracy}");
+        }
+        if (dataPoint.speedAccuracy < 0.7) {
+          _speeds.add(dataPoint.speed);
+        }
+        if (kDebugMode) {
+          logger.dataLogger.v("Raw GPS Speed: ${dataPoint.speed}");
+        }
+      },
+      onError: (err) {
+        if (kDebugMode) logger.dataLogger.v("Error on PositionStream: $err");
+      },
+    );
+    _gpsSubscription.onDone(
+      () {
+        dataStreamTimer.cancel();
+        _streamCtrl.close();
+        gpsInUsage = false;
+      },
+    );
   }
 
-  //void stopDataStreams();
-
-  void startDataStream() {
-    if(!gpsInUsage){
-      _startGPSStream();
-    }
-
+  void _startDataStream() {
     int i = 0;
     const int sec = 2;
     const int secToTrack = 8;
-    Timer.periodic(const Duration(seconds: sec), (timer) {
-      if (!isDataReliable) {
-        i++;
-        // Wait until data is reliable or 8 sec
-        if (_isDataReliable(_speeds) || i >= (secToTrack / sec)) {
-          isDataReliable = true;
-          i = 0;
+    Timer dataStreamTimer = Timer.periodic(
+      const Duration(seconds: sec),
+      (timer) {
+        if (!isDataReliable) {
+          i++;
+          // Wait until data is reliable or 8 sec
+          if (_isDataReliable(_speeds) || i >= (secToTrack / sec)) {
+            isDataReliable = true;
+            i = 0;
+          }
+        } else if (_speeds.isNotEmpty) {
+          var normedSpeed = median(_speeds);
+          _streamCtrl.add(normedSpeed);
+
+          // if(normedSpeed < 0.6){
+          //   i++;
+          //   if(i == 4) isRunning = false;
+          // }else{
+          //   i = 0;
+          // }
+
+          if (_speeds.length > 5) {
+            _speeds.removeRange(0, _speeds.length - 5);
+          }
+        } else {
+          if (kDebugMode) {
+            logger.dataLogger
+                .e("GPS Module active but no accurat data reciving");
+          }
         }
-      } else if (_speeds.isNotEmpty) {
-        var normedSpeed = median(_speeds);
-        _streamCtrl.add(normedSpeed);
-
-        // if(normedSpeed < 0.6){
-        //   i++;
-        //   if(i == 4) isRunning = false;
-        // }else{
-        //   i = 0;
-        // }
-
-        if (_speeds.length > 5) {
-          _speeds.removeRange(0, _speeds.length - 5);
-        }
-      } else {
-        if (kDebugMode) {
-          logger.dataLogger.e("GPS Module active but no accurat data reciving");
-        }
-      }
-
-      // TODO: Jetzt wird garantiert, dass alle Streams beendet werden und GPS nicht 
-      //       sendet wenn der DataStream die Daten nicht braucht
-      //       Entweder So, oder wir lagern das in eine stopDataStreams(); Methode aus
-      if (!_streamCtrl.hasListener) {
-        timer.cancel();
-        _gpsSubscription.cancel();
-        gpsInUsage = false;
-        return;
-      }
-
-    });
+      },
+    );
   }
 
   /// Checks if last values are note deviated too much
