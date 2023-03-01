@@ -109,7 +109,7 @@ class _HomeState extends State<Home> {
           _currentSpeed = value.toInt();
           if (kDebugMode) {
             logger.i("Speed: $value\n"
-                "Current Speed Displayed: $_currentSpeed");
+                "Current speed selected: $_currentSpeed");
           }
         },
       ),
