@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jog_dog/theme/theme.dart';
@@ -54,7 +56,7 @@ Future<void> requestPermissions() async {
   // requested when the method is called/map is instantiated
   Map<Permission, PermissionStatus> allPermissionsStatus = await [
     Permission.location,
-    Permission.storage,
+    Permission.audio,
   ].request();
 
   allPermissionsStatus.forEach(
