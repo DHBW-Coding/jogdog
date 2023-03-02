@@ -40,8 +40,12 @@ class RunMusicLogic {
     _normalizedSpeedSubscription.cancel();
   }
 
+  void pauseRun() {
+    // TODO: Implement (Low Prio)
+  }
+
   void _fadeMusicIn() {
-    //TODO: Kurve die die Musik immer Lauter und Schneller macht
+    // TODO: Kurve die die Musik immer Lauter und Schneller macht (Low Prio)
     _changeMusicSpeed();
   }
 
