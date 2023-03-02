@@ -1,16 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:jog_dog/pages/page_history.dart';
+import 'package:jog_dog/pages/page_home.dart';
+import 'package:jog_dog/pages/page_settings.dart';
 import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debug_logger.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'pages/page_navigation.dart';
-
 var logger;
 
 void main() {
   runApp(const MyApp());
+  requestPermissions();
   SessionManager().loadSessionsFromJson();
   // If in Debug Mode this Code will be executed
   // Else this code will be removed automatically
@@ -23,21 +25,43 @@ void main() {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyApp();
+}
+
+class _MyApp extends State<MyApp> {
+  late int currentPageIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: requestPermissions(),
-      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-        return MaterialApp(
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.system,
-          home: const NavigationPage(),
-        );
-      },
+    return MaterialApp(
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      home: Scaffold(
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: currentPageIndex,
+          destinations: const [
+            NavigationDestination(
+                icon: Icon(Icons.house_outlined), label: "Home"),
+            NavigationDestination(icon: Icon(Icons.history), label: "History"),
+            NavigationDestination(icon: Icon(Icons.settings), label: 'Settings')
+          ],
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
+          },
+        ),
+        body: <Widget>[
+          const Home(),
+          const History(),
+          const Settings()
+        ][currentPageIndex],
+      ),
     );
   }
 }
