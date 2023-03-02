@@ -19,7 +19,6 @@ class RunMusicLogic {
   double _prevMusicSpeed = 0;
   late double _tolerance;
   late double _targetSpeed;
-  late StreamSubscription _normalizedSpeedSubscription;
 
   factory RunMusicLogic() {
     return _instance;
@@ -46,7 +45,7 @@ class RunMusicLogic {
   }
 
   void _changeMusicSpeed() {
-    _normalizedSpeedSubscription = SensorData().normalizedSpeedStream.listen(
+    SensorData().normalizedSpeedStream.listen(
       (currentSpeed) {
         logger.dataLogger.d("Current NormSpeed: $currentSpeed");
         double musicChangeFactor = currentSpeed / _targetSpeed;
@@ -74,7 +73,7 @@ class RunMusicLogic {
 class SensorData {
   static final SensorData _instance = SensorData._internal();
 
-  final StreamController<double> _streamCtrl = StreamController.broadcast();
+  late StreamController<double> _streamCtrl;
   final List<double> _speeds = [];
   bool isDataReliable = false;
   bool gpsInUsage = false;
@@ -123,13 +122,17 @@ class SensorData {
     _startDataStream();
   }
 
-  void stopTracking() {
+  Future<void> stopTracking() async {
     _gpsSubscription.cancel();
+    if (kDebugMode) {
+      logger.dataLogger.i("GPS Stream canceled");
+    }
+    _streamCtrl.close();
+    dataStreamTimer.cancel();
+    gpsInUsage = false;
   }
 
   void _startGPSStream() {
-    if (gpsInUsage) return;
-    gpsInUsage = true;
     _gpsSubscription =
         Geolocator.getPositionStream(locationSettings: _settings).listen(
       (Position dataPoint) {
@@ -147,20 +150,14 @@ class SensorData {
         if (kDebugMode) logger.dataLogger.v("Error on PositionStream: $err");
       },
     );
-    _gpsSubscription.onDone(
-      () {
-        dataStreamTimer.cancel();
-        _streamCtrl.close();
-        gpsInUsage = false;
-      },
-    );
   }
 
   void _startDataStream() {
     int i = 0;
     const int sec = 2;
     const int secToTrack = 8;
-    Timer dataStreamTimer = Timer.periodic(
+    _streamCtrl = StreamController.broadcast();
+    dataStreamTimer = Timer.periodic(
       const Duration(seconds: sec),
       (timer) {
         if (!isDataReliable) {
@@ -170,7 +167,7 @@ class SensorData {
             isDataReliable = true;
             i = 0;
           }
-        } else if (_speeds.isNotEmpty) {
+        } else if (_speeds.isNotEmpty && dataStreamTimer.isActive) {
           var normedSpeed = median(_speeds);
           _streamCtrl.add(normedSpeed);
 
