@@ -18,7 +18,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int currentTime = 0;
   int _currentSpeed = 10;
-  late Timer timeElapsed;
   bool _isRunning = SessionManager().isRunning;
 
   @override
@@ -34,6 +33,7 @@ class _HomeState extends State<Home> {
         padding: const EdgeInsets.all(15),
         child: Center(
           child: ListView(
+            physics: const NeverScrollableScrollPhysics(),
             children: [
               sessionDisplay(),
               SizedBox(
@@ -104,7 +104,7 @@ class _HomeState extends State<Home> {
         ),
         min: 5,
         max: 20,
-        initialValue: 10,
+        initialValue: _currentSpeed.toDouble(),
         onChange: (double value) {
           _currentSpeed = value.toInt();
           if (kDebugMode) {
@@ -153,21 +153,9 @@ class _HomeState extends State<Home> {
   void startPressed() {
     currentTime = 0;
     RunMusicLogic().startRun(_currentSpeed.toDouble(), 0.5);
-    //Timer that updates the time every second
-    timeElapsed = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        setState(
-          () {
-            currentTime++;
-          },
-        );
-      },
-    );
   }
 
   void stopPressed() {
-    timeElapsed.cancel();
     RunMusicLogic().finishRun();
   }
 }
