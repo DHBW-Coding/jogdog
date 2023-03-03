@@ -98,7 +98,6 @@ class SensorData {
     if (defaultTargetPlatform == TargetPlatform.android) {
       _settings = AndroidSettings(
         accuracy: LocationAccuracy.best,
-        timeLimit: const Duration(seconds: 10),
         intervalDuration: const Duration(milliseconds: 250),
         foregroundNotificationConfig: const ForegroundNotificationConfig(
           notificationTitle: "JogDog jogging in Background",
@@ -112,8 +111,7 @@ class SensorData {
         accuracy: LocationAccuracy.best,
         activityType: ActivityType.fitness,
         allowBackgroundLocationUpdates: true,
-        timeLimit: const Duration(seconds: 10),
-        showBackgroundLocationIndicator: false,
+        showBackgroundLocationIndicator: true,
       );
     } else {
       _settings = const LocationSettings(
