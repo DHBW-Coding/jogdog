@@ -80,7 +80,7 @@ class _HomeState extends State<Home> {
       absorbing: _isRunning,
       child: SleekCircularSlider(
         appearance: CircularSliderAppearance(
-          size: 350,
+          size: 300,
           customColors: CustomSliderColors(
             progressBarColor: Theme.of(context).colorScheme.primary,
             trackColor: Theme.of(context).colorScheme.onInverseSurface,

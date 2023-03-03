@@ -113,7 +113,7 @@ class SensorData {
         activityType: ActivityType.fitness,
         allowBackgroundLocationUpdates: true,
         timeLimit: const Duration(seconds: 10),
-        showBackgroundLocationIndicator: false,
+        showBackgroundLocationIndicator: true,
       );
     } else {
       _settings = const LocationSettings(
