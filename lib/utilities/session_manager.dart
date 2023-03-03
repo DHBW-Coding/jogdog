@@ -93,11 +93,12 @@ class SessionManager {
         _currentSession._speeds[time.toString()] = speed * _msToKmhFactor;
         _currentSession._runEnded = time;
         if (kDebugMode) {
-          logger.dataLogger
-              .v("Runtime: ${getRunTimeAsString(_currentSession)}, "
-                  "Top Speed: ${getTopSpeed(_currentSession)}, "
-                  "Average Speed: ${getAverageSpeedAsString(_currentSession)}, "
-                  "Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
+          logger.dataLogger.v(
+            "Runtime: ${getRunTimeAsString(_currentSession)}, "
+            "Top Speed: ${getTopSpeed(_currentSession)}, "
+            "Average Speed: ${getAverageSpeedAsString(_currentSession)}, "
+            "Timestamp: ${DateTime.now().millisecondsSinceEpoch}"
+          );
         }
       },
     );

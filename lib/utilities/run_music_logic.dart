@@ -40,7 +40,7 @@ class RunMusicLogic {
     SensorData().stopTracking();
   }
 
-    void pauseRun() {
+  void pauseRun() {
     // TODO: Implement (Low Prio)
   }
 
@@ -51,8 +51,7 @@ class RunMusicLogic {
 
   void _changeMusicSpeed() {
 
-    SensorData().normalizedSpeedStream.listen(
-(currentSpeed) {
+    SensorData().normalizedSpeedStream.listen((currentSpeed) {
         logger.dataLogger.d("Current NormSpeed: $currentSpeed");
         double musicChangeFactor = currentSpeed / _targetSpeed;
         double speedDiff = (_prevMusicSpeed - musicChangeFactor).abs();
@@ -78,14 +77,14 @@ class RunMusicLogic {
 /// Uses GPS Data to perform these kind of calculations
 class SensorData {
   static final SensorData _instance = SensorData._internal();
-
-  late StreamController<double> _streamCtrl;
   final List<double> _speeds = [];
+
   bool isDataReliable = false;
-  bool gpsInUsage = false;
+  
+  late StreamController<double> _streamCtrl;
   late LocationSettings _settings;
   late StreamSubscription _gpsSubscription;
-  late Timer dataStreamTimer;
+  late Timer _dataStreamTimer;
 
   factory SensorData() {
     return _instance;
@@ -130,19 +129,17 @@ class SensorData {
 
   Future<void> stopTracking() async {
     _gpsSubscription.cancel();
-    if (kDebugMode) {
+    _streamCtrl.close();
+    _dataStreamTimer.cancel();
+    if (kDebugMode) { // TODO: Hauen wir die Debugs raus oder machen einzeiler draus?
       logger.dataLogger.i("GPS Stream canceled");
     }
-    _streamCtrl.close();
-    dataStreamTimer.cancel();
-    gpsInUsage = false;
   }
 
   void _startGPSStream() {
     _gpsSubscription =
         Geolocator.getPositionStream(locationSettings: _settings)
-        .listen(
-(Position dataPoint) {
+        .listen((Position dataPoint) {
         if (kDebugMode) {
           logger.dataLogger.v("SpeedAccuracy: ${dataPoint.speedAccuracy}");
         }
@@ -164,26 +161,17 @@ class SensorData {
     const int sec = 2;
     const int secToTrack = 8;
     _streamCtrl = StreamController.broadcast();
-    dataStreamTimer = Timer.periodic(
-      const Duration(seconds: sec),
-      (timer) {
+    _dataStreamTimer = Timer.periodic(const Duration(seconds: sec), (timer) {
         if (!isDataReliable) {
           i++;
-          // Wait until data is reliable or 8 sec
+          // Wait until data is reliable or until 8 sec passed
           if (_isDataReliable(_speeds) || i >= (secToTrack / sec)) {
             isDataReliable = true;
             i = 0;
           }
-        } else if (_speeds.isNotEmpty && dataStreamTimer.isActive) {
+        } else if (_speeds.isNotEmpty && _dataStreamTimer.isActive) {
           var normedSpeed = median(_speeds);
           _streamCtrl.add(normedSpeed);
-
-          // if(normedSpeed < 0.6){
-          //   i++;
-          //   if(i == 4) isRunning = false;
-          // }else{
-          //   i = 0;
-          // }
 
           if (_speeds.length > 5) {
             _speeds.removeRange(0, _speeds.length - 5);
@@ -206,9 +194,8 @@ class SensorData {
     if (newest5speeds.where((x) => x == 0.00).length >= 2) return false;
 
     double m = median(newest5speeds);
-    double variance =
-        newest5speeds.map((x) => pow(x - m, 2)).reduce((a, b) => (a + b)) /
-            (lenght - 1);
+    double variance = 
+    newest5speeds.map((x) => pow(x - m, 2)).reduce((a, b) => (a + b)) / (lenght - 1);
     double stdDev = sqrt(variance);
 
     if (kDebugMode) {

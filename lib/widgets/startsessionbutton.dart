@@ -49,7 +49,10 @@ class StartSessionButtonState extends State<StartSessionButton> {
   }
 
   void startPressed() {
-    RunMusicLogic().startRun(10, 0.5);
+    double targetSpeed = widget.currentSliderValue;
+    const double tolerance = 0.05;
+    /// TODO: Add a way to set the tolerance from settings
+    RunMusicLogic().startRun(targetSpeed, tolerance);
   }
 
   void stopPressed() {
