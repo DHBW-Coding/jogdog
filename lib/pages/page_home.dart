@@ -1,7 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
@@ -151,20 +150,10 @@ class _HomeState extends State<Home> {
   }
 
   void startPressed() {
-    Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        if (!_isRunning) {
-          timer.cancel();
-        }
-        setState(
-          () {
-            currentTime++;
-          },
-        );
-      },
-    );
+    RunMusicLogic().startRun(_currentSpeed.toDouble(), 0.5);
   }
 
-  void stopPressed() {}
+  void stopPressed() {
+    RunMusicLogic().finishRun();
+  }
 }
