@@ -9,30 +9,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
-  audio_service:
-    dependency: transitive
-    description:
-      name: audio_service
-      sha256: "7e86d7ce23caad605199f7b25e548fe7b618fb0c150fa0585f47a910fe7e7a67"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.18.9"
-  audio_service_platform_interface:
-    dependency: transitive
-    description:
-      name: audio_service_platform_interface
-      sha256: "2c3a1d52803931e836b9693547a71c0c3585ad54219d2214219ed5cfcc3c1af4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
-  audio_service_web:
-    dependency: transitive
-    description:
-      name: audio_service_web
-      sha256: "523e64ddc914c714d53eec2da85bba1074f08cf26c786d4efb322de510815ea7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.1"
   audio_session:
     dependency: transitive
     description:
@@ -41,14 +17,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.13"
-  audio_video_progress_bar:
-    dependency: "direct main"
-    description:
-      name: audio_video_progress_bar
-      sha256: "38d8efe20cd0ff2bfad648396ae3d4ba6f8058b7d8b6ee6cb26e3245eda58ddd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -66,7 +34,7 @@ packages:
     source: hosted
     version: "1.2.1"
   clock:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: clock
       sha256: cb6d7f03e1de671e34607e909a7213e31d7752be4fb66a86d29fe1eb14bfb5cf
@@ -134,14 +102,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_cache_manager:
-    dependency: transitive
-    description:
-      name: flutter_cache_manager
-      sha256: "32cd900555219333326a2d0653aaaf8671264c29befa65bbd9856d204a4c9fb3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.3.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -154,10 +114,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_plugin_android_lifecycle
-      sha256: "4bef634684b2c7f3468c77c766c831229af829a0cd2d4ee6c1b99558bd14e5d2"
+      sha256: c224ac897bed083dabf11f238dd11a239809b446740be0c2044608c50029ffdf
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.8"
+    version: "2.0.9"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -216,22 +176,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.1"
-  http:
-    dependency: transitive
-    description:
-      name: http
-      sha256: "6aa2946395183537c8b880962d935877325d6a09a2867c3970c05c0fed6ac482"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.13.5"
-  http_parser:
-    dependency: transitive
-    description:
-      name: http_parser
-      sha256: "2aa08ce0341cc9b354a498388e30986515406668dbcc4f7c950c3e715496693b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.2"
   intl:
     dependency: "direct main"
     description:
@@ -256,14 +200,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.31"
-  just_audio_background:
-    dependency: "direct main"
-    description:
-      name: just_audio_background
-      sha256: "89498f9a53f44f50a550d778ceb3cd64cef21246685d85f427be4d97f6e2eb85"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1-beta.9"
   just_audio_platform_interface:
     dependency: transitive
     description:
@@ -289,7 +225,7 @@ packages:
     source: hosted
     version: "2.0.1"
   logger:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: logger
       sha256: c40f9ef51e5bffb4ce69ad2d8c8aad7bd47ec109c090521109b63a4e2bc27191
@@ -384,14 +320,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
-  pedantic:
-    dependency: transitive
-    description:
-      name: pedantic
-      sha256: "67fc27ed9639506c856c840ccce7594d0bdcd91bc8d53d6e52359449a1d50602"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.11.1"
   pedometer:
     dependency: "direct main"
     description:
@@ -465,7 +393,7 @@ packages:
     source: hosted
     version: "4.2.4"
   rxdart:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: rxdart
       sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
@@ -509,22 +437,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
-  sqflite:
-    dependency: transitive
-    description:
-      name: sqflite
-      sha256: "78324387dc81df14f78df06019175a86a2ee0437624166c382e145d0a7fd9a4f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.4+1"
-  sqflite_common:
-    dependency: transitive
-    description:
-      name: sqflite_common
-      sha256: bfd6973aaeeb93475bc0d875ac9aefddf7965ef22ce09790eb963992ffc5183f
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.4.2+2"
   stack_trace:
     dependency: transitive
     description:
@@ -553,26 +465,18 @@ packages:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_charts
-      sha256: f809b3921919bb79cee1ab39944a905126b6c68967d1cd301059ea5e422f49c9
+      sha256: "6faeb211311559f99f3c816b75aa493e68d1cc263f62dec530d5e8098b71bae4"
       url: "https://pub.dev"
     source: hosted
-    version: "20.4.51"
+    version: "20.4.52"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "5f7dae40707df507325ee045d1a172aea9f449ac4244d7c52391dd97208eeef8"
+      sha256: "4319454a92fe5aea1e90ff68c17703a39517ab05dd3074c34c9553e5f7cbf414"
       url: "https://pub.dev"
     source: hosted
-    version: "20.4.51"
-  synchronized:
-    dependency: transitive
-    description:
-      name: synchronized
-      sha256: "33b31b6beb98100bf9add464a36a8dd03eb10c7a8cf15aeec535e9b054aaf04b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.1"
+    version: "20.4.52"
   term_glyph:
     dependency: transitive
     description:

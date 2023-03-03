@@ -35,27 +35,20 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  sensors_plus: ^2.0.1
-  clock: ^1.1.1
-  geolocator: ^9.0.2
-  pedometer: ^3.0.0
-  permission_handler: ^10.2.0
-  logger: ^1.1.0
-  logger_flutter_plus: ^1.0.5
-  sleek_circular_slider : ^2.0.1
-  path_provider: ^2.0.12
-  uuid: ^3.0.7
-
-  #for the music implementation
-  rxdart: ^0.27.7
-  audio_video_progress_bar: ^1.0.0
-  just_audio: ^0.9.31
-  just_audio_background: ^0.0.1-beta.9
-  url_launcher: ^6.1.9
-  intl: ^0.18.0
   syncfusion_flutter_charts: ^20.4.51
+  path_provider: ^2.0.12
   path: ^1.8.2
+  pedometer: ^3.0.0
+  logger_flutter_plus: ^1.0.5
   file_picker: ^5.2.5
+  just_audio: ^0.9.31
+  geolocator: ^9.0.2
+  url_launcher: ^6.1.9
+  sleek_circular_slider : ^2.0.1
+  permission_handler: ^10.2.0
+  intl: ^0.18.0
+  sensors_plus: ^2.0.1
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:
