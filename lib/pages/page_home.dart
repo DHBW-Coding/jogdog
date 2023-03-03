@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
-import 'package:jog_dog/utilities/session_manager.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 import '../main.dart';
@@ -16,9 +14,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int currentTime = 0;
-  int _currentSpeed = 10;
-  bool _isRunning = SessionManager().isRunning;
+  static int currentTime = 0;
+  static int _currentSpeed = 10;
+  static bool _isRunning = false;
 
   @override
   Widget build(BuildContext context) {
