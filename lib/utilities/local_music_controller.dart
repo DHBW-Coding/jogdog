@@ -10,6 +10,7 @@ import 'package:just_audio/just_audio.dart';
 class localMusicController implements MusicInterface {
   bool isPlaying = false;
   Duration songTime = Duration.zero;
+  final bool musicIsLoaded = false;
   List<String> songPath = [];
   late AudioPlayer player;
   late String directoryPath;
@@ -56,9 +57,14 @@ class localMusicController implements MusicInterface {
     ).asFuture(songPath);
   }
 
+  String getSelectedPlaylistName() {
+    int indexOfLastDirSlash = directoryPath.lastIndexOf("/");
+    return directoryPath.substring(indexOfLastDirSlash + 1);
+  }
+
   /// loads the music/playlist to be played
   @override
-  void loadMusic() async {
+  Future<bool> loadMusic() async {
     ConcatenatingAudioSource playlist = ConcatenatingAudioSource(
         children: [AudioSource.asset("assets/music/SFG.mp3")]);
     directoryPath = await getPlaylistDir();
@@ -66,7 +72,7 @@ class localMusicController implements MusicInterface {
     if (directoryPath == "/") {
       songPath = ["No Song was found"];
       player.setAudioSource(playlist);
-      return;
+      return true;
     }
 
     await loadMusicFromPath(directoryPath);
@@ -84,6 +90,7 @@ class localMusicController implements MusicInterface {
     }
 
     player.setAudioSource(playlist);
+    return true;
   }
 
   /// Toggles the isPlaying variable
