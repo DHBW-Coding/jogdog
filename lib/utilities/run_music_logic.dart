@@ -128,9 +128,9 @@ class SensorData {
   }
 
   Future<void> stopTracking() async {
+    _dataStreamTimer.cancel();
     _gpsSubscription.cancel();
     _streamCtrl.close();
-    _dataStreamTimer.cancel();
     if (kDebugMode) { // TODO: Hauen wir die Debugs raus oder machen einzeiler draus?
       logger.dataLogger.i("GPS Stream canceled");
     }
