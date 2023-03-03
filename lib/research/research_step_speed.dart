@@ -10,6 +10,8 @@ class StepSensorData {
 
   var startStepCount;
   final StreamController<double> streamCtrl = StreamController();
+  late Stream<StepCount> _stepCountStream;
+  late Stream<PedestrianStatus> _pedestrianStatusStream;
   Queue<StepCount> events = Queue();
 
   StepSensorData() {
