@@ -8,7 +8,7 @@ import 'package:just_audio/just_audio.dart';
 class localMusicController implements MusicInterface {
   bool isPlaying = false;
   Duration songTime = Duration.zero;
-  final bool musicIsLoaded = false;
+  bool musicIsLoaded = false;
   List<String> songPath = [];
   late AudioPlayer player;
   late String directoryPath;
@@ -63,12 +63,18 @@ class localMusicController implements MusicInterface {
   /// loads the music/playlist to be played
   @override
   Future<bool> loadMusic() async {
-    ConcatenatingAudioSource playlist = ConcatenatingAudioSource(
-        children: [AudioSource.asset("assets/music/SFG.mp3")]);
+    ConcatenatingAudioSource playlist = ConcatenatingAudioSource(children: [
+      AudioSource.asset("assets/music/Different_Heaven.mp3"),
+      AudioSource.asset("assets/music/Disfigure_Blank.mp3"),
+      AudioSource.asset("assets/music/Incincible.mp3"),
+      AudioSource.asset("assets/music/Itro_Tobu_Cloud_9.mp3"),
+      AudioSource.asset("assets/music/Tobu_Hope.mp3"),
+    ]);
     directoryPath = await getPlaylistDir();
 
     if (directoryPath == "/") {
       songPath = ["No Song was found"];
+      logger.allLogger.i("No Song was found.");
       player.setAudioSource(playlist);
       return true;
     }
@@ -82,12 +88,21 @@ class localMusicController implements MusicInterface {
       if (playlist.length == 200) {
         break;
       }
+      logger.dataLogger
+          .i("${playlist.length - 5} Songs were added to the playlist");
     }
-    if (playlist.length > 1) {
+    if ((playlist.length - 5) > 0) {
       playlist.removeAt(0);
+      playlist.removeAt(1);
+      playlist.removeAt(2);
+      playlist.removeAt(3);
+      playlist.removeAt(4);
+    } else {
+      logger.dataLogger.i("No Song was found in Folder $directoryPath");
     }
 
     player.setAudioSource(playlist);
+    musicIsLoaded = true;
     return true;
   }
 
