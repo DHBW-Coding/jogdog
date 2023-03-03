@@ -10,16 +10,14 @@ class PlaylistSelector extends StatefulWidget {
 }
 
 class PlaylistSelectorState extends State<PlaylistSelector> {
-  static bool _musicIsLoaded = false;
+  static bool _musicIsLoaded = localMusicController().isMusicLoaded;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: _musicIsLoaded
           ? Text(
-              localMusicController().getSelectedPlaylistName(),
-              style: const TextStyle(fontStyle: FontStyle.italic),
-            )
+              "Playlist selected: ${localMusicController().getSelectedPlaylistName()}")
           : const Text("Select Playlist"),
       leading: const Icon(Icons.my_library_music_outlined),
       trailing: const Icon(Icons.arrow_forward_ios),
