@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:jog_dog/utilities/debug_logger.dart' as logger;
 
 import 'package:jog_dog/providers/music_interface.dart';

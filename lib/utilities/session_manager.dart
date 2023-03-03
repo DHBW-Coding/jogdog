@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/debug_logger.dart' as logger;
+import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/session_file_manager.dart';
 import 'package:uuid/uuid.dart';
 
 class Session {
   String _id = const Uuid().v4();
+
   String get id => _id;
   Map<String, dynamic> _speeds = {};
   late int _runStarted;
@@ -39,11 +40,13 @@ class Session {
 class SessionManager {
   static final SessionManager _instance = SessionManager._internal();
   late List<Session> _sessions = [];
+
   List<Session> get sessions => _sessions;
   late Session _currentSession;
   late StreamSubscription _subscription;
   bool _isRunning = false;
   int _sessionCount = 0;
+
   bool get isRunning => _isRunning;
   final double _msToKmhFactor = 3.6;
 
@@ -70,9 +73,10 @@ class SessionManager {
     var time = DateTime.now().millisecondsSinceEpoch;
     _currentSession._runStarted = time;
     _currentSession._runEnded = time;
-    if (kDebugMode)
+    if (kDebugMode) {
       logger.dataLogger
           .v("Session started at ${DateTime.now().microsecondsSinceEpoch}");
+    }
     continueSessionTracking();
   }
 
@@ -83,17 +87,21 @@ class SessionManager {
     }
     _isRunning = true;
     _saveSessionPeriodically();
-    _subscription = SensorData().normelizedSpeedStream.listen((double speed) {
-      var time = DateTime.now().millisecondsSinceEpoch;
-      _currentSession._speeds[time.toString()] = speed * _msToKmhFactor;
-      _currentSession._runEnded = time;
-      if (kDebugMode) {
-        logger.dataLogger.v("Runtime: ${getRunTimeAsString(_currentSession)}, "
+    _subscription = SensorData().normalizedSpeedStream.listen(
+      (double speed) {
+        var time = DateTime.now().millisecondsSinceEpoch;
+        _currentSession._speeds[time.toString()] = speed * _msToKmhFactor;
+        _currentSession._runEnded = time;
+        if (kDebugMode) {
+          logger.dataLogger.v(
+            "Runtime: ${getRunTimeAsString(_currentSession)}, "
             "Top Speed: ${getTopSpeed(_currentSession)}, "
             "Average Speed: ${getAverageSpeedAsString(_currentSession)}, "
-            "Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
-      }
-    });
+            "Timestamp: ${DateTime.now().millisecondsSinceEpoch}"
+          );
+        }
+      },
+    );
   }
 
   /// Pauses tracking the current session
@@ -112,7 +120,6 @@ class SessionManager {
     }
     _isRunning = false;
     _subscription.cancel();
-    _saveSession();
     keepSessionAtEndOfRun(keep);
   }
 
@@ -141,6 +148,7 @@ class SessionManager {
     Timer.periodic(const Duration(seconds: 30), (timer) {
       if (!_isRunning) {
         timer.cancel();
+        return;
       }
       _saveSession();
     });
@@ -150,11 +158,7 @@ class SessionManager {
   void keepSessionAtEndOfRun(bool keep) {
     if (keep) {
       if (_sessionCount > 49) {
-        /*
-        *  TODO: Show dialog to ask if the user wants to delete oldest sessions
-        *  TODO: If yes, delete the oldest session and save the current one
-        */
-        return;
+        deleteSession(_sessions.last.id);
       }
       _saveSession();
       _sessionCount++;
