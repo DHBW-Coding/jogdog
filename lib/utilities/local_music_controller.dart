@@ -63,6 +63,7 @@ class localMusicController implements MusicInterface {
   /// loads the music/playlist to be played
   @override
   Future<bool> loadMusic() async {
+    // Todo: Use Looping AudioSource
     ConcatenatingAudioSource playlist = ConcatenatingAudioSource(children: [
       AudioSource.asset("assets/music/Different_Heaven.mp3"),
       AudioSource.asset("assets/music/Disfigure_Blank.mp3"),
@@ -92,11 +93,9 @@ class localMusicController implements MusicInterface {
           .i("${playlist.length - 5} Songs were added to the playlist");
     }
     if ((playlist.length - 5) > 0) {
-      playlist.removeAt(0);
-      playlist.removeAt(1);
-      playlist.removeAt(2);
-      playlist.removeAt(3);
-      playlist.removeAt(4);
+      for (int i = 0; i < 5; ++i) {
+        playlist.removeAt(0);
+      }
     } else {
       logger.dataLogger.i("No Song was found in Folder $directoryPath");
     }
