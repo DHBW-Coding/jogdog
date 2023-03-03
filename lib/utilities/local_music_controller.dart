@@ -71,45 +71,41 @@ class localMusicController implements MusicInterface {
   /// loads the music/playlist to be played
   @override
   Future<bool> loadMusic() async {
-    // Todo: Use Looping AudioSource
-    ConcatenatingAudioSource playlist = ConcatenatingAudioSource(children: [
-      AudioSource.asset("assets/music/Different_Heaven.mp3"),
-      AudioSource.asset("assets/music/Disfigure_Blank.mp3"),
-      AudioSource.asset("assets/music/Incincible.mp3"),
-      AudioSource.asset("assets/music/Itro_Tobu_Cloud_9.mp3"),
-      AudioSource.asset("assets/music/Tobu_Hope.mp3"),
-    ]);
     directoryPath = await getPlaylistDir();
 
-    if (directoryPath == "/") {
-      songPath = ["No Song was found"];
-      logger.allLogger.i("No Song was found.");
-      player.setAudioSource(playlist);
-      return true;
-    }
-
+    // writes all files from [directoyPath] into songPath
     await loadMusicFromPath(directoryPath);
+
+    ConcatenatingAudioSource dynamicPlaylist =
+        ConcatenatingAudioSource(children: []);
 
     for (var element in songPath) {
       if (element.endsWith(".mp3") || element.endsWith(".wav")) {
-        playlist.add(AudioSource.file(element));
+        dynamicPlaylist.add(AudioSource.file(element));
       }
-      if (playlist.length == 200) {
+      if (dynamicPlaylist.length == 200) {
         break;
       }
     }
-    logger.dataLogger
-        .i("${playlist.length - 5} Songs were added to the playlist");
 
-    if ((playlist.length - 5) > 0) {
-      for (int i = 0; i < 5; ++i) {
-        playlist.removeAt(0);
-      }
-    } else {
+    if (directoryPath == "/" || dynamicPlaylist.length == 0) {
       logger.dataLogger.i("No Song was found in Folder $directoryPath");
+      ConcatenatingAudioSource defaultPlaylist =
+          ConcatenatingAudioSource(children: [
+        AudioSource.asset("assets/music/Different_Heaven.mp3"),
+        AudioSource.asset("assets/music/Disfigure_Blank.mp3"),
+        AudioSource.asset("assets/music/Incincible.mp3"),
+        AudioSource.asset("assets/music/Itro_Tobu_Cloud_9.mp3"),
+        AudioSource.asset("assets/music/Tobu_Hope.mp3"),
+      ]);
+      player.setAudioSource(defaultPlaylist);
+      return true;
+    } else {
+      logger.dataLogger
+          .i("${dynamicPlaylist.length - 5} Songs were added to the playlist");
     }
 
-    player.setAudioSource(playlist);
+    player.setAudioSource(dynamicPlaylist);
     musicIsLoaded = true;
     return true;
   }
