@@ -9,7 +9,8 @@ import 'package:just_audio/just_audio.dart';
 class localMusicController implements MusicInterface {
   bool isPlaying = false;
   Duration songTime = Duration.zero;
-  bool musicIsLoaded = false;
+  bool _isMusicLoaded = false;
+  bool get isMusicLoaded => _isMusicLoaded;
   List<String> songPath = [];
   late AudioPlayer player;
   late String directoryPath;
@@ -59,7 +60,7 @@ class localMusicController implements MusicInterface {
 
   /// Returns bool [musicIsLoaded]
   bool getIsMusicLoaded() {
-    return musicIsLoaded;
+    return _isMusicLoaded;
   }
 
   /// Returns the Name of the Folder used
@@ -110,7 +111,7 @@ class localMusicController implements MusicInterface {
     }
 
     player.setAudioSource(playlist);
-    musicIsLoaded = true;
+    _isMusicLoaded = true;
     return true;
   }
 
