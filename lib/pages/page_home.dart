@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
@@ -17,6 +18,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int currentTime = 0;
   int _currentSpeed = 10;
+  late Timer timeElapsed;
   bool _isRunning = SessionManager().isRunning;
 
   @override
@@ -31,17 +33,16 @@ class _HomeState extends State<Home> {
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+          child: ListView(
             children: [
               sessionDisplay(),
-              const SizedBox(
-                height: 40,
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.04,
               ),
               speedSelector(),
               startRunButton(),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.02,
               ),
               const SpotifyButton(),
             ],
@@ -80,7 +81,7 @@ class _HomeState extends State<Home> {
       absorbing: _isRunning,
       child: SleekCircularSlider(
         appearance: CircularSliderAppearance(
-          size: 300,
+          size: MediaQuery.of(context).size.height * 0.4,
           customColors: CustomSliderColors(
             progressBarColor: Theme.of(context).colorScheme.primary,
             trackColor: Theme.of(context).colorScheme.onInverseSurface,
@@ -117,7 +118,7 @@ class _HomeState extends State<Home> {
 
   startRunButton() {
     return SizedBox(
-      height: 45,
+      height: MediaQuery.of(context).size.height * 0.05,
       width: double.infinity,
       child: _isRunning
           ? ElevatedButton(
@@ -150,10 +151,23 @@ class _HomeState extends State<Home> {
   }
 
   void startPressed() {
+    currentTime = 0;
     RunMusicLogic().startRun(_currentSpeed.toDouble(), 0.5);
+    //Timer that updates the time every second
+    timeElapsed = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        setState(
+          () {
+            currentTime++;
+          },
+        );
+      },
+    );
   }
 
   void stopPressed() {
+    timeElapsed.cancel();
     RunMusicLogic().finishRun();
   }
 }

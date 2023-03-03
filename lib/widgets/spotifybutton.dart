@@ -34,7 +34,7 @@ class SpotifyButtonState extends State<SpotifyButton>
                 child: const SpotifyCard(),
               )
             : SizedBox(
-                height: 40,
+                height: MediaQuery.of(context).size.height * 0.04,
                 width: double.infinity,
                 child: ElevatedButton(
                   child: const Text("Load Music"),
