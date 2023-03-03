@@ -5,11 +5,12 @@ import 'package:jog_dog/providers/music_interface.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:just_audio/just_audio.dart';
 
-/// Music Controller that works with local files and wich implements the [MusicInterface]
+/// Music Controller that works with local files and which implements the [MusicInterface]
 class localMusicController implements MusicInterface {
   bool isPlaying = false;
   Duration songTime = Duration.zero;
   bool _isMusicLoaded = false;
+
   bool get isMusicLoaded => _isMusicLoaded;
   List<String> songPath = [];
   late AudioPlayer player;
@@ -48,7 +49,7 @@ class localMusicController implements MusicInterface {
     return directoryPath;
   }
 
-  /// Returns a List wich includes all paths to the files in the directory [path]
+  /// Returns a List which includes all paths to the files in the directory [path]
   Future<List<String>> loadMusicFromPath(String path) async {
     Directory directory = Directory(directoryPath);
     return await directory.list().listen(
@@ -56,11 +57,6 @@ class localMusicController implements MusicInterface {
         songPath.add(event.path);
       },
     ).asFuture(songPath);
-  }
-
-  /// Returns bool [musicIsLoaded]
-  bool getIsMusicLoaded() {
-    return _isMusicLoaded;
   }
 
   /// Returns the Name of the Folder used
