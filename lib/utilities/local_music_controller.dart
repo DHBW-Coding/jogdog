@@ -89,9 +89,10 @@ class localMusicController implements MusicInterface {
       if (playlist.length == 200) {
         break;
       }
-      logger.dataLogger
-          .i("${playlist.length - 5} Songs were added to the playlist");
     }
+    logger.dataLogger
+        .i("${playlist.length - 5} Songs were added to the playlist");
+
     if ((playlist.length - 5) > 0) {
       for (int i = 0; i < 5; ++i) {
         playlist.removeAt(0);
