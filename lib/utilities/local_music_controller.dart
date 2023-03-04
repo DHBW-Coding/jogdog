@@ -5,9 +5,13 @@ import 'package:jog_dog/providers/music_interface.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:just_audio/just_audio.dart';
 
+/// Music Controller that works with local files and which implements the [MusicInterface]
 class localMusicController implements MusicInterface {
   bool isPlaying = false;
   Duration songTime = Duration.zero;
+  bool _isMusicLoaded = false;
+
+  bool get isMusicLoaded => _isMusicLoaded;
   List<String> songPath = [];
   late AudioPlayer player;
   late String directoryPath;
@@ -45,6 +49,7 @@ class localMusicController implements MusicInterface {
     return directoryPath;
   }
 
+  /// Returns a List which includes all paths to the files in the directory [path]
   Future<List<String>> loadMusicFromPath(String path) async {
     Directory directory = Directory(directoryPath);
     return await directory.list().listen(
@@ -54,34 +59,52 @@ class localMusicController implements MusicInterface {
     ).asFuture(songPath);
   }
 
+  /// Returns the Name of the Folder used
+  String getSelectedPlaylistName() {
+    int indexOfLastDirSlash = directoryPath.lastIndexOf("/");
+    return directoryPath.substring(indexOfLastDirSlash + 1);
+  }
+
   /// loads the music/playlist to be played
   @override
-  void loadMusic() async {
-    ConcatenatingAudioSource playlist = ConcatenatingAudioSource(
-        children: [AudioSource.asset("assets/music/SFG.mp3")]);
+  Future<bool> loadMusic() async {
     directoryPath = await getPlaylistDir();
 
-    if (directoryPath == "/") {
-      songPath = ["No Song was found"];
-      player.setAudioSource(playlist);
-      return;
-    }
-
+    // writes all files from [directoyPath] into songPath
     await loadMusicFromPath(directoryPath);
+
+    ConcatenatingAudioSource dynamicPlaylist =
+        ConcatenatingAudioSource(children: []);
 
     for (var element in songPath) {
       if (element.endsWith(".mp3") || element.endsWith(".wav")) {
-        playlist.add(AudioSource.file(element));
+        dynamicPlaylist.add(AudioSource.file(element));
       }
-      if (playlist.length == 200) {
+      if (dynamicPlaylist.length == 200) {
         break;
       }
     }
-    if (playlist.length > 1) {
-      playlist.removeAt(0);
+
+    if (directoryPath == "/" || dynamicPlaylist.length == 0) {
+      logger.dataLogger.i("No Song was found in Folder $directoryPath");
+      ConcatenatingAudioSource defaultPlaylist =
+          ConcatenatingAudioSource(children: [
+        AudioSource.asset("assets/music/Different_Heaven.mp3"),
+        AudioSource.asset("assets/music/Disfigure_Blank.mp3"),
+        AudioSource.asset("assets/music/Incincible.mp3"),
+        AudioSource.asset("assets/music/Itro_Tobu_Cloud_9.mp3"),
+        AudioSource.asset("assets/music/Tobu_Hope.mp3"),
+      ]);
+      player.setAudioSource(defaultPlaylist);
+      return true;
+    } else {
+      logger.dataLogger
+          .i("${dynamicPlaylist.length - 5} Songs were added to the playlist");
     }
 
-    player.setAudioSource(playlist);
+    player.setAudioSource(dynamicPlaylist);
+    _isMusicLoaded = true;
+    return true;
   }
 
   /// Toggles the isPlaying variable
