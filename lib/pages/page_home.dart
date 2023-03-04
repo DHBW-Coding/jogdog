@@ -78,6 +78,22 @@ class _HomeState extends State<Home> {
     return AbsorbPointer(
       absorbing: _isRunning,
       child: SleekCircularSlider(
+        innerWidget: (double value) {
+          return _isRunning ? Image.asset("assets/images/jogging_dog.gif", scale: 1.5) : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "$_currentSpeed km/h",
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
+                Text(
+                  'Select speed',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ],
+          );
+        },
         appearance: CircularSliderAppearance(
           size: MediaQuery.of(context).size.height * 0.4,
           customColors: CustomSliderColors(
@@ -90,14 +106,6 @@ class _HomeState extends State<Home> {
             trackWidth: 25,
             handlerSize: 25,
             shadowWidth: 0,
-          ),
-          infoProperties: InfoProperties(
-            mainLabelStyle: Theme.of(context).textTheme.displayMedium,
-            bottomLabelText: "Selected Speed",
-            bottomLabelStyle: Theme.of(context).textTheme.labelLarge,
-            modifier: (double value) {
-              return "${value.toInt()} km/h";
-            },
           ),
         ),
         min: 5,
