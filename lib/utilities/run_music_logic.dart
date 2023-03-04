@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -66,7 +67,7 @@ class RunMusicLogic {
                 .setPlaybackSpeed(musicChangeFactor < 0.25 ? 0.25 : 2);
           }
 
-          logger.dataLogger.i("Current musicChFac: $musicChangeFactor");
+          logger.dataLogger.d("Current musicChFac: $musicChangeFactor");
         }
       },
     );
@@ -77,7 +78,7 @@ class RunMusicLogic {
 /// Uses GPS Data to perform these kind of calculations
 class SensorData {
   static final SensorData _instance = SensorData._internal();
-  final List<double> _speeds = [];
+  final Queue<double> _speeds = Queue<double>();
 
   bool isDataReliable = false;
   
@@ -141,10 +142,11 @@ class SensorData {
         Geolocator.getPositionStream(locationSettings: _settings)
         .listen((Position dataPoint) {
         if (kDebugMode) {
-          logger.dataLogger.v("SpeedAccuracy: ${dataPoint.speedAccuracy}");
+          //logger.dataLogger.v("SpeedAccuracy: ${dataPoint.speedAccuracy}");
         }
         if (dataPoint.speedAccuracy < 0.7) {
-          _speeds.add(dataPoint.speed);
+          _speeds.addLast(dataPoint.speed);
+          if(_speeds.length > 8) _speeds.removeFirst();
         }
         if (kDebugMode) {
           logger.dataLogger.v("Raw GPS Speed: ${dataPoint.speed}");
@@ -165,17 +167,14 @@ class SensorData {
         if (!isDataReliable) {
           i++;
           // Wait until data is reliable or until 8 sec passed
-          if (_isDataReliable(_speeds) || i >= (secToTrack / sec)) {
+          if (_isDataReliable(_speeds.toList()) || i >= (secToTrack / sec)) {
             isDataReliable = true;
             i = 0;
           }
         } else if (_speeds.isNotEmpty && _dataStreamTimer.isActive) {
-          var normedSpeed = median(_speeds);
+          logger.dataLogger.d("Run Speeds Array" +_speeds.toString());
+          var normedSpeed = median(_speeds.toList());
           _streamCtrl.add(normedSpeed);
-
-          if (_speeds.length > 5) {
-            _speeds.removeRange(0, _speeds.length - 5);
-          }
         } else {
           if (kDebugMode) {
             logger.dataLogger
@@ -197,10 +196,6 @@ class SensorData {
     double variance = 
     newest5speeds.map((x) => pow(x - m, 2)).reduce((a, b) => (a + b)) / (lenght - 1);
     double stdDev = sqrt(variance);
-
-    if (kDebugMode) {
-      logger.dataLogger.i("Standart Deviation of last 5 Speeds: $stdDev");
-    }
 
     if (stdDev > 1.5) {
       return false;
