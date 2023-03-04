@@ -40,7 +40,6 @@ class SpotifyButtonState extends State<SpotifyButton>
                   child: const Text("Load Music"),
                   onPressed: () {
                     _animationController.forward();
-                    localMusicController().loadMusic();
                     setState(
                       () {
                         _connected = true;
