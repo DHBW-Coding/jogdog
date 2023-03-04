@@ -13,10 +13,22 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   static int currentTime = 0;
   static int _currentSpeed = 10;
   static bool _isRunning = false;
+  static bool _showDog = false;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+    _animationController.value = 1.0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,19 +91,33 @@ class _HomeState extends State<Home> {
       absorbing: _isRunning,
       child: SleekCircularSlider(
         innerWidget: (double value) {
-          return _isRunning ? Image.asset("assets/images/jogging_dog.gif", scale: 1.5) : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "$_currentSpeed km/h",
-                  style: Theme.of(context).textTheme.displayMedium,
-                ),
-                Text(
-                  'Select speed',
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
-              ],
+          return AnimatedBuilder(
+            animation: _animation,
+            builder: (context, child) {
+              return _showDog
+                  ? FadeTransition(
+                      opacity: _animation,
+                      child: Image.asset("assets/images/jogging_dog.gif",
+                          scale: 1.5),
+                    )
+                  : FadeTransition(
+                      opacity: _animation,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "$_currentSpeed km/h",
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                          Text(
+                            'Select speed',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ],
+                      ),
+                    );
+            },
           );
         },
         appearance: CircularSliderAppearance(
@@ -132,8 +158,12 @@ class _HomeState extends State<Home> {
               onPressed: () {
                 setState(
                   () {
-                    _isRunning = false;
+                    _isRunning = !_isRunning;
                     stopPressed();
+                    _animationController.reverse().then((_) {
+                      _showDog = !_showDog;
+                      _animationController.forward();
+                    });
                   },
                 );
               },
@@ -144,11 +174,11 @@ class _HomeState extends State<Home> {
                 setState(
                   () {
                     _isRunning = !_isRunning;
-                    if (_isRunning) {
-                      startPressed();
-                    } else {
-                      stopPressed();
-                    }
+                    startPressed();
+                    _animationController.reverse().then((_) {
+                      _showDog = !_showDog;
+                      _animationController.forward();
+                    });
                   },
                 );
               },

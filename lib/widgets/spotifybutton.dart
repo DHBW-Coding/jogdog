@@ -19,7 +19,7 @@ class SpotifyButtonState extends State<SpotifyButton>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this, duration: const Duration(milliseconds: 1000));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
   }
 
