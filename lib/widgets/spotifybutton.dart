@@ -11,7 +11,7 @@ class SpotifyButton extends StatefulWidget {
 
 class SpotifyButtonState extends State<SpotifyButton>
     with SingleTickerProviderStateMixin {
-  bool _connected = false;
+  bool _isMusicLoaded = localMusicController().isMusicLoaded;
   late AnimationController _animationController;
   late Animation<double> _animation;
 
@@ -24,11 +24,17 @@ class SpotifyButtonState extends State<SpotifyButton>
   }
 
   @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
-        return _connected
+        return _isMusicLoaded
             ? FadeTransition(
                 opacity: _animation,
                 child: const SpotifyCard(),
@@ -42,7 +48,7 @@ class SpotifyButtonState extends State<SpotifyButton>
                     _animationController.forward();
                     setState(
                       () {
-                        _connected = true;
+                        _isMusicLoaded = true;
                       },
                     );
                   },
@@ -61,7 +67,7 @@ class SpotifyCard extends StatefulWidget {
 }
 
 class SpotifyCardState extends State<SpotifyCard> {
-  bool _isPlaying = false;
+  static bool _isMusicPlaying = false;
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +94,10 @@ class SpotifyCardState extends State<SpotifyCard> {
                       },
                     ),
                     IconButton(
-                      icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+                      icon: Icon(_isMusicPlaying ? Icons.pause : Icons.play_arrow),
                       onPressed: () {
                         setState(() {
-                          _isPlaying = !_isPlaying;
+                          _isMusicPlaying = !_isMusicPlaying;
                         });
                         localMusicController().togglePlayState();
                       },

@@ -8,7 +8,6 @@ import 'package:jog_dog/utilities/session_manager.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 import '../main.dart';
-import '../widgets/spotifybutton.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -75,11 +74,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 height: MediaQuery.of(context).size.height * 0.04,
               ),
               speedSelector(),
-              startRunButton(),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.02,
-              ),
-              const SpotifyButton(),
+              Card(child: Column(children: [ListTile()]))
             ],
           ),
         ),

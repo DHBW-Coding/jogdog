@@ -10,7 +10,6 @@ class localMusicController implements MusicInterface {
   bool isPlaying = false;
   Duration songTime = Duration.zero;
   bool _isMusicLoaded = false;
-
   bool get isMusicLoaded => _isMusicLoaded;
   List<String> songPath = [];
   late AudioPlayer player;
