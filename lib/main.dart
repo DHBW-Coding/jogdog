@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -78,13 +81,21 @@ Future<void> requestPermissions() async {
     }
     return;
   }
+  List<Permission> permissions = [Permission.location];
 
-  // All needed Permissions should be stored in this map and will be
-  // requested when the method is called/map is instantiated
-  Map<Permission, PermissionStatus> allPermissionsStatus = await [
-    Permission.location,
-    Permission.audio,
-  ].request();
+  ///Check for Platform and add the right permissions
+  if (Platform.isAndroid) {
+    var androidInfo = await DeviceInfoPlugin().androidInfo;
+    if (double.parse(androidInfo.version.release) >= 10) {
+      permissions.add(Permission.audio);
+    } else {
+      permissions.add(Permission.storage);
+    }
+  } else if (Platform.isIOS) {
+    permissions.add(Permission.mediaLibrary);
+  }
+  Map<Permission, PermissionStatus> allPermissionsStatus =
+      await permissions.request();
 
   allPermissionsStatus.forEach(
     (key, currentStatus) {
