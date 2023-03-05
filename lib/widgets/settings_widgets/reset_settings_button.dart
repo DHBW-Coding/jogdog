@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jog_dog/utilities/settings.dart';
+import 'package:jog_dog/theme/theme.dart';
 
 class ResetSettingsButton extends StatelessWidget {
   const ResetSettingsButton({super.key});
@@ -25,7 +27,10 @@ class ResetSettingsButton extends StatelessWidget {
                 ),
                 TextButton(
                     onPressed: () {
-                      // Todo: Restore Settings default
+                      Settings().setTheme(Themes.automatic);
+                      Settings().setTolerance(0.05);
+                      Settings().setTargetSpeed(10);
+                      Settings().setMusicPath("");
                       Navigator.pop(context, "Ok");
                     },
                     child: const Text("Ok"))

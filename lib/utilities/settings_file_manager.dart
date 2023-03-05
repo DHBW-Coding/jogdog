@@ -11,7 +11,12 @@ class SettingsFileManager extends FileManager {
 
   /// Loads the settings from the local storage and returns a settings object
   Future<Settings> loadSettings() async {
-    return Settings.fromJson(await loadFromJson("Settings"));
+    Map<String, dynamic> json = await loadFromJson("Settings");
+    if (json.isEmpty) {
+      return Settings.fromJson(Settings().toJson());
+    }else{
+      return Settings.fromJson(json);
+    }
   }
 
   /// Deletes the settings from the local storage

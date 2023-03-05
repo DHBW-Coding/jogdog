@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jog_dog/utilities/settings.dart';
+import 'package:jog_dog/theme/theme.dart';
 
 class ThemeSelector extends StatefulWidget {
   const ThemeSelector({super.key});
@@ -8,13 +10,13 @@ class ThemeSelector extends StatefulWidget {
 }
 
 class ThemeSelectorState extends State<ThemeSelector> {
-  final Map<String, IconData> themes = {
-    "Automatic": Icons.brightness_auto,
-    "Dark Theme": Icons.brightness_3,
-    "Light Theme": Icons.brightness_medium,
+  final Map<Themes, IconData> themes = {
+    Themes.automatic: Icons.brightness_auto,
+    Themes.dark: Icons.brightness_3,
+    Themes.light: Icons.brightness_medium,
   };
 
-  late String _selectedTheme = "Automatic";
+  late Themes _selectedTheme = Settings().theme;
 
   @override
   Widget build(BuildContext context) {
@@ -28,43 +30,44 @@ class ThemeSelectorState extends State<ThemeSelector> {
           context: context,
           builder: (BuildContext context) {
             return StatefulBuilder(
-                builder: (context, setThemeState) => SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Card(
-                      elevation: 2,
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(
-                          height: 5,
-                        ),
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: themes.length,
-                        itemBuilder: (context, index) {
-                          String theme = themes.keys.elementAt(index);
-                          return RadioListTile(
-                            value: theme.toString(),
-                            groupValue: _selectedTheme,
-                            controlAffinity: ListTileControlAffinity.trailing,
-                            secondary: Icon(themes[theme]),
-                            title: Text(
-                              theme,
-                              style: Theme.of(context).textTheme.headlineSmall,
-                            ),
-                            onChanged: (value) {
-                              setThemeState(
-                                    () {
-                                  _selectedTheme = value.toString();
-                                },
-                              );
-                            },
-                          );
-                        },
+              builder: (context, setThemeState) => SizedBox(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Card(
+                    elevation: 2,
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const Divider(
+                        height: 5,
                       ),
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: themes.length,
+                      itemBuilder: (context, index) {
+                        Themes theme = themes.keys.elementAt(index);
+                        return RadioListTile(
+                          value: theme,
+                          groupValue: _selectedTheme,
+                          controlAffinity: ListTileControlAffinity.trailing,
+                          secondary: Icon(themes[theme]),
+                          title: Text(
+                            "${theme.name[0].toUpperCase()}${theme.name.substring(1).toLowerCase()}",
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          onChanged: (value) {
+                            setThemeState(
+                              () {
+                                _selectedTheme = value!;
+                                Settings().setTheme(_selectedTheme);
+                              },
+                            );
+                          },
+                        );
+                      },
                     ),
                   ),
                 ),
+              ),
             );
           },
         );

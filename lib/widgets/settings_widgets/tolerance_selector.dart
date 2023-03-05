@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jog_dog/utilities/debug_logger.dart';
+import 'package:jog_dog/utilities/settings.dart';
 
 class ToleranceSelector extends StatefulWidget {
   const ToleranceSelector({super.key});
@@ -10,8 +11,8 @@ class ToleranceSelector extends StatefulWidget {
 }
 
 class ToleranceSelectorState extends State<ToleranceSelector> {
-  late int selectedTolerance = 5;
-  late int _selectedItem = 1;
+  late int selectedTolerance = (Settings().tolerance * 100).toInt();
+  late int _selectedItem = (Settings().tolerance * 100) ~/ 5;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +51,7 @@ class ToleranceSelectorState extends State<ToleranceSelector> {
                       setToleranceState(
                         () {
                           selectedTolerance = value * 5;
+                          Settings().setTolerance(selectedTolerance / 100);
                           _selectedItem = value;
                           if (kDebugMode) {
                             allLogger.i(

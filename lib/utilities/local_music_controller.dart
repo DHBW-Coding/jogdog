@@ -3,6 +3,7 @@ import 'package:jog_dog/utilities/debug_logger.dart' as logger;
 
 import 'package:jog_dog/providers/music_interface.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:jog_dog/utilities/settings.dart';
 import 'package:just_audio/just_audio.dart';
 
 /// Music Controller that works with local files and which implements the [MusicInterface]
@@ -45,6 +46,7 @@ class localMusicController implements MusicInterface {
       directoryPath = "/";
     } else {
       directoryPath = temp.toString();
+      Settings().setMusicPath(directoryPath);
     }
     return directoryPath;
   }

@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jog_dog/pages/page_history.dart';
 import 'package:jog_dog/pages/page_home.dart';
 import 'package:jog_dog/pages/page_settings.dart';
+import 'package:jog_dog/utilities/settings.dart';
 import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debug_logger.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
@@ -15,6 +14,7 @@ var logger;
 void main() {
   runApp(const MyApp());
   requestPermissions();
+  Settings().load();
   SessionManager().loadSessionsFromJson();
   // If in Debug Mode this Code will be executed
   // Else this code will be removed automatically
@@ -61,7 +61,7 @@ class _MyApp extends State<MyApp> {
         body: <Widget>[
           const Home(),
           const History(),
-          const Settings()
+          const SettingsPage()
         ][currentPageIndex],
       ),
     );
