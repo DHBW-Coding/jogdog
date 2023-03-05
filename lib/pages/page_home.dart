@@ -49,7 +49,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _animationController.dispose();
-    _timeTimer.cancel();
+    if (_isRunning) {
+      _timeTimer.cancel();
+    }
     super.dispose();
   }
 
