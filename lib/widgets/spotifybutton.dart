@@ -15,15 +15,26 @@ class SpotifyButtonState extends State<SpotifyButton>
 
   @override
   Widget build(BuildContext context) {
-        if(_isMusicLoaded) {
-          return Column(
-            children: const [
-              Divider(),
-              SpotifyCard(),
-            ]
-          );
-        }
-        return const SizedBox();
+    if (_isMusicLoaded) {
+      return Column(children: const [
+        Divider(),
+        SpotifyCard(),
+      ]);
+    }
+    return Column(
+      children: [
+        const Divider(),
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Text("No music loaded", style: Theme.of(context).textTheme.titleLarge,),
+              Text("Please select a Playlist in settings", style: Theme.of(context).textTheme.labelLarge,)
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -40,47 +51,48 @@ class SpotifyCardState extends State<SpotifyCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          width: double.infinity,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child: Icon(Icons.music_note),
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Icon(Icons.music_note),
+            ),
+            Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.skip_previous),
+                    onPressed: () {
+                      localMusicController().previous();
+                    },
+                  ),
+                  IconButton(
+                    icon:
+                        Icon(_isMusicPlaying ? Icons.pause : Icons.play_arrow),
+                    onPressed: () {
+                      setState(() {
+                        _isMusicPlaying = !_isMusicPlaying;
+                      });
+                      localMusicController().togglePlayState();
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.skip_next),
+                    onPressed: () {
+                      localMusicController().skip();
+                    },
+                  ),
+                ],
               ),
-              Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.skip_previous),
-                      onPressed: () {
-                        localMusicController().previous();
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(_isMusicPlaying ? Icons.pause : Icons.play_arrow),
-                      onPressed: () {
-                        setState(() {
-                          _isMusicPlaying = !_isMusicPlaying;
-                        });
-                        localMusicController().togglePlayState();
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.skip_next),
-                      onPressed: () {
-                        localMusicController().skip();
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     );
   }
 }
