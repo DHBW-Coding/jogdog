@@ -53,7 +53,7 @@ class RunMusicLogic {
   void _changeMusicSpeed() {
 
     SensorData().normalizedSpeedStream.listen((currentSpeed) {
-        logger.dataLogger.d("Current NormSpeed: $currentSpeed");
+        logger.dataLogger.w("Current NormSpeed: $currentSpeed");
         double musicChangeFactor = currentSpeed / _targetSpeed;
         double speedDiff = (_prevMusicSpeed - musicChangeFactor).abs();
 
@@ -67,7 +67,7 @@ class RunMusicLogic {
                 .setPlaybackSpeed(musicChangeFactor < 0.25 ? 0.25 : 2);
           }
 
-          logger.dataLogger.d("Current musicChFac: $musicChangeFactor");
+          logger.dataLogger.w("Current musicChFac: $musicChangeFactor");
         }
       },
     );
@@ -149,11 +149,11 @@ class SensorData {
           if(_speeds.length > 8) _speeds.removeFirst();
         }
         if (kDebugMode) {
-          logger.dataLogger.v("Raw GPS Speed: ${dataPoint.speed}");
+          logger.dataLogger.d("Raw GPS Speed: ${dataPoint.speed}");
         }
       },
       onError: (err) {
-        if (kDebugMode) logger.dataLogger.v("Error on PositionStream: $err");
+        if (kDebugMode) logger.dataLogger.w("Error on PositionStream: $err");
       },
     );
   }
@@ -172,15 +172,11 @@ class SensorData {
             i = 0;
           }
         } else if (_speeds.isNotEmpty && _dataStreamTimer.isActive) {
-          logger.dataLogger.d("Run Speeds Array" +_speeds.toString());
           var normedSpeed = median(_speeds.toList());
           _currentSpeed = normedSpeed;
           _streamCtrl.add(normedSpeed);
         } else {
-          if (kDebugMode) {
-            logger.dataLogger
-                .e("GPS Module active but no accurat data reciving");
-          }
+          if (kDebugMode) logger.dataLogger.e("GPS Module active but no accurat data reciving");
         }
       },
     );
