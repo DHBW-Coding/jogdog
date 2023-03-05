@@ -68,6 +68,7 @@ class localMusicController implements MusicInterface {
   @override
   Future<bool> loadMusic() async {
     directoryPath = await getPlaylistDir();
+    await player.setLoopMode(LoopMode.all);
 
     // writes all files from [directoyPath] into songPath
     await loadMusicFromPath(directoryPath);
