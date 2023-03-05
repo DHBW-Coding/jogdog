@@ -16,25 +16,24 @@ class SpotifyButtonState extends State<SpotifyButton>
   @override
   Widget build(BuildContext context) {
     if (_isMusicLoaded) {
-      return Column(children: const [
-        Divider(),
-        SpotifyCard(),
-      ]);
-    }
-    return Column(
-      children: [
-        const Divider(),
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Text("No music loaded", style: Theme.of(context).textTheme.titleLarge,),
-              Text("Please select a Playlist in settings", style: Theme.of(context).textTheme.labelLarge,)
-            ],
-          ),
+      return const SpotifyCard();
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Text(
+              "No music loaded",
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            Text(
+              "Please select a Playlist in settings",
+              style: Theme.of(context).textTheme.labelLarge,
+            )
+          ],
         ),
-      ],
-    );
+      );
+    }
   }
 }
 

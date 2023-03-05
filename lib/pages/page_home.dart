@@ -79,6 +79,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 child: Column(
                     children:[
                       startRunButton(),
+                      const Divider(),
                       const SpotifyButton(),
                 ])
               )
