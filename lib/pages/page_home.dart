@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
@@ -14,7 +17,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  static int currentTime = 0;
+  static late int _startTime;
+  static int _currentTime = 0;
   static int _currentSpeed = 10;
   static bool _isRunning = false;
   static bool _showDog = false;
@@ -28,6 +32,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         vsync: this, duration: const Duration(milliseconds: 500));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
     _animationController.value = 1.0;
+    if (_isRunning){
+      _currentTime = DateTime.now().millisecondsSinceEpoch - _startTime;
+      Timer.periodic(
+        const Duration(seconds: 1),
+            (timer) {
+          if (mounted) {
+            setState(
+                  () {
+                _currentTime = DateTime.now().millisecondsSinceEpoch - _startTime;
+              },
+            );
+          }
+        },
+      );
+    }
   }
 
   @override
@@ -69,11 +88,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         child: Center(
           child: ListTile(
             leading: const Icon(Icons.timer),
-            title: Text(
-              //Time in HH:MM:SS format from currentTime
-              "${(currentTime / 3600).floor().toString().padLeft(2, "0")}:"
-              "${((currentTime % 3600) / 60).floor().toString().padLeft(2, "0")}:"
-              "${(currentTime % 60).toString().padLeft(2, "0")}",
+            title: Text(DateFormat('HH:mm:ss')
+                .format(DateTime.fromMillisecondsSinceEpoch(_currentTime)),
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             subtitle: Text(
@@ -187,8 +203,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   void startPressed() {
-    currentTime = 0;
-    RunMusicLogic().startRun(_currentSpeed.toDouble(), 0.5);
+    _currentTime = 0;
+    _startTime = DateTime.now().millisecondsSinceEpoch;
+    Timer.periodic(
+      const Duration(seconds: 1),
+          (timer) {
+        if (mounted) {
+          setState(
+                () {
+              _currentTime = DateTime.now().millisecondsSinceEpoch - _startTime;
+            },
+          );
+        }
+      },
+    );
+    RunMusicLogic().startRun(_currentSpeed.toDouble(), 1);
   }
 
   void stopPressed() {
