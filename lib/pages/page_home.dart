@@ -40,7 +40,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       _timeTimer = Timer.periodic(
         const Duration(seconds: 1),
         (timer) {
-            _getSessionInfoOnGoing();
+          _getSessionInfoOnGoing();
         },
       );
     }
@@ -95,8 +95,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           child: ListTile(
             leading: const Icon(Icons.timer),
             title: Text(
-              DateFormat('HH:mm:ss')
-                  .format(DateTime.fromMillisecondsSinceEpoch(_currentTime, isUtc: true)),
+              DateFormat('HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(
+                  _currentTime,
+                  isUtc: true)),
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             subtitle: Text(
@@ -224,7 +225,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _timeTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
-          _getSessionInfoOnGoing();
+        _getSessionInfoOnGoing();
       },
     );
     //Todo: Setting tolerance
@@ -238,7 +239,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   _getSessionInfoOnGoing() async {
     int time = DateTime.now().millisecondsSinceEpoch - _startTime;
-    double speed = _isRunning ? SensorData().currentSpeed : 0;
+    double speed = _isRunning ? SensorData().currentSpeed * 3.6 : 0;
     setState(() {
       _currentTime = time;
       _currentRunningSpeed = speed;
