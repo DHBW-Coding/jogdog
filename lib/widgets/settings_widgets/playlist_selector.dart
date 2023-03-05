@@ -19,7 +19,7 @@ class PlaylistSelectorState extends State<PlaylistSelector> {
       title: _musicIsLoaded
           ? Text(
               "Playlist selected: $selectedPlaylistName")
-          : const Text("Select Playlist"),
+          : const Text("Select playlist"),
       leading: const Icon(Icons.my_library_music_outlined),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () async {

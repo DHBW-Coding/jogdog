@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-enum Themes { light, dark, automatic }
-
 class AppTheme {
   static final ThemeData lightTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(

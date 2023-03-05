@@ -1,13 +1,8 @@
-import 'package:flutter/foundation.dart';
-import 'package:jog_dog/main.dart';
-import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/settings_file_manager.dart';
 
 class Settings {
 
   static Settings _settings = Settings._internal();
-  Themes _theme = Themes.automatic;
-  Themes get theme => _theme;
   double _tolerance = 0.05;
   double get tolerance => _tolerance;
   int _targetSpeed = 10;
@@ -25,9 +20,6 @@ class Settings {
 
   Future loadSettings() async {
     _settings = await SettingsFileManager().loadSettings();
-    if (kDebugMode) {
-      logger.d(_settings.theme);
-    }
   }
 
   /// Sets the tolerance for the jog dog
@@ -36,12 +28,6 @@ class Settings {
       return;
     }
     _tolerance = tolerance;
-    SettingsFileManager().saveSettings(this);
-  }
-
-  /// Sets the theme for the jog dog
-  void setTheme(Themes theme) {
-    _theme = theme;
     SettingsFileManager().saveSettings(this);
   }
 
@@ -58,7 +44,6 @@ class Settings {
 
   /// Creates a settings object from a json map
   Settings.fromJson(Map<String, dynamic> json) {
-    _theme = Themes.values[int.parse(json['theme'])];
     _tolerance = json['tolerance'];
     _targetSpeed = json['targetSpeed'];
     _musicPath = json['musicPath'];
@@ -67,7 +52,6 @@ class Settings {
   /// Creates a json map from a settings object
   Map<String, dynamic> toJson() {
     return {
-      'theme': _theme.index.toString(),
       'tolerance': _tolerance,
       'targetSpeed': _targetSpeed,
       'musicPath': _musicPath,

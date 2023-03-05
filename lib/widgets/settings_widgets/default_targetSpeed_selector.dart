@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:jog_dog/utilities/debug_logger.dart';
 import 'package:jog_dog/utilities/settings.dart';
 
-class ToleranceSelector extends StatelessWidget {
-   ToleranceSelector({super.key});
+class DefaultTargetSpeedSelector extends StatelessWidget {
+  DefaultTargetSpeedSelector({super.key});
 
-  double selectedTolerance = Settings().tolerance;
-  int _selectedItem = (Settings().tolerance * 100) ~/ 5;
+  int selectedSpeed = Settings().targetSpeed;
+  int _selectedItem = Settings().targetSpeed - 5;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text("Select tolerance"),
+      title: const Text("Select default target speed"),
       leading: const Icon(Icons.speed_outlined),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {
@@ -33,27 +33,27 @@ class ToleranceSelector extends StatelessWidget {
                   overAndUnderCenterOpacity: 0.5,
                   physics: const FixedExtentScrollPhysics(),
                   childDelegate: ListWheelChildBuilderDelegate(
-                    childCount: 21,
+                    childCount: 16,
                     builder: (context, index) {
                       return Text(
-                        "${index * 5}%",
+                        "${index + 5} km/h",
                         style: Theme.of(context).textTheme.titleLarge,
                       );
                     },
                   ),
                   onSelectedItemChanged: (value) {
-                    selectedTolerance = ((value * 5) / 100);
+                    selectedSpeed = value + 5;
                     _selectedItem = value;
                     if (kDebugMode) {
                       allLogger.i(
-                          "Selected tolerance $selectedTolerance\n Selected item $_selectedItem");
+                          "Selected tolerance $selectedSpeed\n Selected item $_selectedItem");
                     }
                   },
                 ),
               ),
             );
           },
-        ).whenComplete(() => Settings().setTolerance(selectedTolerance));
+        ).whenComplete(() => Settings().setTargetSpeed(selectedSpeed));
       },
     );
   }
