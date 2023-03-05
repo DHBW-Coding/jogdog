@@ -18,10 +18,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   static late int _startTime;
-  static int _currentTime = 0;
-  static int _currentSpeed = 10;
+  int _currentTime = 0;
+  static int _targetSpeed = 10;
   static bool _isRunning = false;
   static bool _showDog = false;
+  late Timer _timeTimer;
+  double _currentRunningSpeed = 0;
   late AnimationController _animationController;
   late Animation<double> _animation;
 
@@ -32,17 +34,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         vsync: this, duration: const Duration(milliseconds: 500));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
     _animationController.value = 1.0;
-    if (_isRunning){
-      _currentTime = DateTime.now().millisecondsSinceEpoch - _startTime;
-      Timer.periodic(
+    if (_isRunning) {
+      _getSessionInfoOnGoing();
+      _timeTimer = Timer.periodic(
         const Duration(seconds: 1),
-            (timer) {
+        (timer) {
           if (mounted) {
-            setState(
-                  () {
-                _currentTime = DateTime.now().millisecondsSinceEpoch - _startTime;
-              },
-            );
+            _getSessionInfoOnGoing();
           }
         },
       );
@@ -88,8 +86,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         child: Center(
           child: ListTile(
             leading: const Icon(Icons.timer),
-            title: Text(DateFormat('HH:mm:ss')
-                .format(DateTime.fromMillisecondsSinceEpoch(_currentTime)),
+            title: Text(
+              DateFormat('HH:mm:ss')
+                  .format(DateTime.fromMillisecondsSinceEpoch(_currentTime)),
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             subtitle: Text(
@@ -113,9 +112,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               return _showDog
                   ? FadeTransition(
                       opacity: _animation,
-                      child: Image.asset("assets/images/jogging_dog.gif",
-                          scale: 1.5),
-                    )
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset("assets/images/jogging_dog.gif",
+                              scale: 1.5),
+                          Text(
+                            'Current speed: ${_currentRunningSpeed.toStringAsFixed(2)} km/h',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ],
+                      ))
                   : FadeTransition(
                       opacity: _animation,
                       child: Column(
@@ -123,11 +131,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "$_currentSpeed km/h",
+                            "$_targetSpeed km/h",
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(
-                            'Select speed',
+                            'Selected speed',
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ],
@@ -152,12 +160,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
         min: 5,
         max: 20,
-        initialValue: _currentSpeed.toDouble(),
+        initialValue:
+            _isRunning ? _currentRunningSpeed : _targetSpeed.toDouble(),
         onChange: (double value) {
-          _currentSpeed = value.toInt();
+          _targetSpeed = value.toInt();
           if (kDebugMode) {
             logger.i("Speed: $value\n"
-                "Current speed selected: $_currentSpeed");
+                "Current speed selected: $_targetSpeed");
           }
         },
       ),
@@ -205,22 +214,27 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void startPressed() {
     _currentTime = 0;
     _startTime = DateTime.now().millisecondsSinceEpoch;
-    Timer.periodic(
+    _timeTimer = Timer.periodic(
       const Duration(seconds: 1),
-          (timer) {
+      (timer) {
         if (mounted) {
-          setState(
-                () {
-              _currentTime = DateTime.now().millisecondsSinceEpoch - _startTime;
-            },
-          );
+          _getSessionInfoOnGoing();
         }
       },
     );
-    RunMusicLogic().startRun(_currentSpeed.toDouble(), 1);
+    //Todo: Setting tolerance
+    RunMusicLogic().startRun(_targetSpeed.toDouble(), 0.1);
   }
 
   void stopPressed() {
+    _timeTimer.cancel();
     RunMusicLogic().finishRun();
+  }
+
+  _getSessionInfoOnGoing() {
+    setState(() async {
+      _currentTime = DateTime.now().millisecondsSinceEpoch - _startTime;
+      _currentRunningSpeed = _isRunning ?  await SensorData().normalizedSpeedStream.first : 0;
+    });
   }
 }
