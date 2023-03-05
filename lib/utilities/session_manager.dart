@@ -214,7 +214,7 @@ class SessionManager {
   String getRunTimeAsString(Session session) {
     int runTime = session._runEnded - session._runStarted;
     return DateFormat('HH:mm:ss')
-        .format(DateTime.fromMillisecondsSinceEpoch(runTime));
+        .format(DateTime.fromMillisecondsSinceEpoch(runTime, isUtc: true));
   }
 
   String getDateAsString(Session session) {

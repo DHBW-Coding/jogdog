@@ -96,7 +96,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             leading: const Icon(Icons.timer),
             title: Text(
               DateFormat('HH:mm:ss')
-                  .format(DateTime.fromMillisecondsSinceEpoch(_currentTime)),
+                  .format(DateTime.fromMillisecondsSinceEpoch(_currentTime, isUtc: true)),
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             subtitle: Text(
