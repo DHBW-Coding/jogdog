@@ -11,51 +11,19 @@ class SpotifyButton extends StatefulWidget {
 
 class SpotifyButtonState extends State<SpotifyButton>
     with SingleTickerProviderStateMixin {
-  bool _isMusicLoaded = localMusicController().isMusicLoaded;
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1000));
-    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
+  final bool _isMusicLoaded = localMusicController().isMusicLoaded;
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return _isMusicLoaded
-            ? FadeTransition(
-                opacity: _animation,
-                child: const SpotifyCard(),
-              )
-            : SizedBox(
-                height: MediaQuery.of(context).size.height * 0.045,
-                width: double.infinity,
-                child: ElevatedButton(
-                  child: const Text("Load Music"),
-                  onPressed: () {
-                    _animationController.forward();
-                    setState(
-                      () {
-                        _isMusicLoaded = true;
-                      },
-                    );
-                  },
-                ),
-              );
-      },
-    );
+        if(_isMusicLoaded) {
+          return Column(
+            children: const [
+              Divider(),
+              SpotifyCard(),
+            ]
+          );
+        }
+        return const SizedBox();
   }
 }
 
@@ -71,8 +39,7 @@ class SpotifyCardState extends State<SpotifyCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
+    return Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
           width: double.infinity,
@@ -114,7 +81,6 @@ class SpotifyCardState extends State<SpotifyCard> {
             ],
           ),
         ),
-      ),
     );
   }
 }
