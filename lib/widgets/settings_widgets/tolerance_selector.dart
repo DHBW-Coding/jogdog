@@ -11,8 +11,8 @@ class ToleranceSelector extends StatefulWidget {
 }
 
 class ToleranceSelectorState extends State<ToleranceSelector> {
-  late int selectedTolerance = (Settings().tolerance * 100).toInt();
-  late int _selectedItem = (Settings().tolerance * 100) ~/ 5;
+  int selectedTolerance = (Settings().tolerance * 100).toInt();
+  int _selectedItem = (Settings().tolerance * 100) ~/ 5;
 
   @override
   Widget build(BuildContext context) {

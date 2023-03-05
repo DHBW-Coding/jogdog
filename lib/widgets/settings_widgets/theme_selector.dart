@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jog_dog/utilities/settings.dart';
 import 'package:jog_dog/theme/theme.dart';
+import 'package:jog_dog/utilities/settings.dart';
 
 class ThemeSelector extends StatefulWidget {
   const ThemeSelector({super.key});
@@ -16,7 +16,7 @@ class ThemeSelectorState extends State<ThemeSelector> {
     Themes.light: Icons.brightness_medium,
   };
 
-  late Themes _selectedTheme = Settings().theme;
+  Themes _selectedTheme = Settings().theme;
 
   @override
   Widget build(BuildContext context) {
