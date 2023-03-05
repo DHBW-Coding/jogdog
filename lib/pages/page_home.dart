@@ -19,7 +19,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   static late int _startTime;
-  int _currentTime = 0;
+  static int _currentTime = 0;
   static int _targetSpeed = 10;
   bool _isRunning = SessionManager().isRunning;
   bool _showDog = SessionManager().isRunning;
