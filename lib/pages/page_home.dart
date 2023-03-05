@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
+import 'package:jog_dog/utilities/session_manager.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 import '../main.dart';
@@ -20,8 +21,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   static late int _startTime;
   int _currentTime = 0;
   static int _targetSpeed = 10;
-  static bool _isRunning = false;
-  static bool _showDog = false;
+  bool _isRunning = SessionManager().isRunning;
+  bool _showDog = SessionManager().isRunning;
   late Timer _timeTimer;
   double _currentRunningSpeed = 0;
   late AnimationController _animationController;
@@ -39,12 +40,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       _timeTimer = Timer.periodic(
         const Duration(seconds: 1),
         (timer) {
-          if (mounted) {
             _getSessionInfoOnGoing();
-          }
         },
       );
     }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _timeTimer.cancel();
+    super.dispose();
   }
 
   @override
@@ -160,8 +166,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
         min: 5,
         max: 20,
-        initialValue:
-            _isRunning ? _currentRunningSpeed : _targetSpeed.toDouble(),
+        initialValue: _targetSpeed.toDouble(),
         onChange: (double value) {
           _targetSpeed = value.toInt();
           if (kDebugMode) {
@@ -217,9 +222,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _timeTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
-        if (mounted) {
           _getSessionInfoOnGoing();
-        }
       },
     );
     //Todo: Setting tolerance
@@ -231,10 +234,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     RunMusicLogic().finishRun();
   }
 
-  _getSessionInfoOnGoing() {
-    setState(() async {
-      _currentTime = DateTime.now().millisecondsSinceEpoch - _startTime;
-      _currentRunningSpeed = _isRunning ?  await SensorData().normalizedSpeedStream.first : 0;
+  _getSessionInfoOnGoing() async {
+    int time = DateTime.now().millisecondsSinceEpoch - _startTime;
+    double speed = _isRunning ? SensorData().currentSpeed : 0;
+    setState(() {
+      _currentTime = time;
+      _currentRunningSpeed = speed;
     });
   }
 }

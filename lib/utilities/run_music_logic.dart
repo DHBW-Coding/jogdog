@@ -86,6 +86,8 @@ class SensorData {
   late LocationSettings _settings;
   late StreamSubscription _gpsSubscription;
   late Timer _dataStreamTimer;
+  late double _currentSpeed = 0;
+  double get currentSpeed => _currentSpeed;
 
   factory SensorData() {
     return _instance;
@@ -172,6 +174,7 @@ class SensorData {
         } else if (_speeds.isNotEmpty && _dataStreamTimer.isActive) {
           logger.dataLogger.d("Run Speeds Array" +_speeds.toString());
           var normedSpeed = median(_speeds.toList());
+          _currentSpeed = normedSpeed;
           _streamCtrl.add(normedSpeed);
         } else {
           if (kDebugMode) {
