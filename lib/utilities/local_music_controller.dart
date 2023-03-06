@@ -15,7 +15,7 @@ class localMusicController implements MusicInterface {
   bool get isMusicLoaded => _isMusicLoaded;
   List<String> songPath = [];
   late AudioPlayer player;
-  late String directoryPath;
+  String directoryPath = Settings().musicPath;
   static final localMusicController _instance =
       localMusicController._internal();
 
@@ -40,7 +40,7 @@ class localMusicController implements MusicInterface {
 
   /// lets the user choose the folder who´s files get put into the Playlist
   /// path to this folder is stored in [directoryPath]
-  Future<String> getPlaylistDir() async {
+  Future<String> _getPlaylistDir() async {
     String? temp = await FilePicker.platform.getDirectoryPath();
     if (temp == "/" || temp == null) {
       directoryPath = "/";
@@ -52,7 +52,7 @@ class localMusicController implements MusicInterface {
   }
 
   /// Returns a List which includes all paths to the files in the directory [path]
-  Future<List<String>> loadMusicFromPath(String path) async {
+  Future<List<String>> _loadMusicFromPath(String path) async {
     Directory directory = Directory(directoryPath);
     return await directory.list().listen(
       (event) {
@@ -76,11 +76,11 @@ class localMusicController implements MusicInterface {
   @override
   Future<bool> loadMusic() async {
     if (directoryPath.isEmpty) {
-      directoryPath = await getPlaylistDir();
+      directoryPath = await _getPlaylistDir();
     }
 
     // writes all files from [directoyPath] into songPath
-    await loadMusicFromPath(directoryPath);
+    await _loadMusicFromPath(directoryPath);
 
     ConcatenatingAudioSource dynamicPlaylist =
         ConcatenatingAudioSource(children: []);

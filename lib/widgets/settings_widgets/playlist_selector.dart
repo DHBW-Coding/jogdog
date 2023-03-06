@@ -10,7 +10,7 @@ class PlaylistSelector extends StatefulWidget {
 }
 
 class PlaylistSelectorState extends State<PlaylistSelector> {
-  static bool _musicIsLoaded = localMusicController().isMusicLoaded;
+  bool _musicIsLoaded = localMusicController().isMusicLoaded;
   String selectedPlaylistName = "No Playlist Selected";
 
   @override
@@ -25,6 +25,7 @@ class PlaylistSelectorState extends State<PlaylistSelector> {
       onTap: () async {
         _musicIsLoaded = await localMusicController().loadMusic();
         setState(() {
+          selectedPlaylistName = localMusicController().getSelectedPlaylistName();
           logger.allLogger.i("MusicIsLoaded: $_musicIsLoaded");
         });
       },
