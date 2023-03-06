@@ -213,11 +213,8 @@ class SessionManager {
   /// Returns the run time of the session as a string
   String getRunTimeAsString(Session session) {
     int runTime = session._runEnded - session._runStarted;
-    Duration duration = Duration(milliseconds: runTime);
-    double hours = duration.inHours.toDouble();
-    double minutes = duration.inMinutes.toDouble() - (hours * 60);
-    double seconds = duration.inSeconds.toDouble() - (minutes * 60);
-    return "${hours.floor()}:${minutes.floor()}:${seconds.floor()}";
+    return DateFormat('HH:mm:ss')
+        .format(DateTime.fromMillisecondsSinceEpoch(runTime, isUtc: true));
   }
 
   String getDateAsString(Session session) {

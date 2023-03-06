@@ -91,9 +91,12 @@ class RunInsights extends StatelessWidget {
                 title: ChartTitle(text: 'Speed over time'),
                 primaryXAxis: NumericAxis(
                   title: AxisTitle(text: 'Minutes into session'),
+                  interval: 1,
                 ),
-                primaryYAxis: NumericAxis(),
-                series: <ChartSeries>[
+                primaryYAxis: NumericAxis(
+                  title: AxisTitle(text: 'Speed in km/h'),
+                ),
+                series: <LineSeries>[
                   LineSeries<MapEntry<String, dynamic>, double>(
                     dataSource:
                         SessionManager().getSpeeds(session).entries.toList(),

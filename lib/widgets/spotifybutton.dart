@@ -11,44 +11,29 @@ class SpotifyButton extends StatefulWidget {
 
 class SpotifyButtonState extends State<SpotifyButton>
     with SingleTickerProviderStateMixin {
-  bool _connected = false;
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
-    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
-  }
+  final bool _isMusicLoaded = localMusicController().isMusicLoaded;
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return _connected
-            ? FadeTransition(
-                opacity: _animation,
-                child: const SpotifyCard(),
-              )
-            : SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  child: const Text("Load Music"),
-                  onPressed: () {
-                    _animationController.forward();
-                    setState(
-                      () {
-                        _connected = true;
-                      },
-                    );
-                  },
-                ),
-              );
-      },
-    );
+    if (_isMusicLoaded) {
+      return const SpotifyCard();
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Text(
+              "No music loaded",
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            Text(
+              "Please select a Playlist in settings",
+              style: Theme.of(context).textTheme.labelLarge,
+            )
+          ],
+        ),
+      );
+    }
   }
 }
 
@@ -60,52 +45,51 @@ class SpotifyCard extends StatefulWidget {
 }
 
 class SpotifyCardState extends State<SpotifyCard> {
-  bool _isPlaying = false;
+  static bool _isMusicPlaying = false;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          width: double.infinity,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child: Icon(Icons.music_note),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Icon(Icons.music_note),
+            ),
+            Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.skip_previous),
+                    onPressed: () {
+                      localMusicController().previous();
+                    },
+                  ),
+                  IconButton(
+                    icon:
+                        Icon(_isMusicPlaying ? Icons.pause : Icons.play_arrow),
+                    onPressed: () {
+                      setState(() {
+                        _isMusicPlaying = !_isMusicPlaying;
+                      });
+                      localMusicController().togglePlayState();
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.skip_next),
+                    onPressed: () {
+                      localMusicController().skip();
+                    },
+                  ),
+                ],
               ),
-              Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.skip_previous),
-                      onPressed: () {
-                        localMusicController().previous();
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-                      onPressed: () {
-                        setState(() {
-                          _isPlaying = !_isPlaying;
-                        });
-                        localMusicController().togglePlayState();
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.skip_next),
-                      onPressed: () {
-                        localMusicController().skip();
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -11,7 +11,6 @@ class localMusicController implements MusicInterface {
   bool isPlaying = false;
   Duration songTime = Duration.zero;
   bool _isMusicLoaded = false;
-
   bool get isMusicLoaded => _isMusicLoaded;
   List<String> songPath = [];
   late AudioPlayer player;
@@ -75,6 +74,7 @@ class localMusicController implements MusicInterface {
   /// loads the music/playlist to be played
   @override
   Future<bool> loadMusic() async {
+    await player.setLoopMode(LoopMode.all);
     if (directoryPath.isEmpty) {
       directoryPath = await _getPlaylistDir();
     }
