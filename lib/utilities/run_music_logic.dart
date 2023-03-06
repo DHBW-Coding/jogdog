@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -52,7 +53,7 @@ class RunMusicLogic {
   void _changeMusicSpeed() {
 
     SensorData().normalizedSpeedStream.listen((currentSpeed) {
-        logger.dataLogger.d("Current NormSpeed: $currentSpeed");
+        logger.dataLogger.w("Current NormSpeed: $currentSpeed");
         double musicChangeFactor = currentSpeed / _targetSpeed;
         double speedDiff = (_prevMusicSpeed - musicChangeFactor).abs();
 
@@ -66,7 +67,7 @@ class RunMusicLogic {
                 .setPlaybackSpeed(musicChangeFactor < 0.25 ? 0.25 : 2);
           }
 
-          logger.dataLogger.i("Current musicChFac: $musicChangeFactor");
+          logger.dataLogger.w("Current musicChFac: $musicChangeFactor");
         }
       },
     );
@@ -77,7 +78,7 @@ class RunMusicLogic {
 /// Uses GPS Data to perform these kind of calculations
 class SensorData {
   static final SensorData _instance = SensorData._internal();
-  final List<double> _speeds = [];
+  final Queue<double> _speeds = Queue<double>();
 
   bool isDataReliable = false;
   
@@ -85,6 +86,8 @@ class SensorData {
   late LocationSettings _settings;
   late StreamSubscription _gpsSubscription;
   late Timer _dataStreamTimer;
+  late double _currentSpeed = 0;
+  double get currentSpeed => _currentSpeed;
 
   factory SensorData() {
     return _instance;
@@ -139,17 +142,18 @@ class SensorData {
         Geolocator.getPositionStream(locationSettings: _settings)
         .listen((Position dataPoint) {
         if (kDebugMode) {
-          logger.dataLogger.v("SpeedAccuracy: ${dataPoint.speedAccuracy}");
+          //logger.dataLogger.v("SpeedAccuracy: ${dataPoint.speedAccuracy}");
         }
         if (dataPoint.speedAccuracy < 0.7) {
-          _speeds.add(dataPoint.speed);
+          _speeds.addLast(dataPoint.speed);
+          if(_speeds.length > 8) _speeds.removeFirst();
         }
         if (kDebugMode) {
-          logger.dataLogger.v("Raw GPS Speed: ${dataPoint.speed}");
+          logger.dataLogger.d("Raw GPS Speed: ${dataPoint.speed}");
         }
       },
       onError: (err) {
-        if (kDebugMode) logger.dataLogger.v("Error on PositionStream: $err");
+        if (kDebugMode) logger.dataLogger.w("Error on PositionStream: $err");
       },
     );
   }
@@ -163,22 +167,16 @@ class SensorData {
         if (!isDataReliable) {
           i++;
           // Wait until data is reliable or until 8 sec passed
-          if (_isDataReliable(_speeds) || i >= (secToTrack / sec)) {
+          if (_isDataReliable(_speeds.toList()) || i >= (secToTrack / sec)) {
             isDataReliable = true;
             i = 0;
           }
         } else if (_speeds.isNotEmpty && _dataStreamTimer.isActive) {
-          var normedSpeed = median(_speeds);
+          var normedSpeed = median(_speeds.toList());
+          _currentSpeed = normedSpeed;
           _streamCtrl.add(normedSpeed);
-
-          if (_speeds.length > 5) {
-            _speeds.removeRange(0, _speeds.length - 5);
-          }
         } else {
-          if (kDebugMode) {
-            logger.dataLogger
-                .e("GPS Module active but no accurat data reciving");
-          }
+          if (kDebugMode) logger.dataLogger.e("GPS Module active but no accurat data reciving");
         }
       },
     );
@@ -195,10 +193,6 @@ class SensorData {
     double variance = 
     newest5speeds.map((x) => pow(x - m, 2)).reduce((a, b) => (a + b)) / (lenght - 1);
     double stdDev = sqrt(variance);
-
-    if (kDebugMode) {
-      logger.dataLogger.i("Standart Deviation of last 5 Speeds: $stdDev");
-    }
 
     if (stdDev > 1.5) {
       return false;
