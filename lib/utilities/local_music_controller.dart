@@ -67,10 +67,17 @@ class localMusicController implements MusicInterface {
     return directoryPath.substring(indexOfLastDirSlash + 1);
   }
 
+  /// setter for [directoryPath]
+  void setPlaylistDir(String directory) {
+    directoryPath = directory;
+  }
+
   /// loads the music/playlist to be played
   @override
   Future<bool> loadMusic() async {
-    directoryPath = await getPlaylistDir();
+    if (directoryPath.isEmpty) {
+      directoryPath = await getPlaylistDir();
+    }
 
     // writes all files from [directoyPath] into songPath
     await loadMusicFromPath(directoryPath);
@@ -89,15 +96,7 @@ class localMusicController implements MusicInterface {
 
     if (directoryPath == "/" || dynamicPlaylist.length == 0) {
       logger.dataLogger.i("No Song was found in Folder $directoryPath");
-      ConcatenatingAudioSource defaultPlaylist =
-          ConcatenatingAudioSource(children: [
-        AudioSource.asset("assets/music/Different_Heaven.mp3"),
-        AudioSource.asset("assets/music/Disfigure_Blank.mp3"),
-        AudioSource.asset("assets/music/Incincible.mp3"),
-        AudioSource.asset("assets/music/Itro_Tobu_Cloud_9.mp3"),
-        AudioSource.asset("assets/music/Tobu_Hope.mp3"),
-      ]);
-      player.setAudioSource(defaultPlaylist);
+      loadDefaultPlaylist();
       return true;
     } else {
       logger.dataLogger
@@ -107,6 +106,19 @@ class localMusicController implements MusicInterface {
     player.setAudioSource(dynamicPlaylist);
     _isMusicLoaded = true;
     return true;
+  }
+
+  /// Loads the Default Songs
+  void loadDefaultPlaylist() {
+    ConcatenatingAudioSource defaultPlaylist =
+        ConcatenatingAudioSource(children: [
+      AudioSource.asset("assets/music/Different_Heaven.mp3"),
+      AudioSource.asset("assets/music/Disfigure_Blank.mp3"),
+      AudioSource.asset("assets/music/Incincible.mp3"),
+      AudioSource.asset("assets/music/Itro_Tobu_Cloud_9.mp3"),
+      AudioSource.asset("assets/music/Tobu_Hope.mp3"),
+    ]);
+    player.setAudioSource(defaultPlaylist);
   }
 
   /// Toggles the isPlaying variable
