@@ -76,13 +76,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               ),
               speedSelector(),
               Card(
-                child: Column(
-                    children:[
-                      startRunButton(),
-                      const Divider(),
-                      const SpotifyButton(),
-                ])
-              )
+                  child: Column(children: [
+                startRunButton(),
+                const Divider(),
+                const SpotifyButton(),
+              ]))
             ],
           ),
         ),
@@ -189,35 +187,43 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       height: MediaQuery.of(context).size.height * 0.05,
       width: double.infinity,
       child: _isRunning
-          ? TextButton(
-              child: const Text("Stop Run"),
-              onPressed: () {
-                setState(
-                  () {
+          ? AbsorbPointer(
+              absorbing: !_showDog,
+              child: TextButton(
+                child: const Text("Stop Run"),
+                onPressed: () {
+                  setState(() {
                     _isRunning = !_isRunning;
-                    stopPressed();
-                    _animationController.reverse().then((_) {
-                      _showDog = !_showDog;
+                  });
+                  stopPressed();
+                  _animationController.reverse().then(
+                    (_) {
+                      setState(() {
+                        _showDog = false;
+                      });
                       _animationController.forward();
-                    });
-                  },
-                );
-              },
+                    },
+                  );
+                },
+              ),
             )
-          : TextButton(
-              child: const Text("Start Run"),
-              onPressed: () {
-                setState(
-                  () {
+          : AbsorbPointer(
+              absorbing: _showDog,
+              child: TextButton(
+                child: const Text("Start Run"),
+                onPressed: () {
+                  setState(() {
                     _isRunning = !_isRunning;
-                    startPressed();
-                    _animationController.reverse().then((_) {
-                      _showDog = !_showDog;
-                      _animationController.forward();
+                  });
+                  startPressed();
+                  _animationController.reverse().then((_) {
+                    setState(() {
+                      _showDog = true;
                     });
-                  },
-                );
-              },
+                    _animationController.forward();
+                  });
+                },
+              ),
             ),
     );
   }
