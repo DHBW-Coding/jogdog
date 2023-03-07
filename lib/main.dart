@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jog_dog/pages/page_navigation.dart';
 import 'package:jog_dog/pages/page_splashscreen.dart';
+import 'package:jog_dog/utilities/local_music_controller.dart';
 import 'package:jog_dog/utilities/settings.dart';
 import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debug_logger.dart';
@@ -48,10 +49,10 @@ class _MyApp extends State<MyApp> {
           themeMode: ThemeMode.system,
           home: snapshot.connectionState == ConnectionState.waiting
               ?
-              // Show a loading spinner while the data is being loaded
+              // Show a Dog Girl while the data is loading
               const SplashScreen()
               :
-              // Once the data has been loaded, show the main app
+              // Once the data has been loaded, show the Navigation Page
               const NavigationPage(),
         );
       },
@@ -62,6 +63,8 @@ class _MyApp extends State<MyApp> {
 Future<bool> initializeApp() async {
   await Settings().loadSettings();
   await requestPermissions();
+  localMusicController().setPlaylistDir(Settings().musicPath);
+  await localMusicController().loadMusic();
   await SessionManager().loadSessionsFromJson();
   return true;
 }

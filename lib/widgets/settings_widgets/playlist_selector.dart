@@ -10,23 +10,25 @@ class PlaylistSelector extends StatefulWidget {
 }
 
 class PlaylistSelectorState extends State<PlaylistSelector> {
-  bool _musicIsLoaded = localMusicController().isMusicLoaded;
+  bool _isPlaylistSet = localMusicController().directoryPath.isEmpty;
   String selectedPlaylistName = "No Playlist Selected";
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: _musicIsLoaded
+      title: _isPlaylistSet
           ? Text(
               "Playlist selected: $selectedPlaylistName")
           : const Text("Select playlist"),
       leading: const Icon(Icons.my_library_music_outlined),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () async {
-        _musicIsLoaded = await localMusicController().loadMusic();
+        await localMusicController().setNewPlaylistDir();
+        await localMusicController().loadMusic();
         setState(() {
+          _isPlaylistSet = localMusicController().directoryPath.isNotEmpty;
           selectedPlaylistName = localMusicController().getSelectedPlaylistName();
-          logger.allLogger.i("MusicIsLoaded: $_musicIsLoaded");
+          logger.allLogger.i("Playlist has been set: $_isPlaylistSet");
         });
       },
     );

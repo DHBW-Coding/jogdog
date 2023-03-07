@@ -11,6 +11,7 @@ class localMusicController implements MusicInterface {
   bool isPlaying = false;
   Duration songTime = Duration.zero;
   bool _isMusicLoaded = false;
+
   bool get isMusicLoaded => _isMusicLoaded;
   List<String> songPath = [];
   late AudioPlayer player;
@@ -39,7 +40,7 @@ class localMusicController implements MusicInterface {
 
   /// lets the user choose the folder who´s files get put into the Playlist
   /// path to this folder is stored in [directoryPath]
-  Future<String> _getPlaylistDir() async {
+  Future<void> setNewPlaylistDir() async {
     String? temp = await FilePicker.platform.getDirectoryPath();
     if (temp == "/" || temp == null) {
       directoryPath = "/";
@@ -47,7 +48,6 @@ class localMusicController implements MusicInterface {
       directoryPath = temp.toString();
       Settings().setMusicPath(directoryPath);
     }
-    return directoryPath;
   }
 
   /// Returns a List which includes all paths to the files in the directory [path]
@@ -75,9 +75,6 @@ class localMusicController implements MusicInterface {
   @override
   Future<bool> loadMusic() async {
     await player.setLoopMode(LoopMode.all);
-    if (directoryPath.isEmpty) {
-      directoryPath = await _getPlaylistDir();
-    }
 
     // writes all files from [directoyPath] into songPath
     await _loadMusicFromPath(directoryPath);
@@ -97,6 +94,7 @@ class localMusicController implements MusicInterface {
     if (directoryPath == "/" || dynamicPlaylist.length == 0) {
       logger.dataLogger.i("No Song was found in Folder $directoryPath");
       loadDefaultPlaylist();
+      _isMusicLoaded = true;
       return true;
     } else {
       logger.dataLogger
@@ -114,7 +112,7 @@ class localMusicController implements MusicInterface {
         ConcatenatingAudioSource(children: [
       AudioSource.asset("assets/music/Different_Heaven.mp3"),
       AudioSource.asset("assets/music/Disfigure_Blank.mp3"),
-      AudioSource.asset("assets/music/Incincible.mp3"),
+      AudioSource.asset("assets/music/Invincible.mp3"),
       AudioSource.asset("assets/music/Itro_Tobu_Cloud_9.mp3"),
       AudioSource.asset("assets/music/Tobu_Hope.mp3"),
     ]);

@@ -7,7 +7,7 @@ class Settings {
   double get tolerance => _tolerance;
   int _targetSpeed = 10;
   int get targetSpeed => _targetSpeed;
-  String _musicPath = "";
+  String _musicPath = "/";
   String get musicPath => _musicPath;
 
   Settings._internal(){

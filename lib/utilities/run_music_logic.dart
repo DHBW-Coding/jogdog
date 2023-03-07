@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:jog_dog/utilities/debug_logger.dart' as logger;
 import 'package:jog_dog/utilities/local_music_controller.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
+import 'package:jog_dog/utilities/settings.dart';
 
 /// Main Logic Function to get the music speed change factor
 /// which should be forwarded to a musicInterface
@@ -28,9 +29,9 @@ class RunMusicLogic {
 
   RunMusicLogic._internal();
 
-  void startRun(double targetSpeed, double tolerance) {
+  void startRun(double targetSpeed) {
     _targetSpeed = targetSpeed / 3.6;
-    _tolerance = tolerance;
+    _tolerance = Settings().tolerance;
     SensorData().startTracking();
     SessionManager().createNewSession();
     _fadeMusicIn();

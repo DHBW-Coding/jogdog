@@ -239,7 +239,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       },
     );
     //Todo: Setting tolerance
-    RunMusicLogic().startRun(_targetSpeed.toDouble(), 0.1);
+    RunMusicLogic().startRun(_targetSpeed.toDouble());
   }
 
   void stopPressed() {
