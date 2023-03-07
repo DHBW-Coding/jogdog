@@ -8,6 +8,7 @@ import 'package:jog_dog/widgets/settings_widgets/debugger_button.dart';
 import 'package:jog_dog/widgets/settings_widgets/default_targetSpeed_selector.dart';
 import 'package:jog_dog/widgets/settings_widgets/get_in_touch_button.dart';
 import 'package:jog_dog/widgets/settings_widgets/imprint_button.dart';
+import 'package:jog_dog/widgets/settings_widgets/inertia_selector.dart';
 import 'package:jog_dog/widgets/settings_widgets/playlist_selector.dart';
 import 'package:jog_dog/widgets/settings_widgets/privacy_policy_button.dart';
 import 'package:jog_dog/widgets/settings_widgets/report_a_bug_button.dart';
@@ -47,6 +48,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
                     ///Opens a modalBottomSheet to select the tolerance of a run
                     ToleranceSelector(),
+
+                    ///Opens a modalBottomSheet to select the inertia of run
+                    InertiaSelector(),
 
                     ///Opens a DropdownButton to select a playlist
                     PlaylistSelector(key: _playlistSelectorKey,),

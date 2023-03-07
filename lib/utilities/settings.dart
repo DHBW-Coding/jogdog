@@ -9,6 +9,8 @@ class Settings {
   int get targetSpeed => _targetSpeed;
   String _musicPath = "";
   String get musicPath => _musicPath;
+  int _inertia = 2;
+  int get inertia => _inertia;
 
   Settings._internal(){
     loadSettings();
@@ -42,10 +44,16 @@ class Settings {
     SettingsFileManager().saveSettings(this);
   }
 
+  void setInertia(int inertia) {
+    _inertia = inertia;
+    SettingsFileManager().saveSettings(this);
+  }
+
   void resetSettings() {
     _musicPath = "";
     _tolerance = 0.05;
     _targetSpeed = 10;
+    _inertia = 2;
     SettingsFileManager().saveSettings(this);
   }
 
@@ -53,6 +61,7 @@ class Settings {
   Settings.fromJson(Map<String, dynamic> json) {
     _tolerance = json['tolerance'];
     _targetSpeed = json['targetSpeed'];
+    _inertia = json['inertia'];
     _musicPath = json['musicPath'];
   }
 
@@ -61,11 +70,8 @@ class Settings {
     return {
       'tolerance': _tolerance,
       'targetSpeed': _targetSpeed,
+      'inertia': _inertia,
       'musicPath': _musicPath,
     };
-  }
-
-  void load() {
-    //idk what to do here I just want to make sure the settings are loaded
   }
 }
