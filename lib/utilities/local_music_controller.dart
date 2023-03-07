@@ -29,6 +29,11 @@ class localMusicController implements MusicInterface {
     _isPlaylistSet = directoryPath.isNotEmpty;
   }
 
+  void resetDirectoryPath() {
+    directoryPath = Settings().musicPath;
+    _isPlaylistSet = false;
+  }
+
   /// set the replay-speed for the current song
   @override
   void setPlaybackSpeed(double changeFactor) async {

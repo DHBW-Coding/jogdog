@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:jog_dog/utilities/local_music_controller.dart';
 import 'package:jog_dog/utilities/settings.dart';
 import 'package:jog_dog/widgets/settings_widgets/about_us_button.dart';
 import 'package:jog_dog/widgets/settings_widgets/clear_all_sessions_button.dart';
@@ -21,6 +22,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final GlobalKey<PlaylistSelectorState> _playlistSelectorKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +49,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ToleranceSelector(),
 
                     ///Opens a DropdownButton to select a playlist
-                    const PlaylistSelector(),
+                    PlaylistSelector(key: _playlistSelectorKey,),
 
                     /// A button to delete all session that are stored
                     const ClearAllSessionsButton(),
@@ -124,10 +126,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: const Text("Cancel"),
                 ),
                 TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       setState(() {
                         Settings().resetSettings();
+                        localMusicController().resetDirectoryPath();
                       });
+                      _playlistSelectorKey.currentState?.updateSelector();
                       Navigator.pop(context, "Ok");
                     },
                     child: const Text("Ok"))

@@ -43,9 +43,9 @@ class Settings {
   }
 
   void resetSettings() {
+    _musicPath = "";
     _tolerance = 0.05;
     _targetSpeed = 10;
-    _musicPath = "";
     SettingsFileManager().saveSettings(this);
   }
 

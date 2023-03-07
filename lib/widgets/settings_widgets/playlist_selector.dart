@@ -4,7 +4,7 @@ import 'package:jog_dog/utilities/debug_logger.dart' as logger;
 import 'package:jog_dog/utilities/settings.dart';
 
 class PlaylistSelector extends StatefulWidget {
-  const PlaylistSelector({super.key});
+  const PlaylistSelector({Key? key}) : super(key: key);
 
   @override
   PlaylistSelectorState createState() => PlaylistSelectorState();
@@ -13,6 +13,13 @@ class PlaylistSelector extends StatefulWidget {
 class PlaylistSelectorState extends State<PlaylistSelector> {
   bool _isPlaylistSet = localMusicController().isPlaylistSet;
   String selectedPlaylistName = localMusicController().getSelectedPlaylistName();
+
+  void updateSelector() {
+    setState(() {
+      _isPlaylistSet = localMusicController().directoryPath.isNotEmpty;
+      selectedPlaylistName = localMusicController().getSelectedPlaylistName();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
