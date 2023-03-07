@@ -26,7 +26,7 @@ class localMusicController implements MusicInterface {
 
   localMusicController._internal() {
     player = AudioPlayer();
-    directoryPath = "";
+    _isPlaylistSet = directoryPath.isNotEmpty;
   }
 
   /// set the replay-speed for the current song
@@ -39,6 +39,11 @@ class localMusicController implements MusicInterface {
     }
   }
 
+  void setPlaylistDir(String path) {
+    directoryPath = path;
+    _isPlaylistSet = true;
+  }
+
   /// lets the user choose the folder who´s files get put into the Playlist
   /// path to this folder is stored in [directoryPath]
   Future<void> setNewPlaylistDir() async {
@@ -47,7 +52,6 @@ class localMusicController implements MusicInterface {
       directoryPath = "";
     } else {
       directoryPath = temp.toString();
-      Settings().setMusicPath(directoryPath);
       _isPlaylistSet = true;
     }
   }

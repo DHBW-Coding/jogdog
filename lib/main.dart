@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jog_dog/pages/page_navigation.dart';
 import 'package:jog_dog/pages/page_splashscreen.dart';
-import 'package:jog_dog/utilities/local_music_controller.dart';
-import 'package:jog_dog/utilities/settings.dart';
 import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debug_logger.dart';
+import 'package:jog_dog/utilities/local_music_controller.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
+import 'package:jog_dog/utilities/settings.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 var logger;
@@ -34,6 +34,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyApp extends State<MyApp> {
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
