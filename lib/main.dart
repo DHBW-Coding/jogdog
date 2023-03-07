@@ -20,10 +20,8 @@ void main() {
   // Else this code will be removed automatically
   if (kDebugMode) {
     logger = allLogger;
-    //dataLogger = DebugLogger().data;
   } else {
     logger = null;
-    //dataLogger = null;
   }
 }
 
@@ -35,8 +33,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyApp extends State<MyApp> {
-  late int currentPageIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -64,9 +60,9 @@ class _MyApp extends State<MyApp> {
 }
 
 Future<bool> initializeApp() async {
+  await Settings().loadSettings();
   await requestPermissions();
   await SessionManager().loadSessionsFromJson();
-  await Settings().loadSettings();
   return true;
 }
 
