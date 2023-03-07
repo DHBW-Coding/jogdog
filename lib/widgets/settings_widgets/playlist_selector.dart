@@ -10,8 +10,8 @@ class PlaylistSelector extends StatefulWidget {
 }
 
 class PlaylistSelectorState extends State<PlaylistSelector> {
-  bool _isPlaylistSet = localMusicController().directoryPath.isEmpty;
-  String selectedPlaylistName = "No Playlist Selected";
+  bool _isPlaylistSet = localMusicController().isPlaylistSet;
+  String selectedPlaylistName = localMusicController().getSelectedPlaylistName();
 
   @override
   Widget build(BuildContext context) {

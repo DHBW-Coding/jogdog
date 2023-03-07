@@ -21,7 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   static late int _startTime;
   static int _currentTime = 0;
-  static int _targetSpeed = Settings().targetSpeed;
+  int _targetSpeed = Settings().targetSpeed;
   bool _isRunning = SessionManager().isRunning;
   bool _showDog = SessionManager().isRunning;
   late Timer _timeTimer;
@@ -77,11 +77,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               ),
               speedSelector(),
               Card(
-                  child: Column(children: [
-                startRunButton(),
-                const Divider(),
-                const SpotifyButton(),
-              ]))
+                child: Column(
+                  children: [
+                    startRunButton(),
+                    const Divider(),
+                    const SpotifyButton(),
+                  ],
+                ),
+              )
             ],
           ),
         ),
@@ -174,6 +177,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         initialValue: _targetSpeed.toDouble(),
         onChange: (double value) {
           _targetSpeed = value.toInt();
+          Settings().setTargetSpeed(value.toInt());
           if (kDebugMode) {
             logger.i("Speed: $value\n"
                 "Current speed selected: $_targetSpeed");
@@ -239,7 +243,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       },
     );
     //Todo: Setting tolerance
-    RunMusicLogic().startRun(_targetSpeed.toDouble());
+    RunMusicLogic().startRun();
   }
 
   void stopPressed() {

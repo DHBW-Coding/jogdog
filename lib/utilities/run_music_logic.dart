@@ -29,8 +29,8 @@ class RunMusicLogic {
 
   RunMusicLogic._internal();
 
-  void startRun(double targetSpeed) {
-    _targetSpeed = targetSpeed / 3.6;
+  void startRun() {
+    _targetSpeed = Settings().targetSpeed.toDouble() / 3.6;
     _tolerance = Settings().tolerance;
     SensorData().startTracking();
     SessionManager().createNewSession();

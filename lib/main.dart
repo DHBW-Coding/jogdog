@@ -63,7 +63,6 @@ class _MyApp extends State<MyApp> {
 Future<bool> initializeApp() async {
   await Settings().loadSettings();
   await requestPermissions();
-  localMusicController().setPlaylistDir(Settings().musicPath);
   await localMusicController().loadMusic();
   await SessionManager().loadSessionsFromJson();
   return true;
