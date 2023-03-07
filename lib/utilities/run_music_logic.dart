@@ -147,7 +147,7 @@ class SensorData {
         }
         if (dataPoint.speedAccuracy < 0.7) {
           _speeds.addLast(dataPoint.speed);
-          if(_speeds.length > 8) _speeds.removeFirst();
+          if(_speeds.length > Settings().inertia) _speeds.removeFirst();
         }
         if (kDebugMode) {
           logger.dataLogger.d("Raw GPS Speed: ${dataPoint.speed}");
@@ -161,7 +161,7 @@ class SensorData {
 
   void _startDataStream() {
     int i = 0;
-    const int sec = 2;
+    const int sec = 1;
     const int secToTrack = 8;
     _streamCtrl = StreamController.broadcast();
     _dataStreamTimer = Timer.periodic(const Duration(seconds: sec), (timer) {
