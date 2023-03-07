@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
+import 'package:jog_dog/utilities/settings.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 import '../main.dart';
@@ -20,7 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   static late int _startTime;
   static int _currentTime = 0;
-  static int _targetSpeed = 10;
+  static int _targetSpeed = Settings().targetSpeed;
   bool _isRunning = SessionManager().isRunning;
   bool _showDog = SessionManager().isRunning;
   late Timer _timeTimer;

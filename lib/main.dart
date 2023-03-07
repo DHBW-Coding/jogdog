@@ -4,9 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jog_dog/pages/page_history.dart';
-import 'package:jog_dog/pages/page_home.dart';
-import 'package:jog_dog/pages/page_settings.dart';
+import 'package:jog_dog/pages/page_navigation.dart';
 import 'package:jog_dog/utilities/settings.dart';
 import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debug_logger.dart';
@@ -17,8 +15,6 @@ var logger;
 
 void main() {
   runApp(const MyApp());
-  requestPermissions();
-  SessionManager().loadSessionsFromJson();
   // If in Debug Mode this Code will be executed
   // Else this code will be removed automatically
   if (kDebugMode) {
@@ -46,33 +42,31 @@ class _MyApp extends State<MyApp> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return MaterialApp(
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      home: Scaffold(
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: currentPageIndex,
-          destinations: const [
-            NavigationDestination(
-                icon: Icon(Icons.house_outlined), label: "Home"),
-            NavigationDestination(icon: Icon(Icons.history), label: "History"),
-            NavigationDestination(icon: Icon(Icons.settings), label: 'Settings')
-          ],
-          onDestinationSelected: (int index) {
-            setState(() {
-              currentPageIndex = index;
-            });
-          },
-        ),
-        body: <Widget>[
-          const Home(),
-          const History(),
-          const SettingsPage()
-        ][currentPageIndex],
-      ),
+    return FutureBuilder(
+      future: initializeApp(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a loading spinner while the data is being loaded
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          // Once the data has been loaded, show the main app
+          return MaterialApp(
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: ThemeMode.system,
+              home: const NavigationPage(),
+          );
+        }
+      },
     );
   }
+}
+
+Future<bool> initializeApp() async {
+  await requestPermissions();
+  await SessionManager().loadSessionsFromJson();
+  await Settings().loadSettings();
+  return true;
 }
 
 Future<void> requestPermissions() async {
