@@ -50,7 +50,7 @@ class _MyApp extends State<MyApp> {
           themeMode: ThemeMode.system,
           home: snapshot.connectionState == ConnectionState.waiting
               ?
-              // Show a Dog Girl while the data is loading
+              // Show a Dog gif while the data is loading
               const SplashScreen()
               :
               // Once the data has been loaded, show the Navigation Page

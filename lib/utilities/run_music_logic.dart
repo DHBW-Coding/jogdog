@@ -87,8 +87,8 @@ class SensorData {
   late LocationSettings _settings;
   late StreamSubscription _gpsSubscription;
   late Timer _dataStreamTimer;
-  late double _currentSpeed = 0;
-  double get currentSpeed => _currentSpeed;
+  late double _currentSpeedInKmh = 0;
+  double get currentSpeedInKmh => _currentSpeedInKmh;
 
   factory SensorData() {
     return _instance;
@@ -174,7 +174,7 @@ class SensorData {
           }
         } else if (_speeds.isNotEmpty && _dataStreamTimer.isActive) {
           var normedSpeed = median(_speeds.toList());
-          _currentSpeed = normedSpeed;
+          _currentSpeedInKmh = normedSpeed * 3.6;
           _streamCtrl.add(normedSpeed);
         } else {
           if (kDebugMode) logger.dataLogger.e("GPS Module active but no accurat data reciving");

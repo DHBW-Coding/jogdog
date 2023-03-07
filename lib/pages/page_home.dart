@@ -242,7 +242,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         _getSessionInfoOnGoing();
       },
     );
-    //Todo: Setting tolerance
     RunMusicLogic().startRun();
   }
 
@@ -253,7 +252,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   _getSessionInfoOnGoing() async {
     int time = DateTime.now().millisecondsSinceEpoch - _startTime;
-    double speed = _isRunning ? SensorData().currentSpeed * 3.6 : 0;
+    double speed = SensorData().currentSpeedInKmh;
     setState(() {
       _currentTime = time;
       _currentRunningSpeed = speed;
