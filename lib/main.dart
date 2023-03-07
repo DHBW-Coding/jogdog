@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jog_dog/pages/page_navigation.dart';
+import 'package:jog_dog/pages/page_splashscreen.dart';
 import 'package:jog_dog/utilities/settings.dart';
 import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debug_logger.dart';
@@ -45,18 +46,18 @@ class _MyApp extends State<MyApp> {
     return FutureBuilder(
       future: initializeApp(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading spinner while the data is being loaded
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          // Once the data has been loaded, show the main app
-          return MaterialApp(
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
-              themeMode: ThemeMode.system,
-              home: const NavigationPage(),
-          );
-        }
+        return MaterialApp(
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: ThemeMode.system,
+          home: snapshot.connectionState == ConnectionState.waiting
+              ?
+              // Show a loading spinner while the data is being loaded
+              const SplashScreen()
+              :
+              // Once the data has been loaded, show the main app
+              const NavigationPage(),
+        );
       },
     );
   }
