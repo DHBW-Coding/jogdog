@@ -5,11 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:jog_dog/utilities/debug_logger.dart' as logger;
 import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/session_file_manager.dart';
+import 'package:jog_dog/utilities/settings.dart';
 import 'package:uuid/uuid.dart';
 
 class Session {
   String _id = const Uuid().v4();
-
+  late int _targetSpeed;
+  int get targetSpeed => _targetSpeed;
   String get id => _id;
   Map<String, dynamic> _speeds = {};
   late int _runStarted;
@@ -21,6 +23,7 @@ class Session {
   Map<String, dynamic> toJson() {
     return {
       'id': _id,
+      'targetSpeed': _targetSpeed,
       'runStarted': _runStarted,
       'runEnded': _runEnded,
       'speeds': _speeds,
@@ -31,6 +34,7 @@ class Session {
   factory Session.fromJson(Map<String, dynamic> json) {
     return Session()
       .._id = json['id']
+      .._targetSpeed = json['targetSpeed']
       .._runStarted = json['runStarted']
       .._runEnded = json['runEnded']
       .._speeds = json['speeds'];
@@ -73,6 +77,7 @@ class SessionManager {
     var time = DateTime.now().millisecondsSinceEpoch;
     _currentSession._runStarted = time;
     _currentSession._runEnded = time;
+    _currentSession._targetSpeed = Settings().targetSpeed;
     if (kDebugMode) {
       logger.dataLogger
           .v("Session started at ${DateTime.now().microsecondsSinceEpoch}");
@@ -119,7 +124,6 @@ class SessionManager {
       return;
     }
     _isRunning = false;
-    _subscription.cancel();
     keepSessionAtEndOfRun(keep);
   }
 
@@ -162,7 +166,8 @@ class SessionManager {
       }
       _saveSession();
       _sessionCount++;
-      loadSessionsFromJson();
+      _sessions.add(_currentSession);
+      sortSessionsByDate();
     } else {
       deleteSession(_currentSession.id);
     }
@@ -172,12 +177,9 @@ class SessionManager {
     return session._speeds;
   }
 
-  double getRunTimeAtTimestamp(Session session, int currentTime) {
+  DateTime getCurrentTimeAtSession(Session session, int currentTime) {
     int runTime = (currentTime - session._runStarted);
-    Duration duration = Duration(milliseconds: runTime);
-    double hours = duration.inHours.toDouble();
-    double minutes = duration.inMinutes.toDouble() - (hours * 60);
-    return minutes;
+    return DateTime.fromMillisecondsSinceEpoch(runTime, isUtc: true);
   }
 
   /// Returns the run time of the session as a string
@@ -232,5 +234,9 @@ class SessionManager {
   String getEndTimeAsString(Session session) {
     return DateFormat('HH:mm')
         .format(DateTime.fromMillisecondsSinceEpoch(session._runEnded));
+  }
+
+  String getTargetSpeed(Session session) {
+    return session._targetSpeed.toString();
   }
 }
