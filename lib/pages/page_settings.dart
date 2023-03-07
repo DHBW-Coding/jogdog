@@ -131,6 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         Settings().resetSettings();
                         localMusicController().resetDirectoryPath();
                       });
+                      localMusicController().loadMusic();
                       _playlistSelectorKey.currentState?.updateSelector();
                       Navigator.pop(context, "Ok");
                     },
