@@ -100,25 +100,29 @@ class RunInsights extends StatelessWidget {
             ),
             const Divider(height: 50),
             Card(
-              child: SfCartesianChart(
-                title: ChartTitle(text: 'Speed over time'),
-                primaryXAxis: DateTimeAxis(
-                  title: AxisTitle(text: 'Hours into session'),
-                  dateFormat: DateFormat.Hm(),
-                ),
-                primaryYAxis: NumericAxis(
-                  title: AxisTitle(text: 'Speed in km/h'),
-                  decimalPlaces: 2,
-                ),
-                series: <LineSeries>[
-                  LineSeries<MapEntry<String, dynamic>, DateTime>(
-                    dataSource:
-                        SessionManager().getSpeeds(session).entries.toList(),
-                    xValueMapper: (entry, _) => SessionManager()
-                        .getCurrentTimeAtSession(session, int.parse(entry.key)),
-                    yValueMapper: (entry, _) => entry.value,
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: SfCartesianChart(
+                  title: ChartTitle(text: 'Speed over time'),
+                  primaryXAxis: DateTimeAxis(
+                    title: AxisTitle(text: 'Hours into session'),
+                    dateFormat: DateFormat.Hm(),
                   ),
-                ],
+                  primaryYAxis: NumericAxis(
+                    title: AxisTitle(text: 'Speed in km/h'),
+                    decimalPlaces: 2,
+                  ),
+                  series: <LineSeries>[
+                    LineSeries<MapEntry<String, dynamic>, DateTime>(
+                      dataSource:
+                          SessionManager().getSpeeds(session).entries.toList(),
+                      xValueMapper: (entry, _) => SessionManager()
+                          .getCurrentTimeAtSession(
+                              session, int.parse(entry.key)),
+                      yValueMapper: (entry, _) => entry.value,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

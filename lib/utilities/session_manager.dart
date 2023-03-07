@@ -179,7 +179,7 @@ class SessionManager {
 
   DateTime getCurrentTimeAtSession(Session session, int currentTime) {
     int runTime = (currentTime - session._runStarted);
-    return DateTime.fromMillisecondsSinceEpoch(runTime, isUtc: true);
+    return DateTime.fromMillisecondsSinceEpoch(runTime);
   }
 
   /// Returns the run time of the session as a string
