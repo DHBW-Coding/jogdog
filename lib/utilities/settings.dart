@@ -42,6 +42,13 @@ class Settings {
     SettingsFileManager().saveSettings(this);
   }
 
+  void resetSettings() {
+    _tolerance = 0.05;
+    _targetSpeed = 10;
+    _musicPath = "";
+    SettingsFileManager().saveSettings(this);
+  }
+
   /// Creates a settings object from a json map
   Settings.fromJson(Map<String, dynamic> json) {
     _tolerance = json['tolerance'];

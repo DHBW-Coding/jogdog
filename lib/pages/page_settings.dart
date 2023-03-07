@@ -126,9 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        Settings().setTolerance(0.05);
-                        Settings().setTargetSpeed(10);
-                        Settings().setMusicPath("");
+                        Settings().resetSettings();
                       });
                       Navigator.pop(context, "Ok");
                     },
