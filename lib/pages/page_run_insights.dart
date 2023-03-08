@@ -116,9 +116,13 @@ class RunInsights extends StatelessWidget {
                     LineSeries<MapEntry<String, dynamic>, DateTime>(
                       dataSource:
                           SessionManager().getSpeeds(session).entries.toList(),
-                      xValueMapper: (entry, _) => SessionManager()
-                          .getCurrentTimeAtSession(
-                              session, int.parse(entry.key)),
+                      xValueMapper: (entry, _) => DateTime(
+                        1970,
+                        1,
+                        1,
+                        0,
+                      ).add(SessionManager().getCurrentTimeAtSession(
+                          int.parse(entry.key), session)),
                       yValueMapper: (entry, _) => entry.value,
                     ),
                   ],

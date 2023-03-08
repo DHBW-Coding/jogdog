@@ -19,8 +19,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  static late int _startTime;
-  static int _currentTime = 0;
+  static late DateTime _startTime;
+  static Duration _currentTime = Duration.zero;
   int _targetSpeed = Settings().targetSpeed;
   bool _isRunning = SessionManager().isRunning;
   bool _showDog = SessionManager().isRunning;
@@ -100,9 +100,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           child: ListTile(
             leading: const Icon(Icons.timer),
             title: Text(
-              DateFormat('HH:mm:ss').format(
-                DateTime.fromMillisecondsSinceEpoch(_currentTime, isUtc: true),
-              ),
+                DateFormat('HH:mm:ss').format(DateTime.utc(0).add(_currentTime)),
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             subtitle: Text(
@@ -234,8 +232,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   void startPressed() {
-    _currentTime = 0;
-    _startTime = DateTime.now().millisecondsSinceEpoch;
+    _currentTime = Duration.zero;
+    _startTime = DateTime.now();
     _timeTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
@@ -251,8 +249,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   _getSessionInfoOnGoing() async {
-    int time = DateTime.now().millisecondsSinceEpoch -
-        _startTime;
+    Duration time = DateTime.now().difference(_startTime);
     double speed = SensorData().currentSpeedInKmh;
     setState(() {
       _currentTime = time;

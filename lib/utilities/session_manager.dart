@@ -76,17 +76,13 @@ class SessionManager {
   /// Creates a new session and starts tracking
   void createNewSession() {
     _currentSession = Session();
-    var time = DateTime
-        .now()
-        .millisecondsSinceEpoch;
+    var time = DateTime.now().millisecondsSinceEpoch;
     _currentSession._runStarted = time;
     _currentSession._runEnded = time;
     _currentSession._targetSpeed = Settings().targetSpeed;
     if (kDebugMode) {
       logger.dataLogger
-          .v("Session started at ${DateTime
-          .now()
-          .millisecondsSinceEpoch}");
+          .v("Session started at ${DateTime.now().millisecondsSinceEpoch}");
     }
     continueSessionTracking();
   }
@@ -99,21 +95,16 @@ class SessionManager {
     _isRunning = true;
     _saveSessionPeriodically();
     _subscription = SensorData().normalizedSpeedStream.listen(
-          (double speed) {
-        var time = DateTime
-            .now()
-            .millisecondsSinceEpoch;
+      (double speed) {
+        var time = DateTime.now().millisecondsSinceEpoch;
         _currentSession._speeds[time.toString()] = speed * _msToKmhFactor;
         _currentSession._runEnded = time;
         if (kDebugMode) {
-          logger.dataLogger.v(
-              "Runtime: ${getRunTimeAsString(_currentSession)}, "
+          logger.dataLogger
+              .v("Runtime: ${getRunTimeAsString(_currentSession)}, "
                   "Top Speed: ${getTopSpeed(_currentSession)}, "
                   "Average Speed: ${getAverageSpeedAsString(_currentSession)}, "
-                  "Timestamp: ${DateTime
-                  .now()
-                  .millisecondsSinceEpoch}"
-          );
+                  "Timestamp: ${DateTime.now().millisecondsSinceEpoch}");
         }
       },
     );
@@ -212,17 +203,16 @@ class SessionManager {
     return "";
   }
 
-  DateTime getCurrentTimeAtSession(Session session, int currentTime) {
-    int runTime = (currentTime - session._runStarted);
-    return DateTime
-        .fromMillisecondsSinceEpoch(runTime).subtract(const Duration(hours: 1));
-    }
+  Duration getCurrentTimeAtSession(int currentTime, Session session) {
+    return DateTime.fromMillisecondsSinceEpoch(currentTime)
+        .difference(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
+  }
 
   /// Returns the run time of the session as a string
   String getRunTimeAsString(Session session) {
-    int runTime = session._runEnded - session._runStarted;
-    return DateFormat('HH:mm:ss')
-        .format(DateTime.fromMillisecondsSinceEpoch(runTime, isUtc: true));
+    Duration currentTime = DateTime.fromMillisecondsSinceEpoch(session._runEnded)
+        .difference(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
+    return DateFormat('HH:mm:ss').format(DateTime.utc(0).add(currentTime));
   }
 
   String getDateAsString(Session session) {
