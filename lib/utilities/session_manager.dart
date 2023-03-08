@@ -11,7 +11,9 @@ import 'package:uuid/uuid.dart';
 class Session {
   String _id = const Uuid().v4();
   late int _targetSpeed;
+
   int get targetSpeed => _targetSpeed;
+
   String get id => _id;
   Map<String, dynamic> _speeds = {};
   late int _runStarted;
@@ -74,13 +76,17 @@ class SessionManager {
   /// Creates a new session and starts tracking
   void createNewSession() {
     _currentSession = Session();
-    var time = DateTime.now().millisecondsSinceEpoch * 1000;
+    var time = DateTime
+        .now()
+        .millisecondsSinceEpoch;
     _currentSession._runStarted = time;
     _currentSession._runEnded = time;
     _currentSession._targetSpeed = Settings().targetSpeed;
     if (kDebugMode) {
       logger.dataLogger
-          .v("Session started at ${DateTime.now().millisecondsSinceEpoch}");
+          .v("Session started at ${DateTime
+          .now()
+          .millisecondsSinceEpoch}");
     }
     continueSessionTracking();
   }
@@ -93,16 +99,20 @@ class SessionManager {
     _isRunning = true;
     _saveSessionPeriodically();
     _subscription = SensorData().normalizedSpeedStream.listen(
-      (double speed) {
-        var time = DateTime.now().millisecondsSinceEpoch;
+          (double speed) {
+        var time = DateTime
+            .now()
+            .millisecondsSinceEpoch;
         _currentSession._speeds[time.toString()] = speed * _msToKmhFactor;
         _currentSession._runEnded = time;
         if (kDebugMode) {
           logger.dataLogger.v(
-            "Runtime: ${getRunTimeAsString(_currentSession)}, "
-            "Top Speed: ${getTopSpeed(_currentSession)}, "
-            "Average Speed: ${getAverageSpeedAsString(_currentSession)}, "
-            "Timestamp: ${DateTime.now().millisecondsSinceEpoch}"
+              "Runtime: ${getRunTimeAsString(_currentSession)}, "
+                  "Top Speed: ${getTopSpeed(_currentSession)}, "
+                  "Average Speed: ${getAverageSpeedAsString(_currentSession)}, "
+                  "Timestamp: ${DateTime
+                  .now()
+                  .millisecondsSinceEpoch}"
           );
         }
       },
@@ -177,16 +187,6 @@ class SessionManager {
     return session._speeds;
   }
 
-  DateTime getCurrentTimeAtSession(Session session, int currentTime) {
-    int runTime = (currentTime - session._runStarted);
-    return DateTime.fromMillisecondsSinceEpoch(runTime).toLocal();
-  }
-
-  /// Returns the run time of the session as a string
-  double getRunTime(Session session) {
-    return (session._runEnded - session._runStarted) / 1000;
-  }
-
   /// Returns the top speed of the session
   String getTopSpeed(Session session) {
     double currentMaximum = 0;
@@ -212,28 +212,34 @@ class SessionManager {
     return "";
   }
 
+  DateTime getCurrentTimeAtSession(Session session, int currentTime) {
+    int runTime = (currentTime - session._runStarted);
+    return DateTime
+        .fromMillisecondsSinceEpoch(runTime).subtract(const Duration(hours: 1));
+    }
+
   /// Returns the run time of the session as a string
   String getRunTimeAsString(Session session) {
     int runTime = session._runEnded - session._runStarted;
     return DateFormat('HH:mm:ss')
-        .format(DateTime.fromMillisecondsSinceEpoch(runTime).toLocal());
+        .format(DateTime.fromMillisecondsSinceEpoch(runTime, isUtc: true));
   }
 
   String getDateAsString(Session session) {
     return DateFormat('dd.MM.yyyy')
-        .format(DateTime.fromMillisecondsSinceEpoch(session._runStarted).toLocal());
+        .format(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
   }
 
   /// Returns the start time of the session as a string
   String getStartTimeAsString(Session session) {
     return DateFormat('HH:mm')
-        .format(DateTime.fromMillisecondsSinceEpoch(session._runStarted).toLocal());
+        .format(DateTime.fromMillisecondsSinceEpoch(session._runStarted));
   }
 
   /// Returns the end time of the session as a string
   String getEndTimeAsString(Session session) {
     return DateFormat('HH:mm')
-        .format(DateTime.fromMillisecondsSinceEpoch(session._runEnded).toLocal());
+        .format(DateTime.fromMillisecondsSinceEpoch(session._runEnded));
   }
 
   String getTargetSpeed(Session session) {

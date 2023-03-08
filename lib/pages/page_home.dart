@@ -100,8 +100,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           child: ListTile(
             leading: const Icon(Icons.timer),
             title: Text(
-              DateFormat('HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(
-                  _currentTime)),
+              DateFormat('HH:mm:ss').format(
+                DateTime.fromMillisecondsSinceEpoch(_currentTime, isUtc: true),
+              ),
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             subtitle: Text(
@@ -250,7 +251,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   _getSessionInfoOnGoing() async {
-    int time = DateTime.now().millisecondsSinceEpoch - _startTime;
+    int time = DateTime.now().millisecondsSinceEpoch -
+        _startTime;
     double speed = SensorData().currentSpeedInKmh;
     setState(() {
       _currentTime = time;

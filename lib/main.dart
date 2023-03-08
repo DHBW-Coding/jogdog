@@ -34,7 +34,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyApp extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([

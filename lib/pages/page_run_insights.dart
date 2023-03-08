@@ -107,7 +107,6 @@ class RunInsights extends StatelessWidget {
                   primaryXAxis: DateTimeAxis(
                     title: AxisTitle(text: 'Hours into session'),
                     dateFormat: DateFormat.Hm(),
-
                   ),
                   primaryYAxis: NumericAxis(
                     title: AxisTitle(text: 'Speed in km/h'),
