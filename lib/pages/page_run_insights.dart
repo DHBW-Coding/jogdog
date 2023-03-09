@@ -112,8 +112,8 @@ class RunInsights extends StatelessWidget {
                     title: AxisTitle(text: 'Speed in km/h'),
                     decimalPlaces: 2,
                   ),
-                  series: <LineSeries>[
-                    LineSeries<MapEntry<String, dynamic>, DateTime>(
+                  series: <ChartSeries>[
+                    SplineSeries<MapEntry<String, dynamic>, DateTime>(
                       dataSource:
                           SessionManager().getSpeeds(session).entries.toList(),
                       xValueMapper: (entry, _) => DateTime(
