@@ -99,35 +99,39 @@ class RunInsights extends StatelessWidget {
               ),
             ),
             const Divider(height: 50),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(5),
-                child: SfCartesianChart(
-                  title: ChartTitle(text: 'Speed over time'),
-                  primaryXAxis: DateTimeAxis(
-                    title: AxisTitle(text: 'Hours into session'),
-                    dateFormat: DateFormat.Hm(),
-                  ),
-                  primaryYAxis: NumericAxis(
-                    title: AxisTitle(text: 'Speed in km/h'),
-                    decimalPlaces: 2,
-                  ),
-                  series: <ChartSeries>[
-                    SplineSeries<MapEntry<String, dynamic>, DateTime>(
-                      dataSource:
-                          SessionManager().getSpeeds(session).entries.toList(),
-                      xValueMapper: (entry, _) => DateTime(
-                        1970,
-                        1,
-                        1,
-                        0,
-                      ).add(SessionManager().getCurrentTimeAtSession(
-                          int.parse(entry.key), session)),
-                      yValueMapper: (entry, _) => entry.value,
-                    ),
-                  ],
-                ),
-              ),
+            _buildChart(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChart() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(5),
+        child: SfCartesianChart(
+          title: ChartTitle(text: 'Speed over time'),
+          primaryXAxis: DateTimeAxis(
+            title: AxisTitle(text: 'Hours into session'),
+            dateFormat: DateFormat.Hm(),
+          ),
+          primaryYAxis: NumericAxis(
+            title: AxisTitle(text: 'Speed in km/h'),
+            decimalPlaces: 2,
+          ),
+          series: <ChartSeries>[
+            SplineSeries<MapEntry<String, dynamic>, DateTime>(
+              dataSource:
+              SessionManager().getSpeeds(session).entries.toList(),
+              xValueMapper: (entry, _) => DateTime(
+                1970,
+                1,
+                1,
+                0,
+              ).add(SessionManager().getCurrentTimeAtSession(
+                  int.parse(entry.key), session)),
+              yValueMapper: (entry, _) => entry.value,
             ),
           ],
         ),

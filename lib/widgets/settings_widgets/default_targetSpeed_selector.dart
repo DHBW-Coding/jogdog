@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:jog_dog/utilities/debug_logger.dart';
 import 'package:jog_dog/utilities/settings.dart';
 
+
+//Variable has to be mutable to be changed
+//ignore: must_be_immutable
 class DefaultTargetSpeedSelector extends StatelessWidget {
   DefaultTargetSpeedSelector({super.key});
 
+  final int _selectedItem = Settings().targetSpeed - 5;
   int selectedSpeed = Settings().targetSpeed;
-  int _selectedItem = Settings().targetSpeed - 5;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,6 @@ class DefaultTargetSpeedSelector extends StatelessWidget {
                   ),
                   onSelectedItemChanged: (value) {
                     selectedSpeed = value + 5;
-                    _selectedItem = value;
                     if (kDebugMode) {
                       allLogger.i(
                           "Selected tolerance $selectedSpeed\n Selected item $_selectedItem");
