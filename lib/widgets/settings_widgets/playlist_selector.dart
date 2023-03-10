@@ -26,8 +26,8 @@ class PlaylistSelectorState extends State<PlaylistSelector> {
     return ListTile(
       title: _isPlaylistSet
           ? Text(
-              "Playlist selected: $selectedPlaylistName")
-          : const Text("Select playlist"),
+              "Playlist: $selectedPlaylistName")
+          : const Text("Playlist : None"),
       leading: const Icon(Icons.my_library_music_outlined),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () async {

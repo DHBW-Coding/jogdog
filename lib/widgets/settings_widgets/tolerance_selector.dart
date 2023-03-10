@@ -12,7 +12,7 @@ class ToleranceSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text("Select tolerance"),
+      title: const Text("Speed tolerance"),
       leading: const Icon(Icons.access_time_filled_outlined),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {

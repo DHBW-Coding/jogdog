@@ -12,7 +12,7 @@ class InertiaSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text("Select inertia"),
+      title: const Text("Music adjustment time"),
       leading: const Icon(Icons.ac_unit_outlined),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {
