@@ -105,7 +105,7 @@ class RunInsights extends StatelessWidget {
                 child: SfCartesianChart(
                   title: ChartTitle(text: 'Speed over time'),
                   primaryXAxis: DateTimeAxis(
-                    title: AxisTitle(text: 'Hours into session'),
+                    title: AxisTitle(text: 'Time into session'),
                     dateFormat: DateFormat.Hm(),
                   ),
                   primaryYAxis: NumericAxis(

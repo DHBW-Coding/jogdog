@@ -38,6 +38,7 @@ class RunMusicLogic {
   }
 
   void finishRun() {
+    localMusicController().setPlaybackSpeed(1);
     SessionManager().stopSessionTracking(true);
     SensorData().stopTracking();
   }
@@ -140,18 +141,18 @@ class SensorData {
 
   void _startGPSStream() {
     _gpsSubscription =
-        Geolocator.getPositionStream(locationSettings: _settings)
-        .listen((Position dataPoint) {
-        if (kDebugMode) {
-          //logger.dataLogger.v("SpeedAccuracy: ${dataPoint.speedAccuracy}");
-        }
+      Geolocator.getPositionStream(locationSettings: _settings)
+      .listen((Position dataPoint) {
+
         if (dataPoint.speedAccuracy < 0.7) {
-          _speeds.addLast(dataPoint.speed);
+          if(dataPoint.speed <= 0){
+            _speeds.addLast(0);
+          }else{
+            _speeds.addLast(dataPoint.speed);
+          }
           if(_speeds.length > Settings().inertia) _speeds.removeFirst();
         }
-        if (kDebugMode) {
-          logger.dataLogger.d("Raw GPS Speed: ${dataPoint.speed}");
-        }
+        if (kDebugMode) { logger.dataLogger.d("Raw GPS Speed: ${dataPoint.speed}");}
       },
       onError: (err) {
         if (kDebugMode) logger.dataLogger.w("Error on PositionStream: $err");
@@ -188,7 +189,7 @@ class SensorData {
     int lenght = speeds.length;
     if (lenght <= 5) return false;
     List<double> newest5speeds = speeds.getRange(lenght - 5, lenght).toList();
-    if (newest5speeds.where((x) => x == 0.00).length >= 2) return false;
+    if (newest5speeds.where((x) => x <= 0.00).length >= 2) return false;
 
     double m = median(newest5speeds);
     double variance = 
