@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:jog_dog/utilities/debug_logger.dart';
 import 'package:jog_dog/utilities/settings.dart';
 
+//Variables has to be mutable to be changed
+////ignore: must_be_immutable
 class ToleranceSelector extends StatelessWidget {
-   ToleranceSelector({super.key});
+  ToleranceSelector({super.key});
 
+  final int _selectedItem = (Settings().tolerance * 100) ~/ 5;
   double selectedTolerance = Settings().tolerance;
-  int _selectedItem = (Settings().tolerance * 100) ~/ 5;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,6 @@ class ToleranceSelector extends StatelessWidget {
                   ),
                   onSelectedItemChanged: (value) {
                     selectedTolerance = ((value * 5) / 100);
-                    _selectedItem = value;
                     if (kDebugMode) {
                       allLogger.i(
                           "Selected tolerance $selectedTolerance\n Selected item $_selectedItem");
