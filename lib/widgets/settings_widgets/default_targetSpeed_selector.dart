@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:jog_dog/utilities/debug_logger.dart';
 import 'package:jog_dog/utilities/settings.dart';
 
-//Variables has to be mutable to be changed
-////ignore: must_be_immutable
-class ToleranceSelector extends StatelessWidget {
-  ToleranceSelector({super.key});
 
-  final int _selectedItem = (Settings().tolerance * 100) ~/ 5;
-  double selectedTolerance = Settings().tolerance;
+//Variable has to be mutable to be changed
+//ignore: must_be_immutable
+class DefaultTargetSpeedSelector extends StatelessWidget {
+  DefaultTargetSpeedSelector({super.key});
+
+  final int _selectedItem = Settings().targetSpeed - 5;
+  int selectedSpeed = Settings().targetSpeed;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text("Speed tolerance"),
-      leading: const Icon(Icons.access_time_filled_outlined),
+      title: const Text("Default target speed"),
+      leading: const Icon(Icons.speed_outlined),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {
         showModalBottomSheet<void>(
@@ -35,26 +36,26 @@ class ToleranceSelector extends StatelessWidget {
                   overAndUnderCenterOpacity: 0.5,
                   physics: const FixedExtentScrollPhysics(),
                   childDelegate: ListWheelChildBuilderDelegate(
-                    childCount: 21,
+                    childCount: 16,
                     builder: (context, index) {
                       return Text(
-                        "${index * 5}%",
+                        "${index + 5} km/h",
                         style: Theme.of(context).textTheme.titleLarge,
                       );
                     },
                   ),
                   onSelectedItemChanged: (value) {
-                    selectedTolerance = ((value * 5) / 100);
+                    selectedSpeed = value + 5;
                     if (kDebugMode) {
                       allLogger.i(
-                          "Selected tolerance $selectedTolerance\n Selected item $_selectedItem");
+                          "Selected tolerance $selectedSpeed\n Selected item $_selectedItem");
                     }
                   },
                 ),
               ),
             );
           },
-        ).whenComplete(() => Settings().setTolerance(selectedTolerance));
+        ).whenComplete(() => Settings().setTargetSpeed(selectedSpeed));
       },
     );
   }

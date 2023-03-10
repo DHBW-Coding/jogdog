@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jog_dog/utilities/run_music_logic.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
+import 'package:jog_dog/utilities/settings.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 import '../main.dart';
@@ -18,9 +19,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  static late int _startTime;
-  static int _currentTime = 0;
-  static int _targetSpeed = 10;
+  static late DateTime _startTime;
+  static Duration _currentTime = Duration.zero;
+  int _targetSpeed = Settings().targetSpeed;
   bool _isRunning = SessionManager().isRunning;
   bool _showDog = SessionManager().isRunning;
   late Timer _timeTimer;
@@ -76,11 +77,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               ),
               speedSelector(),
               Card(
-                  child: Column(children: [
-                startRunButton(),
-                const Divider(),
-                const SpotifyButton(),
-              ]))
+                child: Column(
+                  children: [
+                    startRunButton(),
+                    const Divider(),
+                    const SpotifyButton(),
+                  ],
+                ),
+              )
             ],
           ),
         ),
@@ -96,9 +100,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           child: ListTile(
             leading: const Icon(Icons.timer),
             title: Text(
-              DateFormat('HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(
-                  _currentTime,
-                  isUtc: true)),
+                DateFormat('HH:mm:ss').format(DateTime.utc(0).add(_currentTime)),
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             subtitle: Text(
@@ -173,6 +175,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         initialValue: _targetSpeed.toDouble(),
         onChange: (double value) {
           _targetSpeed = value.toInt();
+          Settings().setTargetSpeed(value.toInt());
           if (kDebugMode) {
             logger.i("Speed: $value\n"
                 "Current speed selected: $_targetSpeed");
@@ -229,16 +232,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   void startPressed() {
-    _currentTime = 0;
-    _startTime = DateTime.now().millisecondsSinceEpoch;
+    _currentTime = Duration.zero;
+    _startTime = DateTime.now();
     _timeTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
         _getSessionInfoOnGoing();
       },
     );
-    //Todo: Setting tolerance
-    RunMusicLogic().startRun(_targetSpeed.toDouble(), 0.1);
+    RunMusicLogic().startRun();
   }
 
   void stopPressed() {
@@ -247,8 +249,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   _getSessionInfoOnGoing() async {
-    int time = DateTime.now().millisecondsSinceEpoch - _startTime;
-    double speed = _isRunning ? SensorData().currentSpeed * 3.6 : 0;
+    Duration time = DateTime.now().difference(_startTime);
+    double speed = SensorData().currentSpeedInKmh;
     setState(() {
       _currentTime = time;
       _currentRunningSpeed = speed;

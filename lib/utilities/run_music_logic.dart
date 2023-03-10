@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:jog_dog/utilities/debug_logger.dart' as logger;
 import 'package:jog_dog/utilities/local_music_controller.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
+import 'package:jog_dog/utilities/settings.dart';
 
 /// Main Logic Function to get the music speed change factor
 /// which should be forwarded to a musicInterface
@@ -28,15 +29,16 @@ class RunMusicLogic {
 
   RunMusicLogic._internal();
 
-  void startRun(double targetSpeed, double tolerance) {
-    _targetSpeed = targetSpeed / 3.6;
-    _tolerance = tolerance;
+  void startRun() {
+    _targetSpeed = Settings().targetSpeed.toDouble() / 3.6;
+    _tolerance = Settings().tolerance;
     SensorData().startTracking();
     SessionManager().createNewSession();
     _fadeMusicIn();
   }
 
   void finishRun() {
+    localMusicController().setPlaybackSpeed(1);
     SessionManager().stopSessionTracking(true);
     SensorData().stopTracking();
   }
@@ -86,8 +88,8 @@ class SensorData {
   late LocationSettings _settings;
   late StreamSubscription _gpsSubscription;
   late Timer _dataStreamTimer;
-  late double _currentSpeed = 0;
-  double get currentSpeed => _currentSpeed;
+  late double _currentSpeedInKmh = 0;
+  double get currentSpeedInKmh => _currentSpeedInKmh;
 
   factory SensorData() {
     return _instance;
@@ -139,18 +141,18 @@ class SensorData {
 
   void _startGPSStream() {
     _gpsSubscription =
-        Geolocator.getPositionStream(locationSettings: _settings)
-        .listen((Position dataPoint) {
-        if (kDebugMode) {
-          //logger.dataLogger.v("SpeedAccuracy: ${dataPoint.speedAccuracy}");
-        }
+      Geolocator.getPositionStream(locationSettings: _settings)
+      .listen((Position dataPoint) {
+
         if (dataPoint.speedAccuracy < 0.7) {
-          _speeds.addLast(dataPoint.speed);
-          if(_speeds.length > 8) _speeds.removeFirst();
+          if(dataPoint.speed <= 0){
+            _speeds.addLast(0);
+          }else{
+            _speeds.addLast(dataPoint.speed);
+          }
+          if(_speeds.length > Settings().inertia) _speeds.removeFirst();
         }
-        if (kDebugMode) {
-          logger.dataLogger.d("Raw GPS Speed: ${dataPoint.speed}");
-        }
+        if (kDebugMode) { logger.dataLogger.d("Raw GPS Speed: ${dataPoint.speed}");}
       },
       onError: (err) {
         if (kDebugMode) logger.dataLogger.w("Error on PositionStream: $err");
@@ -160,7 +162,7 @@ class SensorData {
 
   void _startDataStream() {
     int i = 0;
-    const int sec = 2;
+    const int sec = 1;
     const int secToTrack = 8;
     _streamCtrl = StreamController.broadcast();
     _dataStreamTimer = Timer.periodic(const Duration(seconds: sec), (timer) {
@@ -173,7 +175,7 @@ class SensorData {
           }
         } else if (_speeds.isNotEmpty && _dataStreamTimer.isActive) {
           var normedSpeed = median(_speeds.toList());
-          _currentSpeed = normedSpeed;
+          _currentSpeedInKmh = normedSpeed * 3.6;
           _streamCtrl.add(normedSpeed);
         } else {
           if (kDebugMode) logger.dataLogger.e("GPS Module active but no accurat data reciving");
@@ -187,7 +189,7 @@ class SensorData {
     int lenght = speeds.length;
     if (lenght <= 5) return false;
     List<double> newest5speeds = speeds.getRange(lenght - 5, lenght).toList();
-    if (newest5speeds.where((x) => x == 0.00).length >= 2) return false;
+    if (newest5speeds.where((x) => x <= 0.00).length >= 2) return false;
 
     double m = median(newest5speeds);
     double variance = 

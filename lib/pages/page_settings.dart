@@ -1,25 +1,29 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:jog_dog/utilities/local_music_controller.dart';
+import 'package:jog_dog/utilities/settings.dart';
+import 'package:jog_dog/widgets/settings_widgets/about_us_button.dart';
+import 'package:jog_dog/widgets/settings_widgets/clear_all_sessions_button.dart';
+import 'package:jog_dog/widgets/settings_widgets/debugger_button.dart';
+import 'package:jog_dog/widgets/settings_widgets/default_targetSpeed_selector.dart';
+import 'package:jog_dog/widgets/settings_widgets/get_in_touch_button.dart';
+import 'package:jog_dog/widgets/settings_widgets/imprint_button.dart';
+import 'package:jog_dog/widgets/settings_widgets/inertia_selector.dart';
 import 'package:jog_dog/widgets/settings_widgets/playlist_selector.dart';
-import 'package:jog_dog/widgets/settings_widgets/theme_selector.dart';
+import 'package:jog_dog/widgets/settings_widgets/privacy_policy_button.dart';
+import 'package:jog_dog/widgets/settings_widgets/report_a_bug_button.dart';
+import 'package:jog_dog/widgets/settings_widgets/tip_button.dart';
 import 'package:jog_dog/widgets/settings_widgets/tolerance_selector.dart';
 
-import '../widgets/settings_widgets/about_us_button.dart';
-import '../widgets/settings_widgets/clear_all_sessions_button.dart';
-import '../widgets/settings_widgets/debugger_button.dart';
-import '../widgets/settings_widgets/get_in_touch_button.dart';
-import '../widgets/settings_widgets/privacy_policy_button.dart';
-import '../widgets/settings_widgets/reset_settings_button.dart';
-import '../widgets/settings_widgets/tip_button.dart';
-
-class Settings extends StatefulWidget {
-  const Settings({super.key});
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
 
   @override
-  State<Settings> createState() => _SettingsState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsState extends State<Settings> {
+class _SettingsPageState extends State<SettingsPage> {
+  final GlobalKey<PlaylistSelectorState> _playlistSelectorKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,34 +38,28 @@ class _SettingsState extends State<Settings> {
         child: Center(
           child: ListView(
             children: <Widget>[
-              ///Start of Display Settings -------------------------------------
-              Text("Display", style: Theme.of(context).textTheme.headlineSmall),
-              Card(
-                child: Column(
-                  children: const [
-                    /// Opens a bottomModalSheet to select the theme of the app
-                    ThemeSelector(),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 50),
-
               ///Start of General Settings -------------------------------------
               Text("General", style: Theme.of(context).textTheme.headlineSmall),
               Card(
                 child: Column(
-                  children: const [
+                  children: [
+                    ///Opens a modalBottomSheet to select the standard default speed the user wants to hold
+                    DefaultTargetSpeedSelector(),
+
                     ///Opens a modalBottomSheet to select the tolerance of a run
                     ToleranceSelector(),
 
+                    ///Opens a modalBottomSheet to select the inertia of run
+                    InertiaSelector(),
+
                     ///Opens a DropdownButton to select a playlist
-                    PlaylistSelector(),
+                    PlaylistSelector(key: _playlistSelectorKey,),
 
                     /// A button to delete all session that are stored
-                    ClearAllSessionsButton(),
+                    const ClearAllSessionsButton(),
 
                     /// A button to restore all default settings
-                    ResetSettingsButton(),
+                    resetSettingsButton(),
                   ],
                 ),
               ),
@@ -74,8 +72,10 @@ class _SettingsState extends State<Settings> {
                   children: const [
                     /// Opens a mail with pre written mail and subject
                     GetInTouchButton(),
+                    ReportABugButton(),
                     PrivacyPolicyButton(),
                     AboutUsButton(),
+                    ImprintButton(),
                   ],
                 ),
               ),
@@ -107,6 +107,44 @@ class _SettingsState extends State<Settings> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget resetSettingsButton() {
+    return ListTile(
+      title: const Text("Reset settings"),
+      leading: const Icon(Icons.settings_backup_restore),
+      trailing: const Icon(Icons.arrow_forward_ios),
+      onTap: () {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Resetting all settings!"),
+              content: const Text(
+                  "Are you sure you want to reset all your settings?"),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, "Cancel"),
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                    onPressed: () async {
+                      setState(() {
+                        Settings().resetSettings();
+                        localMusicController().resetDirectoryPath();
+                      });
+                      localMusicController().loadMusic();
+                      _playlistSelectorKey.currentState?.updateSelector();
+                      Navigator.pop(context, "Ok");
+                    },
+                    child: const Text("Ok"))
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }

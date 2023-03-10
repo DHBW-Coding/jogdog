@@ -4,28 +4,25 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jog_dog/pages/page_history.dart';
-import 'package:jog_dog/pages/page_home.dart';
-import 'package:jog_dog/pages/page_settings.dart';
+import 'package:jog_dog/pages/page_navigation.dart';
+import 'package:jog_dog/pages/page_splashscreen.dart';
 import 'package:jog_dog/theme/theme.dart';
 import 'package:jog_dog/utilities/debug_logger.dart';
+import 'package:jog_dog/utilities/local_music_controller.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
+import 'package:jog_dog/utilities/settings.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 var logger;
 
 void main() {
   runApp(const MyApp());
-  requestPermissions();
-  SessionManager().loadSessionsFromJson();
   // If in Debug Mode this Code will be executed
   // Else this code will be removed automatically
   if (kDebugMode) {
     logger = allLogger;
-    //dataLogger = DebugLogger().data;
   } else {
     logger = null;
-    //dataLogger = null;
   }
 }
 
@@ -37,41 +34,38 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyApp extends State<MyApp> {
-  late int currentPageIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return MaterialApp(
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      home: Scaffold(
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: currentPageIndex,
-          destinations: const [
-            NavigationDestination(
-                icon: Icon(Icons.house_outlined), label: "Home"),
-            NavigationDestination(icon: Icon(Icons.history), label: "History"),
-            NavigationDestination(icon: Icon(Icons.settings), label: 'Settings')
-          ],
-          onDestinationSelected: (int index) {
-            setState(() {
-              currentPageIndex = index;
-            });
-          },
-        ),
-        body: <Widget>[
-          const Home(),
-          const History(),
-          const Settings()
-        ][currentPageIndex],
-      ),
+    return FutureBuilder(
+      future: initializeApp(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        return MaterialApp(
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: ThemeMode.system,
+          home: snapshot.connectionState == ConnectionState.waiting
+              ?
+              // Show a Dog gif while the data is loading
+              const SplashScreen()
+              :
+              // Once the data has been loaded, show the Navigation Page
+              const NavigationPage(),
+        );
+      },
     );
   }
+}
+
+Future<bool> initializeApp() async {
+  await Settings().loadSettings();
+  await requestPermissions();
+  await localMusicController().loadMusic();
+  await SessionManager().loadSessionsFromJson();
+  return true;
 }
 
 Future<void> requestPermissions() async {

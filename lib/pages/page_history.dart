@@ -22,9 +22,23 @@ class _HistoryState extends State<History> {
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: SessionManager().sessions.isEmpty
-            ? const ListTile(
-                title: Text("No sessions found"),
-                subtitle: Text("Start a session to see it here"),
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const ListTile(
+                    title: Text("No sessions found"),
+                    subtitle: Text(
+                      "Start a session to see it here",
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      "assets/images/take_me_out_dog.png",
+                      scale: 1.5,
+                    ),
+                  )
+                ],
               )
             : ListView.separated(
                 separatorBuilder: (BuildContext context, int index) =>

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -59,15 +60,15 @@ class RunInsights extends StatelessWidget {
                     ),
                     const Divider(height: 20),
 
-                    ///Shows the top speed of the session
+                    /// Shows the targetSpeed of the session
                     Text(
-                      "Top speed",
+                      "Target speed",
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     ListTile(
-                      leading: const Icon(Icons.speed),
-                      title:
-                          Text('${SessionManager().getTopSpeed(session)} km/h'),
+                      leading: const Icon(Icons.speed_outlined),
+                      title: Text(
+                          "${SessionManager().getTargetSpeed(session)} km/h"),
                     ),
                     const Divider(height: 20),
 
@@ -81,31 +82,56 @@ class RunInsights extends StatelessWidget {
                       title: Text(
                           '${SessionManager().getAverageSpeedAsString(session)} km/h'),
                     ),
+                    const Divider(height: 20),
+
+                    ///Shows the top speed of the session
+                    Text(
+                      "Top speed",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.speed),
+                      title:
+                          Text('${SessionManager().getTopSpeed(session)} km/h'),
+                    ),
                   ],
                 ),
               ),
             ),
             const Divider(height: 50),
-            Card(
-              child: SfCartesianChart(
-                title: ChartTitle(text: 'Speed over time'),
-                primaryXAxis: NumericAxis(
-                  title: AxisTitle(text: 'Minutes into session'),
-                  interval: 1,
-                ),
-                primaryYAxis: NumericAxis(
-                  title: AxisTitle(text: 'Speed in km/h'),
-                ),
-                series: <LineSeries>[
-                  LineSeries<MapEntry<String, dynamic>, double>(
-                    dataSource:
-                        SessionManager().getSpeeds(session).entries.toList(),
-                    xValueMapper: (entry, _) => SessionManager()
-                        .getRunTimeAtTimestamp(session, int.parse(entry.key)),
-                    yValueMapper: (entry, _) => entry.value,
-                  ),
-                ],
-              ),
+            _buildChart(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChart() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(5),
+        child: SfCartesianChart(
+          title: ChartTitle(text: 'Speed over time'),
+          primaryXAxis: DateTimeAxis(
+            title: AxisTitle(text: 'Time into session'),
+            dateFormat: DateFormat.Hm(),
+          ),
+          primaryYAxis: NumericAxis(
+            title: AxisTitle(text: 'Speed in km/h'),
+            decimalPlaces: 2,
+          ),
+          series: <ChartSeries>[
+            SplineSeries<MapEntry<String, dynamic>, DateTime>(
+              dataSource:
+              SessionManager().getSpeeds(session).entries.toList(),
+              xValueMapper: (entry, _) => DateTime(
+                1970,
+                1,
+                1,
+                0,
+              ).add(SessionManager().getCurrentTimeAtSession(
+                  int.parse(entry.key), session)),
+              yValueMapper: (entry, _) => entry.value,
             ),
           ],
         ),
