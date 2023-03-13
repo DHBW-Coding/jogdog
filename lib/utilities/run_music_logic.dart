@@ -34,6 +34,7 @@ class RunMusicLogic {
     _tolerance = Settings().tolerance;
     SensorData().startTracking();
     SessionManager().createNewSession();
+    SessionManager().continueSessionTracking();
     _fadeMusicIn();
   }
 
@@ -90,6 +91,7 @@ class SensorData {
   late Timer _dataStreamTimer;
   late double _currentSpeedInKmh = 0;
   double get currentSpeedInKmh => _currentSpeedInKmh;
+  int _inertia = Settings().inertia;
 
   factory SensorData() {
     return _instance;
@@ -126,6 +128,7 @@ class SensorData {
   }
 
   void startTracking() {
+    _speeds.clear();
     _startGPSStream();
     _startDataStream();
   }
@@ -150,7 +153,7 @@ class SensorData {
           }else{
             _speeds.addLast(dataPoint.speed);
           }
-          if(_speeds.length > Settings().inertia) _speeds.removeFirst();
+          if(_speeds.length > _inertia) _speeds.removeFirst();
         }
         if (kDebugMode) { logger.dataLogger.d("Raw GPS Speed: ${dataPoint.speed}");}
       },

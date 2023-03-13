@@ -9,7 +9,7 @@ import 'package:jog_dog/utilities/settings.dart';
 import 'package:uuid/uuid.dart';
 
 class Session {
-  String _id = const Uuid().v4();
+  String _id = Uuid().v4();
   late int _targetSpeed;
 
   int get targetSpeed => _targetSpeed;
@@ -46,12 +46,12 @@ class Session {
 class SessionManager {
   static final SessionManager _instance = SessionManager._internal();
   late List<Session> _sessions = [];
-
   List<Session> get sessions => _sessions;
   late Session _currentSession;
   late StreamSubscription _subscription;
   bool _isRunning = false;
   int _sessionCount = 0;
+  int get sessionCount => _sessionCount;
 
   bool get isRunning => _isRunning;
   final double _msToKmhFactor = 3.6;
@@ -84,7 +84,6 @@ class SessionManager {
       logger.dataLogger
           .v("Session started at ${DateTime.now().millisecondsSinceEpoch}");
     }
-    continueSessionTracking();
   }
 
   /// Starts tracking the current session
