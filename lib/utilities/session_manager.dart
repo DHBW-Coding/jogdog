@@ -76,7 +76,7 @@ class SessionManager {
 
   /// Tracks the time of the current session
   /// If the time is over 4 hours, the session is stopped and a new one is created
-  void trackSessionTime() {
+  void _trackSessionTime() {
     int time = 0;
     Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!_isRunning) {
@@ -119,7 +119,7 @@ class SessionManager {
       return;
     }
     _isRunning = true;
-    trackSessionTime();
+    _trackSessionTime();
     _saveSessionPeriodically();
     _subscription = SensorData().normalizedSpeedStream.listen(
       (double speed) {
