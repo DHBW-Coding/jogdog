@@ -83,7 +83,7 @@ class SensorData {
   static final SensorData _instance = SensorData._internal();
   final Queue<double> _speeds = Queue<double>();
 
-  bool isDataReliable = false;
+  bool dataReliable = false;
   
   late StreamController<double> _streamCtrl;
   late LocationSettings _settings;
@@ -169,11 +169,11 @@ class SensorData {
     const int secToTrack = 8;
     _streamCtrl = StreamController.broadcast();
     _dataStreamTimer = Timer.periodic(const Duration(seconds: sec), (timer) {
-        if (!isDataReliable) {
+        if (!dataReliable) {
           i++;
           // Wait until data is reliable or until 8 sec passed
-          if (_isDataReliable(_speeds.toList()) || i >= (secToTrack / sec)) {
-            isDataReliable = true;
+          if (isDataReliable(_speeds.toList()) || i >= (secToTrack / sec)) {
+            dataReliable = true;
             i = 0;
           }
         } else if (_speeds.isNotEmpty && _dataStreamTimer.isActive) {
@@ -187,32 +187,32 @@ class SensorData {
     );
   }
 
-  /// Checks if last values are note deviated too much
-  bool _isDataReliable(List<double> speeds) {
-    int lenght = speeds.length;
-    if (lenght <= 5) return false;
-    List<double> newest5speeds = speeds.getRange(lenght - 5, lenght).toList();
-    if (newest5speeds.where((x) => x <= 0.00).length >= 2) return false;
-
-    double m = median(newest5speeds);
-    double variance = 
-    newest5speeds.map((x) => pow(x - m, 2)).reduce((a, b) => (a + b)) / (lenght - 1);
-    double stdDev = sqrt(variance);
-
-    if (stdDev > 1.5) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   /// Publish every 2 seconds the current Speed
   Stream<double> get normalizedSpeedStream {
     return _streamCtrl.stream;
   }
 }
 
-/// Calulates the median of the givens [values] of a list
+/// Checks if last values are note deviated too much
+bool isDataReliable(List<double> speeds) {
+  int length = speeds.length;
+  if (length <= 5) return false;
+  List<double> newest5speeds = speeds.getRange(length - 5, length).toList();
+  if (newest5speeds.where((x) => x <= 0.00).length >= 2) return false;
+
+  double m = median(newest5speeds);
+  double variance =
+      newest5speeds.map((x) => pow(x - m, 2)).reduce((a, b) => (a + b)) / (length - 1);
+  double stdDev = sqrt(variance);
+
+  if (stdDev > 1.5) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+/// Calculates the median of the givens [values] of a list
 double median(List values) {
   values.sort();
 

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jog_dog/utilities/session_manager.dart';
-import 'package:path_provider/path_provider.dart';
 
 void main() {
   group("Testing different methods of the session_manager", () {
