@@ -20,6 +20,11 @@ void main() {
       expect(test, true);
     });
 
+    test("The method returns true if the data is reliable with only two values", () {
+      bool test = isDataReliable([1.0, 1.0]);
+      expect(test, true);
+    });
+
     test("The method returns false if the data is not reliable", () {
       bool test = isDataReliable([1.0, 1.0, 0.0, 0.0, 0.0, 1.0]);
       expect(test, false);
