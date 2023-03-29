@@ -83,7 +83,7 @@ class SensorData {
   static final SensorData _instance = SensorData._internal();
   final Queue<double> _speeds = Queue<double>();
 
-  bool dataReliable = false;
+  bool _isDataReliable = false;
   
   late StreamController<double> _streamCtrl;
   late LocationSettings _settings;
@@ -169,11 +169,11 @@ class SensorData {
     const int secToTrack = 8;
     _streamCtrl = StreamController.broadcast();
     _dataStreamTimer = Timer.periodic(const Duration(seconds: sec), (timer) {
-        if (!dataReliable) {
+        if (!_isDataReliable) {
           i++;
           // Wait until data is reliable or until 8 sec passed
           if (isDataReliable(_speeds.toList()) || i >= (secToTrack / sec)) {
-            dataReliable = true;
+            _isDataReliable = true;
             i = 0;
           }
         } else if (_speeds.isNotEmpty && _dataStreamTimer.isActive) {
