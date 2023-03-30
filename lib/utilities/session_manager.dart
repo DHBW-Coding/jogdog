@@ -9,7 +9,7 @@ import 'package:jog_dog/utilities/settings.dart';
 import 'package:uuid/uuid.dart';
 
 class Session {
-  String _id = const Uuid().v4();
+  String _id = Uuid().v4();
   late int _targetSpeed;
 
   int get targetSpeed => _targetSpeed;
@@ -46,12 +46,13 @@ class Session {
 class SessionManager {
   static final SessionManager _instance = SessionManager._internal();
   late List<Session> _sessions = [];
-
   List<Session> get sessions => _sessions;
   late Session _currentSession;
   late StreamSubscription _subscription;
   bool _isRunning = false;
+  late Timer _saveSessionTimer;
   int _sessionCount = 0;
+  int get sessionCount => _sessionCount;
 
   bool get isRunning => _isRunning;
   final double _msToKmhFactor = 3.6;
@@ -73,8 +74,34 @@ class SessionManager {
     _sessions.sort((a, b) => b._runStarted.compareTo(a._runStarted));
   }
 
+  /// Tracks the time of the current session
+  /// If the time is over 4 hours, the session is stopped and a new one is created
+  void _trackSessionTime() {
+    int time = 0;
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!_isRunning) {
+        timer.cancel();
+        return;
+      }
+      time++;
+      /// 14.400 seconds = 4 hours
+      /// +1 second to for the 1 second delay of the timer
+      if (time == 14401) {
+        stopSessionTracking(true);
+        _subscription.cancel();
+        _saveSessionTimer.cancel();
+        createNewSession();
+        continueSessionTracking();
+        timer.cancel();
+      }
+    });
+  }
+
   /// Creates a new session and starts tracking
   void createNewSession() {
+    if (_sessionCount > 49) {
+      deleteSession(_sessions.last.id);
+    }
     _currentSession = Session();
     var time = DateTime.now().millisecondsSinceEpoch;
     _currentSession._runStarted = time;
@@ -84,7 +111,6 @@ class SessionManager {
       logger.dataLogger
           .v("Session started at ${DateTime.now().millisecondsSinceEpoch}");
     }
-    continueSessionTracking();
   }
 
   /// Starts tracking the current session
@@ -93,6 +119,7 @@ class SessionManager {
       return;
     }
     _isRunning = true;
+    _trackSessionTime();
     _saveSessionPeriodically();
     _subscription = SensorData().normalizedSpeedStream.listen(
       (double speed) {
@@ -150,7 +177,7 @@ class SessionManager {
     if (!_isRunning) {
       return;
     }
-    Timer.periodic(const Duration(seconds: 30), (timer) {
+    _saveSessionTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       if (!_isRunning) {
         timer.cancel();
         return;
@@ -162,9 +189,6 @@ class SessionManager {
   /// Saves the current session or deletes it
   void keepSessionAtEndOfRun(bool keep) {
     if (keep) {
-      if (_sessionCount > 49) {
-        deleteSession(_sessions.last.id);
-      }
       _saveSession();
       _sessionCount++;
       _sessions.add(_currentSession);
